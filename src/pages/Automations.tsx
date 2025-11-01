@@ -5,7 +5,9 @@ import {
   Zap, Mail, Calendar, Clock, Bell, 
   TrendingUp, FileText, Heart, Plus, Check,
   Globe, Plane, Users, DollarSign, Briefcase,
-  Baby, Home, Package, Dumbbell
+  Baby, Home, Package, Dumbbell, Music, Stethoscope,
+  ShoppingBag, Building, UtensilsCrossed, Car, 
+  Fuel, ShoppingCart, Tv, GraduationCap, Truck
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AutomationCard } from "@/components/AutomationCard";
@@ -76,7 +78,7 @@ const automations = [
     title: "Package Tracker",
     description: "Track all my package deliveries and notify me",
     enabled: false,
-    category: "internet",
+    category: "email",
   },
   {
     id: 8,
@@ -86,7 +88,7 @@ const automations = [
     enabled: true,
     lastRun: "Today",
     nextRun: "Thursday",
-    category: "internet",
+    category: "email",
   },
 ];
 
@@ -94,31 +96,38 @@ const galleryCategories = [
   {
     title: "Email Automations",
     items: [
-      { icon: Mail, title: "Important Email Digest", description: "Daily summary of important emails" },
-      { icon: Users, title: "Hiring Update Emails", description: "Daily hiring updates at 7PM" },
       { icon: FileText, title: "Newsletter Summaries", description: "Weekly newsletter digests" },
-      { icon: Bell, title: "Email Reminders", description: "Smart email follow-up reminders" },
-      { icon: TrendingUp, title: "Priority Email Sorting", description: "Auto-categorize important emails" },
+      { icon: Package, title: "Package Tracking", description: "Track all package deliveries" },
+      { icon: DollarSign, title: "Bill Payment Reminders", description: "Remind before bills due" },
+      { icon: ShoppingBag, title: "Amazon Order Summaries", description: "Weekly digest of all Amazon orders" },
+      { icon: Building, title: "Bank Alert Consolidation", description: "Daily summary of all bank alerts" },
+      { icon: UtensilsCrossed, title: "Recipe Email Collection", description: "Save recipes from emails" },
+      { icon: FileText, title: "Tax Document Collector", description: "Collect W-2s, 1099s during tax season" },
     ],
   },
   {
     title: "Calendar Automations",
     items: [
-      { icon: Calendar, title: "Meeting Prep", description: "Prep notes 15mins before meetings" },
-      { icon: Dumbbell, title: "Gym Reminders", description: "Remind 1 day before gym" },
       { icon: Clock, title: "Focus Time Blocker", description: "Block calendar for deep work" },
-      { icon: Baby, title: "School Schedule Manager", description: "Manage kid's school calendar" },
       { icon: Heart, title: "Weekend Activity Planner", description: "Plan weekend activities" },
+      { icon: Stethoscope, title: "Doctor Appointment Finder", description: "Check dentist availability next 10 days" },
+      { icon: Music, title: "Concert & Events Tracker", description: "Alert for concerts in my city" },
+      { icon: Car, title: "Car Maintenance Scheduler", description: "Remind for oil change, registration" },
+      { icon: Heart, title: "Date Night Planner", description: "Block Friday nights and suggest activities" },
+      { icon: UtensilsCrossed, title: "Meal Prep Reminders", description: "Sunday meal prep and grocery list" },
     ],
   },
   {
     title: "Internet Automations",
     items: [
-      { icon: Plane, title: "Flight Price Alerts", description: "Track flight prices and alert" },
-      { icon: Package, title: "Package Tracking", description: "Track all deliveries" },
-      { icon: DollarSign, title: "Bill Payment Reminders", description: "Remind before bills due" },
-      { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stocks and alert" },
+      { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stocks and alert on changes" },
       { icon: Globe, title: "Website Change Monitor", description: "Track website updates" },
+      { icon: Music, title: "Concert Alerts", description: "Alert for concerts in next 6 months" },
+      { icon: Stethoscope, title: "Dentist Availability", description: "Check availability in next 10 days" },
+      { icon: Fuel, title: "Gas Price Tracker", description: "Alert when gas prices drop" },
+      { icon: ShoppingCart, title: "Grocery Deals", description: "Weekly deals from Target, Costco, Walmart" },
+      { icon: Tv, title: "Streaming Service Tracker", description: "New shows matching my taste" },
+      { icon: UtensilsCrossed, title: "Restaurant Wait Times", description: "Check wait times at favorites" },
     ],
   },
   {
@@ -126,8 +135,12 @@ const galleryCategories = [
     items: [
       { icon: Baby, title: "Complete School Manager", description: "Calendar + email for school" },
       { icon: Plane, title: "Trip Organizer", description: "Organize all trip details" },
-      { icon: Home, title: "Home Project Manager", description: "Track home projects" },
+      { icon: Home, title: "Home Project Manager", description: "Track home renovations" },
       { icon: Briefcase, title: "Work Dashboard", description: "Daily work summary and prep" },
+      { icon: GraduationCap, title: "College Application Manager", description: "Deadlines, essays, financial aid" },
+      { icon: Heart, title: "Wedding Planner Assistant", description: "Vendors, RSVPs, budget tracker" },
+      { icon: Truck, title: "Moving Coordinator", description: "Utilities, address changes, checklist" },
+      { icon: Heart, title: "Pet Care Manager", description: "Vet appointments, medication, food" },
     ],
   },
 ];
@@ -262,10 +275,10 @@ const Automations = () => {
                   return (
                     <motion.div
                       key={itemIndex}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: itemIndex * 0.1 }}
-                      className="glass rounded-2xl p-4 min-w-[220px] snap-start cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex-shrink-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="glass rounded-2xl p-4 min-w-[240px] snap-start cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex-shrink-0"
                       onClick={() => handleAddAutomation(item.title)}
                     >
                       <div className="flex items-start justify-between mb-3">

@@ -27,9 +27,9 @@ export const AutomationCard = ({
 }: AutomationCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3, delay }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
       onClick={onClick}
       className="glass rounded-2xl p-5 sm:p-6 cursor-pointer group hover:scale-[1.01] transition-all duration-300 active:scale-[0.99] min-h-[44px]"
     >

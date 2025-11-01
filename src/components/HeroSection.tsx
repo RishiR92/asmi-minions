@@ -1,7 +1,9 @@
 import { User } from "lucide-react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-calm.jpg";
-import minionImage from "@/assets/minions.png";
+import minion1 from "@/assets/minions.png";
+import minion2 from "@/assets/minions.png";
+import minion3 from "@/assets/minions.png";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -35,19 +37,36 @@ export const HeroSection = () => {
         />
       </motion.div>
       
-      {/* Minion Characters - Positioned in upper half */}
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-        className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none"
-      >
-        <img
-          src={minionImage}
-          alt="AI Minions"
-          className="w-full max-w-md h-auto object-contain opacity-60 mix-blend-soft-light"
+      {/* Minion Characters - 3 separate positioned in upper half */}
+      <div className="absolute top-0 left-0 right-0 h-1/2 pointer-events-none">
+        <motion.img
+          src={minion1}
+          alt="AI Minion"
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          className="absolute left-[10%] sm:left-[15%] top-[20%] w-24 sm:w-32 h-auto object-contain opacity-40 mix-blend-overlay"
+          style={{ filter: "blur(0.5px)", transform: "translateZ(0)", backfaceVisibility: "hidden" }}
         />
-      </motion.div>
+        <motion.img
+          src={minion2}
+          alt="AI Minion"
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="absolute left-1/2 -translate-x-1/2 top-[15%] w-28 sm:w-36 h-auto object-contain opacity-45 mix-blend-overlay"
+          style={{ filter: "blur(0.5px)", transform: "translateZ(0)", backfaceVisibility: "hidden" }}
+        />
+        <motion.img
+          src={minion3}
+          alt="AI Minion"
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+          className="absolute right-[10%] sm:right-[15%] top-[25%] w-20 sm:w-28 h-auto object-contain opacity-40 mix-blend-overlay"
+          style={{ filter: "blur(0.5px)", transform: "translateZ(0)", backfaceVisibility: "hidden" }}
+        />
+      </div>
       
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/60" />
