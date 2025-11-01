@@ -8,50 +8,50 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Aurora Gradient Background Colors */
-    --bg-start: 260 60% 92%;
-    --bg-mid-1: 280 50% 94%;
-    --bg-mid-2: 320 65% 94%;
-    --bg-accent: 340 70% 94%;
-    --bg-end: 30 80% 92%;
+    /* Bold Sunset Vibes Gradient - Purple to Hot Pink to Coral */
+    --bg-start: 260 75% 72%;
+    --bg-mid-1: 285 80% 68%;
+    --bg-mid-2: 320 85% 65%;
+    --bg-accent: 340 90% 68%;
+    --bg-end: 25 95% 65%;
     
-    /* Base Colors - Adjusted for colorful background */
+    /* Base Colors - High contrast for vibrant background */
     --background: 240 20% 98%;
     --background-secondary: 240 15% 96%;
-    --foreground: 240 25% 20%;
+    --foreground: 270 20% 15%;
     
     --card: 0 0% 100%;
-    --card-foreground: 240 25% 20%;
+    --card-foreground: 270 20% 15%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 240 25% 20%;
+    --popover-foreground: 270 20% 15%;
     
-    --primary: 270 15% 60%;
-    --primary-foreground: 270 15% 25%;
+    --primary: 260 70% 52%;
+    --primary-foreground: 0 0% 100%;
     
     --secondary: 240 10% 90%;
-    --secondary-foreground: 240 25% 20%;
+    --secondary-foreground: 270 20% 15%;
     
     --muted: 240 10% 90%;
-    --muted-foreground: 240 15% 45%;
+    --muted-foreground: 270 15% 35%;
     
     --accent: 270 15% 95%;
-    --accent-foreground: 270 15% 25%;
+    --accent-foreground: 270 20% 15%;
     
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
     
     --border: 240 10% 90%;
     --input: 240 10% 90%;
-    --ring: 270 15% 65%;
+    --ring: 260 70% 52%;
 
     --radius: 1.5rem;
     
-    /* Enhanced Liquid Glass */
+    /* Enhanced Liquid Glass - Adjusted for bold background */
     --glass-bg: 0 0% 100%;
-    --glass-opacity: 0.7;
-    --glass-blur: 24px;
-    --glass-border: 0 0% 100% / 0.35;
+    --glass-opacity: 0.75;
+    --glass-blur: 28px;
+    --glass-border: 0 0% 100% / 0.45;
     
     /* Minimal gradient utilities */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(270 18% 70%) 100%);
@@ -61,13 +61,13 @@ All colors MUST be HSL.
     --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
     
     --sidebar-background: 240 20% 98%;
-    --sidebar-foreground: 240 25% 20%;
-    --sidebar-primary: 270 15% 65%;
-    --sidebar-primary-foreground: 240 20% 98%;
+    --sidebar-foreground: 270 20% 15%;
+    --sidebar-primary: 260 70% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 270 15% 95%;
-    --sidebar-accent-foreground: 270 15% 25%;
+    --sidebar-accent-foreground: 270 20% 15%;
     --sidebar-border: 240 10% 90%;
-    --sidebar-ring: 270 15% 65%;
+    --sidebar-ring: 260 70% 52%;
   }
 
   .dark {
@@ -137,7 +137,7 @@ All colors MUST be HSL.
     min-height: 100dvh;
   }
   
-  /* Subtle animated floating orbs */
+  /* Bold animated floating orbs */
   body::before {
     content: '';
     position: fixed;
@@ -145,17 +145,17 @@ All colors MUST be HSL.
     background: 
       radial-gradient(
         circle at 20% 30%, 
-        hsl(280 60% 95% / 0.4) 0%, 
+        hsl(280 80% 75% / 0.6) 0%, 
         transparent 50%
       ),
       radial-gradient(
         circle at 80% 70%, 
-        hsl(340 70% 95% / 0.4) 0%, 
+        hsl(340 85% 70% / 0.6) 0%, 
         transparent 50%
       );
     pointer-events: none;
     z-index: 0;
-    animation: float 20s ease-in-out infinite;
+    animation: float 15s ease-in-out infinite;
   }
   
   @keyframes floatOrbs {
