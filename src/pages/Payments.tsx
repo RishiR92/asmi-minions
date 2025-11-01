@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { CreditCard, TrendingUp, Calendar, Plus } from "lucide-react";
+import { CreditCard, TrendingUp, Calendar, Plus, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const subscriptions = [
   {
@@ -8,21 +9,34 @@ const subscriptions = [
     amount: "$12.99",
     period: "monthly",
     nextBilling: "Jan 15, 2025",
-    color: "gradient-primary",
+    status: "active",
+    features: ["Unlimited automations", "Priority support", "Advanced analytics"],
   },
   {
-    name: "Cloud Storage",
+    name: "Cloud Storage Plus",
     amount: "$9.99",
     period: "monthly",
     nextBilling: "Jan 20, 2025",
-    color: "gradient-secondary",
+    status: "active",
+    features: ["500 GB storage", "File sharing", "Auto backup"],
+  },
+  {
+    name: "AI Assistant",
+    amount: "$19.99",
+    period: "monthly",
+    nextBilling: "Jan 18, 2025",
+    status: "active",
+    features: ["GPT-4 access", "Custom workflows", "API access"],
   },
 ];
 
 const transactions = [
-  { date: "Dec 15", description: "FlowHub Pro - Monthly", amount: "-$12.99" },
-  { date: "Dec 10", description: "Cloud Storage", amount: "-$9.99" },
-  { date: "Nov 15", description: "FlowHub Pro - Monthly", amount: "-$12.99" },
+  { date: "Dec 20", description: "AI Assistant - Monthly", amount: "$19.99", status: "completed" },
+  { date: "Dec 15", description: "FlowHub Pro - Monthly", amount: "$12.99", status: "completed" },
+  { date: "Dec 10", description: "Cloud Storage Plus", amount: "$9.99", status: "completed" },
+  { date: "Nov 20", description: "AI Assistant - Monthly", amount: "$19.99", status: "completed" },
+  { date: "Nov 15", description: "FlowHub Pro - Monthly", amount: "$12.99", status: "completed" },
+  { date: "Nov 10", description: "Cloud Storage Plus", amount: "$9.99", status: "completed" },
 ];
 
 const Payments = () => {
@@ -45,8 +59,8 @@ const Payments = () => {
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Payments</h1>
-                <p className="text-sm text-muted-foreground">Manage subscriptions</p>
+                <h1 className="text-2xl font-bold text-foreground">Subscriptions</h1>
+                <p className="text-sm text-muted-foreground">{subscriptions.length} active plans</p>
               </div>
             </div>
           </motion.div>
@@ -93,86 +107,82 @@ const Payments = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="glass rounded-2xl p-5 hover-lift tap-scale cursor-pointer"
+              className="glass rounded-2xl p-5 space-y-4"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl ${sub.color} flex items-center justify-center shadow-medium`}>
-                    <CreditCard className="w-5 h-5 text-white" />
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-3 flex-1">
+                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-medium flex-shrink-0">
+                    <CreditCard className="w-6 h-6 text-white" />
                   </div>
-                  <div>
-                    <h4 className="text-base font-semibold text-foreground">
-                      {sub.name}
-                    </h4>
-                    <p className="text-xs text-muted-foreground capitalize">
-                      {sub.period}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="text-base font-semibold text-foreground">
+                        {sub.name}
+                      </h4>
+                      <Badge variant="secondary" className="text-xs">
+                        {sub.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground capitalize mb-3">
+                      {sub.amount}/{sub.period}
                     </p>
+                    
+                    {/* Features */}
+                    <div className="space-y-1.5">
+                      {sub.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <CheckCircle2 className="w-3 h-3 text-primary flex-shrink-0" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <p className="text-lg font-bold text-foreground">{sub.amount}</p>
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Calendar className="w-3 h-3" />
-                Next billing: <span className="text-foreground font-medium">{sub.nextBilling}</span>
+              
+              <div className="pt-3 border-t border-border/50 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Next billing: <span className="text-foreground font-medium">{sub.nextBilling}</span></span>
+                </div>
+                <Button size="sm" variant="ghost" className="text-xs h-8">
+                  Manage
+                </Button>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Transaction History */}
+        {/* Payment History */}
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-foreground">Recent Transactions</h3>
-          <div className="glass rounded-2xl overflow-hidden">
+          <h3 className="text-lg font-semibold text-foreground">Payment History</h3>
+          <div className="glass rounded-2xl overflow-hidden divide-y divide-border/50">
             {transactions.map((tx, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className={`p-4 flex items-center justify-between ${
-                  index !== transactions.length - 1 ? "border-b border-border/50" : ""
-                }`}
+                transition={{ delay: 0.3 + index * 0.05 }}
+                className="p-4 flex items-center justify-between hover:bg-accent/5 transition-colors"
               >
-                <div>
-                  <p className="text-sm font-medium text-foreground">{tx.description}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{tx.date}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{tx.description}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{tx.date}</p>
+                  </div>
                 </div>
-                <p className="text-sm font-semibold text-destructive">{tx.amount}</p>
+                <p className="text-sm font-semibold text-foreground">${tx.amount}</p>
               </motion.div>
             ))}
           </div>
-        </div>
-
-        {/* Payment Methods */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-foreground">Payment Methods</h3>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="glass rounded-2xl p-5 hover-lift tap-scale cursor-pointer"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center shadow-medium">
-                  <CreditCard className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">•••• 4242</p>
-                  <p className="text-xs text-muted-foreground">Expires 12/25</p>
-                </div>
-              </div>
-              <Button size="sm" variant="outline" className="rounded-xl">
-                Edit
-              </Button>
-            </div>
-          </motion.div>
           <Button
             variant="outline"
-            className="w-full rounded-2xl h-12"
+            className="w-full rounded-2xl h-11"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Payment Method
+            View All Payments
           </Button>
         </div>
       </div>
