@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -32,6 +31,7 @@ export const BottomSheet = ({ isOpen, onClose, title, children }: BottomSheetPro
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed bottom-0 left-0 right-0 glass-sheet rounded-t-[32px] z-50 max-h-[85vh] overflow-hidden shadow-2xl"
+            style={{ transform: "translateZ(0)" }}
           >
             {/* Handle - Non-draggable visual indicator */}
             <div className="flex justify-center py-4 px-4">
@@ -51,10 +51,10 @@ export const BottomSheet = ({ isOpen, onClose, title, children }: BottomSheetPro
               </div>
             </div>
 
-            {/* Content */}
-            <ScrollArea className="h-[calc(85vh-100px)] px-5 sm:px-6 py-6">
-              {children}
-            </ScrollArea>
+          {/* Content */}
+          <div className="overflow-y-auto overflow-x-visible py-5 max-h-[calc(85vh-100px)]">
+            {children}
+          </div>
           </motion.div>
         </>
       )}

@@ -10,6 +10,7 @@ import MailHub from "./pages/MailHub";
 import EmailList from "./pages/EmailList";
 import CalendarView from "./pages/CalendarView";
 import Payments from "./pages/Payments";
+import Bills from "./pages/Bills";
 import SubscriptionDetail from "./pages/SubscriptionDetail";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/mail/:filter" element={<EmailList />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/payments" element={<Payments />} />
+            <Route path="/bills" element={<Bills />} />
             <Route path="/subscription-detail" element={<SubscriptionDetail />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

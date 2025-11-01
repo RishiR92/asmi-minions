@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { CreditCard, TrendingUp, Calendar, Plus, Clock, CheckCircle2, Zap, Wifi, Car, Dumbbell, AlertCircle } from "lucide-react";
+import { CreditCard, TrendingUp, Plus, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -31,48 +31,6 @@ const subscriptions = [
   },
 ];
 
-const upcomingBills = [
-  {
-    name: "Credit Card Payment",
-    amount: "$450.00",
-    dueDate: "Jan 5, 2025",
-    status: "overdue",
-    icon: CreditCard,
-    paymentUrl: "#pay-credit-card",
-  },
-  {
-    name: "Electric Bill",
-    amount: "$85.00",
-    dueDate: "Jan 8, 2025",
-    status: "due-soon",
-    icon: Zap,
-    paymentUrl: "#pay-electric",
-  },
-  {
-    name: "Gym Membership",
-    amount: "$35.00",
-    dueDate: "Jan 10, 2025",
-    status: "upcoming",
-    icon: Dumbbell,
-    paymentUrl: "#pay-gym",
-  },
-  {
-    name: "Internet Bill",
-    amount: "$60.00",
-    dueDate: "Jan 12, 2025",
-    status: "upcoming",
-    icon: Wifi,
-    paymentUrl: "#pay-internet",
-  },
-  {
-    name: "Car Insurance",
-    amount: "$120.00",
-    dueDate: "Jan 15, 2025",
-    status: "upcoming",
-    icon: Car,
-    paymentUrl: "#pay-insurance",
-  },
-];
 
 const transactions = [
   { date: "Dec 20", description: "AI Assistant - Monthly", amount: "$19.99", status: "completed" },
@@ -132,75 +90,6 @@ const Payments = () => {
           </div>
         </motion.div>
 
-        {/* Upcoming Bills & Payments */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-foreground">Upcoming Bills & Payments</h3>
-          
-          {upcomingBills.map((bill, index) => {
-            const Icon = bill.icon;
-            const isOverdue = bill.status === "overdue";
-            const isDueSoon = bill.status === "due-soon";
-            
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="glass rounded-2xl p-5 hover:scale-[1.01] transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-medium flex-shrink-0 ${
-                    isOverdue ? "bg-destructive/10" : isDueSoon ? "bg-amber-500/10" : "bg-primary/10"
-                  }`}>
-                    <Icon className={`w-6 h-6 ${
-                      isOverdue ? "text-destructive" : isDueSoon ? "text-amber-500" : "text-primary"
-                    }`} />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h4 className="text-base font-semibold text-foreground mb-1">
-                          {bill.name}
-                        </h4>
-                        <p className="text-2xl font-bold text-foreground">
-                          {bill.amount}
-                        </p>
-                      </div>
-                      <Badge 
-                        variant={isOverdue ? "destructive" : "secondary"}
-                        className="text-xs"
-                      >
-                        {isOverdue ? "Overdue" : isDueSoon ? "Due Soon" : "Upcoming"}
-                      </Badge>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                      {isOverdue ? (
-                        <AlertCircle className="w-4 h-4 text-destructive" />
-                      ) : (
-                        <Clock className="w-4 h-4" />
-                      )}
-                      <span>Due: <span className="font-medium text-foreground">{bill.dueDate}</span></span>
-                    </div>
-                    
-                    <Button 
-                      size="sm" 
-                      className={`w-full rounded-xl ${
-                        isOverdue ? "bg-destructive hover:bg-destructive/90" : ""
-                      }`}
-                      asChild
-                    >
-                      <a href={bill.paymentUrl}>Pay Now</a>
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
         {/* Active Subscriptions */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -216,12 +105,10 @@ const Payments = () => {
           </div>
 
           {subscriptions.map((sub, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="glass rounded-2xl p-5 sm:p-6 space-y-4 hover:scale-[1.01] transition-all duration-300"
+              className="glass rounded-2xl p-5 sm:p-6 space-y-4 hover:scale-[1.01] transition-all duration-200"
+              style={{ transform: "translateZ(0)" }}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
@@ -268,7 +155,7 @@ const Payments = () => {
                   Manage
                 </Button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -277,12 +164,10 @@ const Payments = () => {
           <h3 className="text-lg font-semibold text-foreground">Payment History</h3>
           <div className="glass rounded-2xl overflow-hidden divide-y divide-border/30">
             {transactions.map((tx, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
                 className="p-4 flex items-center justify-between hover:bg-accent/5 transition-colors"
+                style={{ transform: "translateZ(0)" }}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -294,7 +179,7 @@ const Payments = () => {
                   </div>
                 </div>
                 <p className="text-sm font-semibold text-foreground">${tx.amount}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
           <Button

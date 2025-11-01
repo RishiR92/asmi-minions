@@ -1,4 +1,4 @@
-import { Zap, Mail, Calendar, CreditCard, Clock, DollarSign } from "lucide-react";
+import { Zap, Mail, Calendar, CreditCard, Clock, Bell, User } from "lucide-react";
 import { ServiceCard } from "@/components/ServiceCard";
 import { TimelineItem } from "@/components/TimelineItem";
 import { HeroSection } from "@/components/HeroSection";
@@ -7,15 +7,9 @@ import { SwipeableContent } from "@/components/SwipeableContent";
 
 const quickAccessItems = [
   {
-    icon: Zap,
-    title: "Automations",
-    stat: "3 active flows",
-    href: "/automations",
-  },
-  {
     icon: Mail,
     title: "Mail Hub",
-    stat: "12 unread",
+    stat: "3 unread",
     href: "/mail",
   },
   {
@@ -25,16 +19,28 @@ const quickAccessItems = [
     href: "/calendar",
   },
   {
+    icon: Zap,
+    title: "Automations",
+    stat: "5 active",
+    href: "/automations",
+  },
+  {
     icon: CreditCard,
     title: "Subscriptions",
-    stat: "3 active plans",
+    stat: "$127/month",
     href: "/payments",
   },
   {
-    icon: DollarSign,
+    icon: Bell,
     title: "Upcoming Payments",
-    stat: "2 bills due soon",
-    href: "/payments",
+    stat: "4 bills due",
+    href: "/bills",
+  },
+  {
+    icon: User,
+    title: "Profile",
+    stat: "View settings",
+    href: "/profile",
   },
 ];
 
