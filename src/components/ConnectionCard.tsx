@@ -18,7 +18,7 @@ export const ConnectionCard = ({
   lastSync,
 }: ConnectionCardProps) => {
   return (
-    <div className="glass rounded-2xl p-5 sm:p-4 shadow-soft">
+    <div className="glass rounded-2xl p-5 sm:p-6 hover:scale-[1.01] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex gap-3 flex-1 min-w-0">
           <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">

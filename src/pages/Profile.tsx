@@ -8,7 +8,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen pt-safe pb-safe pb-24">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 pt-safe z-40">
         <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl sm:text-2xl font-semibold text-foreground">Profile</h1>
@@ -25,7 +25,7 @@ const Profile = () => {
 
       <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 space-y-6">
         {/* Profile Card */}
-        <div className="glass rounded-3xl p-6 text-center shadow-soft">
+        <div className="glass rounded-3xl p-6 sm:p-5 text-center hover:scale-[1.01] transition-all duration-300">
           <div className="relative inline-block mb-4">
             <Avatar className="w-24 h-24 sm:w-20 sm:h-20 ring-2 ring-primary/20">
               <AvatarImage src="" alt="You" />
@@ -81,7 +81,7 @@ const Profile = () => {
             <Shield className="w-5 h-5 text-primary" strokeWidth={1.5} />
             Permissions & Access
           </h3>
-          <div className="glass rounded-2xl p-5 sm:p-4 space-y-4 shadow-soft">
+          <div className="glass rounded-2xl p-5 sm:p-4 space-y-4 hover:scale-[1.01] transition-all duration-300">
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">Email Automation</p>
@@ -113,7 +113,7 @@ const Profile = () => {
           <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             Activity Summary
           </h3>
-          <div className="glass rounded-2xl p-4 shadow-soft">
+          <div className="glass rounded-2xl p-4 hover:scale-[1.01] transition-all duration-300">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
@@ -145,7 +145,7 @@ const Profile = () => {
           <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             App Settings
           </h3>
-          <div className="glass rounded-2xl p-4 space-y-2 shadow-soft">
+          <div className="glass rounded-2xl p-4 space-y-2 hover:scale-[1.01] transition-all duration-300">
             <Button
               variant="ghost"
               className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary min-h-[44px]"

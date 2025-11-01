@@ -31,7 +31,7 @@ export const AutomationCard = ({
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay }}
       onClick={onClick}
-      className="glass rounded-2xl p-5 hover-lift tap-scale cursor-pointer group"
+      className="glass rounded-2xl p-5 sm:p-6 cursor-pointer group hover:scale-[1.01] transition-all duration-300 active:scale-[0.99] min-h-[44px]"
     >
       <div className="flex items-start gap-4">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${

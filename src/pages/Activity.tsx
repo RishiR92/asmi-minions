@@ -22,14 +22,14 @@ const Activity = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 z-40 pt-safe">
+        <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-5 sm:py-6">
           <h1 className="text-2xl font-bold text-foreground">Activity</h1>
           <p className="text-sm text-muted-foreground mt-1">Your poke history</p>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-6">
         <div className="space-y-3">
           {activities.map((activity) => {
             const initials = activity.user
@@ -42,7 +42,7 @@ const Activity = () => {
             return (
               <div
                 key={activity.id}
-                className="glass rounded-2xl p-4 hover-lift animate-scale-in"
+                className="glass rounded-2xl p-5 sm:p-4 animate-scale-in hover:scale-[1.01] active:scale-[0.99] transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
                   <Avatar className="w-12 h-12 ring-2 ring-primary/20">

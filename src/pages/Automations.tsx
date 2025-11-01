@@ -99,7 +99,7 @@ const Automations = () => {
   return (
     <div className="min-h-screen pt-safe pb-safe pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 pt-safe z-40">
         <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -185,7 +185,7 @@ const Automations = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: itemIndex * 0.1 }}
-                      className="glass rounded-2xl p-5 min-w-[280px] snap-start hover-lift tap-scale cursor-pointer"
+                      className="glass rounded-2xl p-5 sm:p-6 min-w-[280px] sm:min-w-[300px] snap-start cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                     >
                       <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-4 shadow-medium">
                         <Icon className="w-6 h-6 text-white" />

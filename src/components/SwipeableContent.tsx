@@ -60,12 +60,12 @@ export const SwipeableContent = ({ children }: SwipeableContentProps) => {
       style={{ y }}
       className="fixed inset-x-0 bottom-0 z-40 max-w-lg mx-auto will-change-transform"
     >
-      <div className="h-full glass rounded-t-[2rem] shadow-strong flex flex-col overflow-hidden">
+      <div className="h-full glass-sheet rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden">
         {/* Drag Handle - Expanded touch area */}
         <div 
-          className="flex items-center justify-center pt-5 pb-4 cursor-grab active:cursor-grabbing touch-none select-none"
+          className="flex items-center justify-center pt-5 pb-4 cursor-grab active:cursor-grabbing touch-none select-none bg-transparent"
         >
-          <div className="w-12 h-1.5 rounded-full bg-muted-foreground/40 transition-all active:scale-110" />
+          <div className="w-12 h-1.5 rounded-full bg-muted-foreground/30 transition-all active:scale-110" />
         </div>
         
         {/* Scrollable Content */}

@@ -48,8 +48,8 @@ const Payments = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 z-40 pt-safe">
+        <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -67,12 +67,12 @@ const Payments = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-6 space-y-6">
         {/* Total Spending */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="glass rounded-3xl p-6"
+          className="glass rounded-3xl p-5 sm:p-6 hover:scale-[1.01] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -107,7 +107,7 @@ const Payments = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="glass rounded-2xl p-5 space-y-4"
+              className="glass rounded-2xl p-5 sm:p-6 space-y-4 hover:scale-[1.01] transition-all duration-300"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
@@ -156,7 +156,7 @@ const Payments = () => {
         {/* Payment History */}
         <div className="space-y-3">
           <h3 className="text-lg font-semibold text-foreground">Payment History</h3>
-          <div className="glass rounded-2xl overflow-hidden divide-y divide-border/50">
+          <div className="glass rounded-2xl overflow-hidden divide-y divide-border/30">
             {transactions.map((tx, index) => (
               <motion.div
                 key={index}

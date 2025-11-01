@@ -14,8 +14,8 @@ const MailHub = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 z-40 pt-safe">
+        <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -35,14 +35,14 @@ const MailHub = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 placeholder="Search emails..."
-                className="pl-12 rounded-2xl h-12 glass border-border/50"
+                className="pl-12 rounded-2xl h-12 sm:h-11 glass border-border/30 min-h-[44px] text-base sm:text-sm"
               />
             </div>
           </motion.div>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-6 space-y-6">
         {/* Filters */}
         <div className="grid grid-cols-2 gap-3">
           {filters.map((filter, index) => {
@@ -53,7 +53,7 @@ const MailHub = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="glass rounded-2xl p-4 hover-lift tap-scale text-left"
+                className="glass rounded-2xl p-5 sm:p-4 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left min-h-[80px] sm:min-h-0"
               >
                 <div className="flex items-center justify-between mb-2">
                   <Icon className="w-5 h-5 text-primary" />
@@ -74,7 +74,7 @@ const MailHub = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="glass rounded-3xl p-8 text-center space-y-4"
+          className="glass rounded-3xl p-8 sm:p-6 text-center space-y-4 hover:scale-[1.01] transition-all duration-300"
         >
           <div className="w-20 h-20 rounded-full gradient-primary mx-auto flex items-center justify-center shadow-glow">
             <Mail className="w-10 h-10 text-white" />
@@ -106,7 +106,7 @@ const MailHub = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 + index * 0.1 }}
-              className="flex items-center gap-3 glass rounded-xl p-4"
+              className="flex items-center gap-3 glass rounded-xl p-4 sm:p-3 hover:scale-[1.01] transition-all duration-300"
             >
               <div className="w-2 h-2 rounded-full gradient-primary" />
               <p className="text-sm text-foreground">{feature}</p>

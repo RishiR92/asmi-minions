@@ -13,8 +13,8 @@ const CalendarView = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="glass-sheet border-b border-border/30 sticky top-0 z-40 pt-safe">
+        <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,7 +42,7 @@ const CalendarView = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-5 sm:px-6 py-6 space-y-6">
         {/* Today's Stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -55,7 +55,7 @@ const CalendarView = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="glass rounded-2xl p-4 text-center"
+              className="glass rounded-2xl p-5 sm:p-4 text-center hover:scale-[1.02] transition-all duration-300"
             >
               <p className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
                 {stat.value}
@@ -74,7 +74,7 @@ const CalendarView = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
-              className="glass rounded-2xl p-5 hover-lift tap-scale cursor-pointer"
+              className="glass rounded-2xl p-5 sm:p-4 cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-300"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-xl ${event.color} flex items-center justify-center shadow-medium`}>
@@ -98,7 +98,7 @@ const CalendarView = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="glass rounded-3xl p-8 text-center space-y-4"
+          className="glass rounded-3xl p-8 sm:p-6 text-center space-y-4 hover:scale-[1.01] transition-all duration-300"
         >
           <div className="w-20 h-20 rounded-full gradient-secondary mx-auto flex items-center justify-center shadow-glow">
             <CalendarIcon className="w-10 h-10 text-white" />

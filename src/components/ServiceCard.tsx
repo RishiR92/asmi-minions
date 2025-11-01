@@ -11,7 +11,7 @@ interface ServiceCardProps {
 export const ServiceCard = ({ icon: Icon, title, stat, href }: ServiceCardProps) => {
   return (
     <Link to={href}>
-      <div className="glass rounded-3xl p-5 sm:p-6 tap-subtle cursor-pointer min-w-[260px] sm:min-w-[280px] h-[140px] sm:h-[160px] flex flex-col justify-between shadow-soft hover:shadow-lg transition-all duration-300">
+      <div className="glass rounded-3xl p-5 sm:p-6 tap-subtle cursor-pointer min-w-[260px] sm:min-w-[280px] h-[140px] sm:h-[160px] flex flex-col justify-between hover:scale-[1.02] transition-all duration-300 active:scale-[0.98]">
         <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
           <Icon className="w-7 h-7 sm:w-6 sm:h-6 text-primary" strokeWidth={1.5} />
         </div>
