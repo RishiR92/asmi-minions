@@ -7,18 +7,6 @@ import { SwipeableContent } from "@/components/SwipeableContent";
 
 const quickAccessItems = [
   {
-    icon: Mail,
-    title: "Mail Hub",
-    stat: "3 unread",
-    href: "/mail",
-  },
-  {
-    icon: Calendar,
-    title: "Calendar",
-    stat: "2 events today",
-    href: "/calendar",
-  },
-  {
     icon: Zap,
     title: "Automations",
     stat: "5 active",
@@ -35,6 +23,18 @@ const quickAccessItems = [
     title: "Upcoming Payments",
     stat: "4 bills due",
     href: "/bills",
+  },
+  {
+    icon: Mail,
+    title: "Mail Hub",
+    stat: "3 unread",
+    href: "/mail",
+  },
+  {
+    icon: Calendar,
+    title: "Calendar",
+    stat: "2 events today",
+    href: "/calendar",
   },
   {
     icon: User,
