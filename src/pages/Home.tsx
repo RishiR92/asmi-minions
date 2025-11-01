@@ -54,14 +54,19 @@ const upcomingEvents = [
     time: "Today at 3:00 PM",
   },
   {
-    icon: CreditCard,
-    title: "Payment deadline - Client project",
-    time: "Tomorrow at 5:00 PM",
+    icon: Clock,
+    title: "Mom's birthday dinner",
+    time: "Tomorrow at 7:00 PM",
   },
   {
-    icon: Clock,
-    title: "Quarterly review presentation",
-    time: "Friday at 10:00 AM",
+    icon: CreditCard,
+    title: "Invoice payment deadline",
+    time: "Thursday at 5:00 PM",
+  },
+  {
+    icon: Calendar,
+    title: "Dentist appointment",
+    time: "Friday at 2:30 PM",
   },
 ];
 
