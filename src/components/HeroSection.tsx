@@ -1,6 +1,7 @@
 import { User } from "lucide-react";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { motion } from "framer-motion";
+import heroImage from "@/assets/hero-calm.jpg";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -20,9 +21,22 @@ const getDate = () => {
 export const HeroSection = () => {
   return (
     <div className="relative h-[50vh] min-h-[400px] overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10">
-      {/* Decorative elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,_hsl(var(--primary)/0.1),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,_hsl(var(--primary)/0.08),transparent_50%)]" />
+      {/* Hero Image */}
+      <motion.div
+        initial={{ opacity: 0, scale: 1.1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute inset-0"
+      >
+        <img
+          src={heroImage}
+          alt="Calm serene background"
+          className="w-full h-full object-cover opacity-30"
+        />
+      </motion.div>
+      
+      {/* Decorative gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/60" />
       
       <div className="relative h-full flex flex-col justify-between p-6 sm:p-8 pt-safe">
         {/* Top section with profile */}
