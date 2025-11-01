@@ -1,24 +1,9 @@
 import { Zap, Mail, Calendar, CreditCard, Clock } from "lucide-react";
 import { ServiceCard } from "@/components/ServiceCard";
 import { TimelineItem } from "@/components/TimelineItem";
-import { WeatherWidget } from "@/components/WeatherWidget";
-import { DragHandle } from "@/components/DragHandle";
-import { motion } from "framer-motion";
+import { HeroSection } from "@/components/HeroSection";
+import { SwipeableContent } from "@/components/SwipeableContent";
 
-const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-};
-
-const getDate = () => {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-};
 
 const quickAccessItems = [
   {
@@ -72,67 +57,44 @@ const upcomingEvents = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen pt-safe pb-safe pb-24 relative">
-      {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
-        <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h1 className="text-3xl sm:text-2xl font-semibold text-foreground mb-1">
-              {getGreeting()}
-            </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed">{getDate()}</p>
-          </motion.div>
-          <WeatherWidget />
-        </div>
-      </div>
+    <div className="min-h-screen relative overflow-hidden bg-background">
+      {/* Upper Hero Section - Fixed calm design */}
+      <HeroSection />
 
-      <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 space-y-6">
-        {/* Quick Access - Horizontal Scroll */}
-        <section className="relative">
-          <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
-            Quick Access
-          </h2>
-          <div className="relative">
-            {/* Left fade gradient */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background/80 to-transparent z-10 pointer-events-none" />
-            
-            {/* Scrollable content */}
-            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 scroll-smooth">
+      {/* Lower Swipeable Content */}
+      <SwipeableContent>
+        <div className="space-y-6 py-4">
+          {/* Quick Access - Horizontal Scroll */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">
+              Quick Access
+            </h2>
+            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide -mx-5 px-5">
               {quickAccessItems.map((item) => (
                 <div key={item.title} className="snap-start">
                   <ServiceCard {...item} />
                 </div>
               ))}
             </div>
-            
-            {/* Right fade gradient */}
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-10 pointer-events-none" />
-          </div>
-        </section>
+          </section>
 
-        {/* What's Coming Up */}
-        <section>
-          <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
-            What's Coming Up
-          </h2>
-          <div className="glass rounded-3xl p-5 sm:p-4">
-            {upcomingEvents.map((event, index) => (
-              <TimelineItem
-                key={index}
-                {...event}
-                isLast={index === upcomingEvents.length - 1}
-              />
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* Drag Handle for Gesture Nav */}
-      <DragHandle />
+          {/* What's Coming Up */}
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-4">
+              What's Coming Up
+            </h2>
+            <div className="glass rounded-3xl p-5">
+              {upcomingEvents.map((event, index) => (
+                <TimelineItem
+                  key={index}
+                  {...event}
+                  isLast={index === upcomingEvents.length - 1}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      </SwipeableContent>
     </div>
   );
 };
