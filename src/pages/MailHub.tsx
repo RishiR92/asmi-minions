@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
-import { Mail, Search, Inbox, Star, Archive, Send } from "lucide-react";
+import { Mail, Inbox, Star, FileEdit, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 const MailHub = () => {
+  const navigate = useNavigate();
+  
   const filters = [
-    { icon: Inbox, label: "Inbox", count: 12 },
-    { icon: Star, label: "Important", count: 3 },
-    { icon: Send, label: "Sent", count: 0 },
-    { icon: Archive, label: "Archived", count: 45 },
+    { icon: Inbox, label: "Inbox", count: 12, id: "inbox" },
+    { icon: Star, label: "Important", count: 3, id: "important" },
+    { icon: Send, label: "Sent", count: 0, id: "sent" },
+    { icon: FileEdit, label: "Saved Drafts", count: 5, id: "drafts" },
   ];
 
   return (
@@ -29,15 +31,6 @@ const MailHub = () => {
                 <p className="text-sm text-muted-foreground">Manage your emails</p>
               </div>
             </div>
-
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search emails..."
-                className="pl-12 rounded-2xl h-12 sm:h-11 glass border-border/30 min-h-[44px] text-base sm:text-sm"
-              />
-            </div>
           </motion.div>
         </div>
       </div>
@@ -53,6 +46,7 @@ const MailHub = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
+                onClick={() => navigate(`/mail/${filter.id}`)}
                 className="glass rounded-2xl p-5 sm:p-4 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left min-h-[80px] sm:min-h-0"
               >
                 <div className="flex items-center justify-between mb-2">

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Automations from "./pages/Automations";
 import MailHub from "./pages/MailHub";
+import EmailList from "./pages/EmailList";
 import CalendarView from "./pages/CalendarView";
 import Payments from "./pages/Payments";
 import Profile from "./pages/Profile";
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/automations" element={<Automations />} />
             <Route path="/mail" element={<MailHub />} />
+            <Route path="/mail/:filter" element={<EmailList />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/profile" element={<Profile />} />
