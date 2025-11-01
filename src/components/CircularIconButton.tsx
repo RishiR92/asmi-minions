@@ -1,9 +1,9 @@
-import { LucideIcon } from "lucide-react";
+import type { ElementType } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 interface CircularIconButtonProps {
-  icon: LucideIcon;
+  icon: ElementType;
   label: string;
   href: string;
 }

@@ -27,15 +27,15 @@ const quickAccessItems = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen pt-safe pb-safe pb-24 relative">
+    <main className="min-h-screen pt-safe pb-safe pb-24 relative" role="main">
       {/* Hero Section */}
-      <div className="relative h-[45vh] overflow-hidden">
+      <header className="relative h-[45vh] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-background">
           {/* Abstract shapes */}
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-2xl animate-float" />
           <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-primary/8 blur-3xl animate-float" style={{ animationDelay: "2s" }} />
         </div>
-      </div>
+      </header>
 
       {/* Content */}
       <div className="max-w-full sm:max-w-lg mx-auto px-6 -mt-16 space-y-10">
@@ -67,7 +67,7 @@ const Home = () => {
 
       {/* Drag Handle for Gesture Nav */}
       <DragHandle />
-    </div>
+    </main>
   );
 };
 
