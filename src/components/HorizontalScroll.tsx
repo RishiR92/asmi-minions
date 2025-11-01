@@ -18,10 +18,11 @@ export const HorizontalScroll = ({ children, title }: HorizontalScrollProps) => 
       )}
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+        className="flex gap-4 overflow-x-auto overflow-y-visible pb-4 snap-x snap-mandatory scrollbar-hide -mx-5 px-5"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
         }}
       >
         {children}

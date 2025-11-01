@@ -1,7 +1,7 @@
 import { User } from "lucide-react";
-import { WeatherWidget } from "@/components/WeatherWidget";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-calm.jpg";
+import minionImage from "@/assets/minions.png";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -35,6 +35,20 @@ export const HeroSection = () => {
         />
       </motion.div>
       
+      {/* Minion Characters - Positioned in upper half */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+        className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none"
+      >
+        <img
+          src={minionImage}
+          alt="AI Minions"
+          className="w-full max-w-md h-auto object-contain opacity-60 mix-blend-soft-light"
+        />
+      </motion.div>
+      
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/60" />
       
@@ -44,11 +58,8 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex justify-between items-start"
+          className="flex justify-end items-start"
         >
-          <div className="flex-1">
-            <WeatherWidget />
-          </div>
           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
             <User className="w-5 h-5 text-primary" strokeWidth={1.5} />
           </div>

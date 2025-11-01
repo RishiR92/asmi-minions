@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { 
   Zap, Mail, Calendar, Clock, Bell, 
   TrendingUp, FileText, Heart, Plus, Check,
   Globe, Plane, Users, DollarSign, Briefcase,
-  Baby, Home, Package
+  Baby, Home, Package, Dumbbell
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AutomationCard } from "@/components/AutomationCard";
@@ -17,43 +18,39 @@ const automations = [
     id: 1,
     icon: Mail,
     title: "Important Email Digest",
-    description: "Summarize and draft replies to important emails daily",
+    description: "Summarize and draft replies to only important emails each day",
     enabled: true,
     lastRun: "Today, 8:00 AM",
     nextRun: "Tomorrow, 8:00 AM",
     category: "email",
-    type: "personal",
   },
   {
     id: 2,
     icon: Users,
     title: "Daily Hiring Updates",
-    description: "Send hiring updates (offers, CTCs) at 7PM daily",
+    description: "Send hiring updates (offers, acceptances, CTCs) at 7PM daily",
     enabled: true,
     lastRun: "Today, 7:00 PM",
     nextRun: "Tomorrow, 7:00 PM",
     category: "email",
-    type: "work",
   },
   {
     id: 3,
-    icon: Calendar,
-    title: "Gym Session Planner",
-    description: "Plan my gym sessions this week",
+    icon: Dumbbell,
+    title: "Remind for Gym",
+    description: "Remind me 1 day before gym session",
     enabled: false,
     category: "calendar",
-    type: "personal",
   },
   {
     id: 4,
-    icon: Briefcase,
-    title: "Meeting Prep Assistant",
-    description: "Prep me for key meetings with context and agenda",
+    icon: Bell,
+    title: "Meeting Notes",
+    description: "Send meeting notes 15mins before every meeting",
     enabled: true,
     lastRun: "Today, 9:00 AM",
     nextRun: "Tomorrow, 9:00 AM",
     category: "calendar",
-    type: "work",
   },
   {
     id: 5,
@@ -62,7 +59,6 @@ const automations = [
     description: "Alert me on Paris flight price drops",
     enabled: false,
     category: "internet",
-    type: "personal",
   },
   {
     id: 6,
@@ -73,46 +69,72 @@ const automations = [
     lastRun: "Yesterday",
     nextRun: "Daily",
     category: "calendar",
-    type: "personal",
+  },
+  {
+    id: 7,
+    icon: Package,
+    title: "Package Tracker",
+    description: "Track all my package deliveries and notify me",
+    enabled: false,
+    category: "internet",
+  },
+  {
+    id: 8,
+    icon: DollarSign,
+    title: "Bill Reminders",
+    description: "Remind me 3 days before bills are due",
+    enabled: true,
+    lastRun: "Today",
+    nextRun: "Thursday",
+    category: "internet",
   },
 ];
 
 const galleryCategories = [
   {
-    title: "Work Automations",
+    title: "Email Automations",
     items: [
-      { icon: Users, title: "Daily Hiring Updates", description: "Send hiring updates at 7PM daily", type: "work" },
-      { icon: Briefcase, title: "Meeting Prep Assistant", description: "Prep for key meetings automatically", type: "work" },
-      { icon: FileText, title: "Invoice Processing", description: "Auto-forward invoices to accountant", type: "work" },
-      { icon: Bell, title: "Team Standup Scheduler", description: "Schedule daily team standups", type: "work" },
-      { icon: Clock, title: "Focus Time Blocker", description: "Block calendar for deep work", type: "work" },
-      { icon: TrendingUp, title: "Competitor Monitoring", description: "Track competitor website changes", type: "work" },
+      { icon: Mail, title: "Important Email Digest", description: "Daily summary of important emails" },
+      { icon: Users, title: "Hiring Update Emails", description: "Daily hiring updates at 7PM" },
+      { icon: FileText, title: "Newsletter Summaries", description: "Weekly newsletter digests" },
+      { icon: Bell, title: "Email Reminders", description: "Smart email follow-up reminders" },
+      { icon: TrendingUp, title: "Priority Email Sorting", description: "Auto-categorize important emails" },
     ],
   },
   {
-    title: "Personal Automations",
+    title: "Calendar Automations",
     items: [
-      { icon: Mail, title: "Important Email Digest", description: "Daily summary of important emails", type: "personal" },
-      { icon: Calendar, title: "Gym Session Planner", description: "Plan gym sessions for the week", type: "personal" },
-      { icon: Plane, title: "Flight Price Tracker", description: "Alert on flight price drops", type: "personal" },
-      { icon: FileText, title: "Newsletter Summary", description: "Summarize newsletters weekly", type: "personal" },
-      { icon: Heart, title: "Weekend Planner", description: "Plan weekend activities", type: "personal" },
-      { icon: Package, title: "Package Delivery Updates", description: "Track all package deliveries", type: "personal" },
+      { icon: Calendar, title: "Meeting Prep", description: "Prep notes 15mins before meetings" },
+      { icon: Dumbbell, title: "Gym Reminders", description: "Remind 1 day before gym" },
+      { icon: Clock, title: "Focus Time Blocker", description: "Block calendar for deep work" },
+      { icon: Baby, title: "School Schedule Manager", description: "Manage kid's school calendar" },
+      { icon: Heart, title: "Weekend Activity Planner", description: "Plan weekend activities" },
     ],
   },
   {
-    title: "Complex/Smart Automations",
+    title: "Internet Automations",
     items: [
-      { icon: Baby, title: "Manage My Kid's School", description: "Calendar + email automation for school", type: "personal" },
-      { icon: Plane, title: "Paris Trip Organizer", description: "Organize everything for Paris trip", type: "personal" },
-      { icon: Home, title: "Home Renovation Manager", description: "Track renovation tasks and budget", type: "personal" },
-      { icon: DollarSign, title: "Personal Finance Hub", description: "Track expenses and investments", type: "personal" },
+      { icon: Plane, title: "Flight Price Alerts", description: "Track flight prices and alert" },
+      { icon: Package, title: "Package Tracking", description: "Track all deliveries" },
+      { icon: DollarSign, title: "Bill Payment Reminders", description: "Remind before bills due" },
+      { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stocks and alert" },
+      { icon: Globe, title: "Website Change Monitor", description: "Track website updates" },
+    ],
+  },
+  {
+    title: "Smart Automations",
+    items: [
+      { icon: Baby, title: "Complete School Manager", description: "Calendar + email for school" },
+      { icon: Plane, title: "Trip Organizer", description: "Organize all trip details" },
+      { icon: Home, title: "Home Project Manager", description: "Track home projects" },
+      { icon: Briefcase, title: "Work Dashboard", description: "Daily work summary and prep" },
     ],
   },
 ];
 
 const Automations = () => {
-  const [activeTab, setActiveTab] = useState("email");
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("all");
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [automationStates, setAutomationStates] = useState(
     automations.reduce((acc, auto) => ({ ...acc, [auto.id]: auto.enabled }), {})
@@ -121,12 +143,15 @@ const Automations = () => {
   const { toast } = useToast();
 
   const tabs = [
+    { id: "all", label: "All" },
     { id: "email", label: "Emails" },
     { id: "calendar", label: "Calendar" },
     { id: "internet", label: "Internet" },
   ];
 
-  const filteredAutomations = automations.filter(a => a.category === activeTab);
+  const filteredAutomations = activeTab === "all" 
+    ? automations 
+    : automations.filter(a => a.category === activeTab);
 
   const handleAddAutomation = (title: string) => {
     const automationKey = title.toLowerCase().replace(/\s+/g, '-');
@@ -211,7 +236,7 @@ const Automations = () => {
                 [automation.id]: !prev[automation.id]
               }));
             }}
-            onClick={() => {}}
+            onClick={() => navigate("/automation-detail", { state: { automation } })}
             delay={index * 0.05}
           />
         ))}
@@ -240,7 +265,7 @@ const Automations = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: itemIndex * 0.1 }}
-                      className="glass rounded-2xl p-4 sm:p-5 min-w-[240px] sm:min-w-[260px] snap-start cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                      className="glass rounded-2xl p-4 min-w-[220px] snap-start cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex-shrink-0"
                       onClick={() => handleAddAutomation(item.title)}
                     >
                       <div className="flex items-start justify-between mb-3">
@@ -249,7 +274,7 @@ const Automations = () => {
                         </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
-                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors min-h-[44px] min-w-[44px] ${
+                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
                             isAdded 
                               ? 'bg-primary text-primary-foreground' 
                               : 'bg-muted/50 text-muted-foreground'
@@ -261,14 +286,9 @@ const Automations = () => {
                       <h4 className="text-base font-semibold text-foreground mb-1.5">
                         {item.title}
                       </h4>
-                      <p className="text-sm text-muted-foreground mb-2">
+                      <p className="text-sm text-muted-foreground">
                         {item.description}
                       </p>
-                      {item.type && (
-                        <span className="inline-block text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                          {item.type}
-                        </span>
-                      )}
                     </motion.div>
                   );
                 })}
