@@ -121,7 +121,7 @@ const automations = [
 
 const galleryCategories = [
   {
-    title: "Email Automations",
+    title: "Email",
     items: [
       { icon: Package, title: "Package Tracking", description: "Consolidate all shipping updates in one daily digest" },
       { icon: CreditCard, title: "Bill Payment Reminders", description: "Never miss a payment deadline with smart alerts" },
@@ -137,7 +137,7 @@ const galleryCategories = [
     ],
   },
   {
-    title: "Calendar Automations",
+    title: "Calendar",
     items: [
       { icon: Calendar, title: "Focus Time Blocker", description: "Automatically block focus time in your calendar" },
       { icon: Calendar, title: "Weekend Activity Planner", description: "Suggest and schedule weekend activities based on weather" },
@@ -149,7 +149,7 @@ const galleryCategories = [
     ],
   },
   {
-    title: "Internet Automations",
+    title: "Internet",
     items: [
       { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stock prices and get notified of changes" },
       { icon: Globe, title: "Website Change Monitor", description: "Track changes on specific websites automatically" },
@@ -164,7 +164,7 @@ const galleryCategories = [
     ],
   },
   {
-    title: "Smart Automations",
+    title: "Smart Minions",
     items: [
       { icon: Music, title: "Concert Ticket Finder", description: "Auto-search for tickets when concerts are announced" },
       { icon: TrendingDown, title: "Price Drop Alert", description: "Track products and get alerted when prices drop" },
