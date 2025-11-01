@@ -8,7 +8,7 @@ import { SwipeableContent } from "@/components/SwipeableContent";
 const quickAccessItems = [
   {
     icon: Zap,
-    title: "Automations",
+    title: "AI Minions",
     stat: "5 active",
     href: "/automations",
   },

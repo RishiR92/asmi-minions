@@ -236,7 +236,7 @@ const Automations = () => {
             className="flex items-center justify-between mb-4"
           >
             <div>
-              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">Automations</h1>
+              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">AI Minions</h1>
               <p className="text-sm text-muted-foreground">
                 {automations.filter(a => automationStates[a.id]).length} active
               </p>
@@ -296,7 +296,7 @@ const Automations = () => {
       <BottomSheet
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
-        title="Automation Gallery"
+        title="AI Minions in Demand"
       >
         <div className="space-y-8">
           {galleryCategories.map((category, catIndex) => (
@@ -312,28 +312,32 @@ const Automations = () => {
                   return (
                     <div
                       key={itemIndex}
-                      className="glass rounded-2xl p-4 min-w-[240px] cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex-shrink-0"
-                      style={{ transform: "translateZ(0)" }}
+                      className="liquid-glass rounded-3xl p-5 min-w-[280px] max-w-[280px] cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex-shrink-0 border border-white/10"
+                      style={{ 
+                        transform: "translateZ(0)",
+                        backdropFilter: "blur(20px) saturate(180%)",
+                        WebkitBackdropFilter: "blur(20px) saturate(180%)"
+                      }}
                       onClick={() => handleAddAutomation(item.title)}
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-medium">
-                          <Icon className="w-5 h-5 text-white" />
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+                          <Icon className="w-6 h-6 text-white" />
                         </div>
                         <button
-                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
                             isAdded 
-                              ? 'bg-primary text-primary-foreground' 
-                              : 'bg-muted/50 text-muted-foreground'
+                              ? 'bg-primary text-primary-foreground shadow-md' 
+                              : 'bg-white/10 text-muted-foreground hover:bg-white/20'
                           }`}
                         >
-                          {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                          {isAdded ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
                         </button>
                       </div>
-                      <h4 className="text-base font-semibold text-foreground mb-1.5">
+                      <h4 className="text-base font-semibold text-foreground mb-2 leading-tight">
                         {item.title}
                       </h4>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
                         {item.description}
                       </p>
                     </div>

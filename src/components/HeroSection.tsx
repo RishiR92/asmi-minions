@@ -36,13 +36,12 @@ export const HeroSection = () => {
         <source src={minionVideo} type="video/mp4" />
       </video>
       
-      {/* Gradient overlay - stronger when video ends */}
-      <div 
-        className={`absolute inset-0 bg-gradient-to-b transition-opacity duration-500 ${
-          videoEnded 
-            ? "from-background/50 via-background/30 to-background/90" 
-            : "from-background/20 via-background/10 to-background/60"
-        }`}
+      {/* Gradient overlay - fade in gradually as video ends */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: videoEnded ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
         style={{ transform: "translateZ(0)" }}
       />
       
@@ -61,17 +60,17 @@ export const HeroSection = () => {
 
         {/* Bottom greeting - Only visible after video ends */}
         <AnimatePresence>
-          {videoEnded && (
+        {videoEnded && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
               className="flex flex-col justify-end pb-4"
             >
-              <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-3 tracking-tight drop-shadow-lg">
+              <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-3 tracking-tight" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
                 {getGreeting()}
               </h1>
-              <p className="text-lg text-muted-foreground drop-shadow-md">{getDate()}</p>
+              <p className="text-lg text-muted-foreground" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>{getDate()}</p>
             </motion.div>
           )}
         </AnimatePresence>
