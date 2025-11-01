@@ -10,7 +10,7 @@ import CalendarView from "./pages/CalendarView";
 import Payments from "./pages/Payments";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import { BottomNav } from "./components/BottomNav";
+import { GestureNav } from "./components/GestureNav";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +31,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <BottomNav />
+          <GestureNav />
         </div>
       </BrowserRouter>
     </TooltipProvider>
