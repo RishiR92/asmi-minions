@@ -1,81 +1,174 @@
-import { useState } from "react";
-import { Zap, TrendingUp } from "lucide-react";
-import { FriendCard } from "@/components/FriendCard";
-import { toast } from "sonner";
-
-const recentFriends = [
-  { id: 1, name: "Sarah Chen", avatar: "", status: "online", lastActive: "Active now" },
-  { id: 2, name: "Mike Johnson", avatar: "", status: "online", lastActive: "2m ago" },
-  { id: 3, name: "Emma Davis", avatar: "", status: "offline", lastActive: "1h ago" },
-];
+import { motion } from "framer-motion";
+import { Zap, Mail, Calendar, CreditCard, Activity } from "lucide-react";
+import { QuickAccessCard } from "@/components/QuickAccessCard";
+import { WeatherWidget } from "@/components/WeatherWidget";
+import { StatCard } from "@/components/StatCard";
 
 const Home = () => {
-  const [pokeCount] = useState(42);
-
-  const handlePoke = (name: string) => {
-    toast.success(`Poked ${name}! 👋`, {
-      duration: 2000,
-    });
+  const greeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
   };
+
+  const userName = "Rishi";
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center animate-float">
-              <Zap className="w-6 h-6 text-white fill-white" />
-            </div>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 gradient-mesh opacity-60" />
+        
+        <div className="relative max-w-lg mx-auto px-6 pt-8 pb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            {/* Greeting */}
             <div>
-              <h1 className="text-2xl font-bold text-foreground">PokeHub</h1>
-              <p className="text-sm text-muted-foreground">Stay connected</p>
+              <h1 className="text-3xl font-bold text-foreground mb-1">
+                {greeting()}, {userName} 👋
+              </h1>
+              <p className="text-muted-foreground">
+                {new Date().toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
             </div>
-          </div>
+
+            {/* Weather Widget */}
+            <WeatherWidget />
+          </motion.div>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
-        {/* Stats Card */}
-        <div className="glass rounded-3xl p-6 animate-scale-in">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Today's Pokes</p>
-              <p className="text-4xl font-bold gradient-primary bg-clip-text text-transparent">
-                {pokeCount}
-              </p>
-            </div>
-            <div className="w-16 h-16 rounded-2xl gradient-secondary flex items-center justify-center">
-              <TrendingUp className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-border/50">
-            <p className="text-sm text-muted-foreground">
-              <span className="text-primary font-semibold">+12</span> from yesterday
-            </p>
+      <div className="max-w-lg mx-auto px-6 py-6 space-y-8">
+        {/* Quick Access Grid */}
+        <div>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl font-bold text-foreground mb-4"
+          >
+            Quick Access
+          </motion.h2>
+          <div className="grid grid-cols-2 gap-4">
+            <QuickAccessCard
+              icon={Zap}
+              title="Automations"
+              description="Manage tasks"
+              href="/automations"
+              gradient="gradient-primary"
+              delay={0.1}
+            />
+            <QuickAccessCard
+              icon={Mail}
+              title="Mail Hub"
+              description="Check emails"
+              href="/mail"
+              gradient="gradient-secondary"
+              delay={0.15}
+            />
+            <QuickAccessCard
+              icon={Calendar}
+              title="Calendar"
+              description="View schedule"
+              href="/calendar"
+              gradient="gradient-accent"
+              delay={0.2}
+            />
+            <QuickAccessCard
+              icon={CreditCard}
+              title="Payments"
+              description="Subscriptions"
+              href="/payments"
+              gradient="gradient-secondary"
+              delay={0.25}
+            />
           </div>
         </div>
 
-        {/* Quick Poke Section */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-foreground">Quick Poke</h2>
-            <span className="text-sm text-muted-foreground">
-              {recentFriends.length} online
-            </span>
+        {/* Activity Stats */}
+        <div>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-xl font-bold text-foreground mb-4"
+          >
+            Today's Activity
+          </motion.h2>
+          <div className="grid grid-cols-3 gap-3">
+            <StatCard
+              icon={Zap}
+              label="Automations"
+              value="12"
+              change="+3"
+              gradient="gradient-primary"
+              delay={0.35}
+            />
+            <StatCard
+              icon={Mail}
+              label="Emails"
+              value="48"
+              gradient="gradient-secondary"
+              delay={0.4}
+            />
+            <StatCard
+              icon={Activity}
+              label="Tasks Done"
+              value="7"
+              change="+2"
+              gradient="gradient-accent"
+              delay={0.45}
+            />
           </div>
+        </div>
 
+        {/* Recent Activity Feed */}
+        <div>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-xl font-bold text-foreground mb-4"
+          >
+            Recent Activity
+          </motion.h2>
           <div className="space-y-3">
-            {recentFriends.map((friend) => (
-              <FriendCard
-                key={friend.id}
-                name={friend.name}
-                avatar={friend.avatar}
-                status={friend.status}
-                lastActive={friend.lastActive}
-                onPoke={() => handlePoke(friend.name)}
-              />
-            ))}
+            {[
+              { icon: Mail, text: "Daily email digest sent", time: "8:00 AM" },
+              { icon: Calendar, text: "Team meeting reminder", time: "9:45 AM" },
+              { icon: Zap, text: "Weekly report generated", time: "Yesterday" },
+            ].map((activity, index) => {
+              const Icon = activity.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.55 + index * 0.1 }}
+                  className="glass rounded-2xl p-4 flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-medium">
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">
+                      {activity.text}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {activity.time}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
