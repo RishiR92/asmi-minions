@@ -109,10 +109,10 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Upcoming Events & Deadlines */}
+        {/* What's Coming Up */}
         <section>
           <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
-            Upcoming Events
+            What's Coming Up
           </h2>
           <div className="glass rounded-3xl p-5 sm:p-4">
             {upcomingEvents.map((event, index) => (
