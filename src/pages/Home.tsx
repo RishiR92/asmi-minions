@@ -47,21 +47,21 @@ const quickAccessItems = [
   },
 ];
 
-const todayActivities = [
-  {
-    icon: Zap,
-    title: "Email automation completed successfully",
-    time: "2 min ago",
-  },
-  {
-    icon: Mail,
-    title: "3 emails filtered to Priority inbox",
-    time: "15 min ago",
-  },
+const upcomingEvents = [
   {
     icon: Calendar,
-    title: "Team Sync meeting at 3 PM",
-    time: "1 hour ago",
+    title: "Team Sync meeting",
+    time: "Today at 3:00 PM",
+  },
+  {
+    icon: CreditCard,
+    title: "Payment deadline - Client project",
+    time: "Tomorrow at 5:00 PM",
+  },
+  {
+    icon: Clock,
+    title: "Quarterly review presentation",
+    time: "Friday at 10:00 AM",
   },
 ];
 
@@ -109,17 +109,17 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Today's Activity - Timeline */}
+        {/* Upcoming Events & Deadlines */}
         <section>
           <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
-            Today's Activity
+            Upcoming Events
           </h2>
           <div className="glass rounded-3xl p-5 sm:p-4">
-            {todayActivities.map((activity, index) => (
+            {upcomingEvents.map((event, index) => (
               <TimelineItem
                 key={index}
-                {...activity}
-                isLast={index === todayActivities.length - 1}
+                {...event}
+                isLast={index === upcomingEvents.length - 1}
               />
             ))}
           </div>
