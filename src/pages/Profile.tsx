@@ -6,16 +6,16 @@ import { ConnectionCard } from "@/components/ConnectionCard";
 
 const Profile = () => {
   return (
-    <div className="min-h-screen pb-24 bg-gradient-subtle">
+    <div className="min-h-screen pt-safe pb-safe pb-24">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-md mx-auto px-5 py-6">
+      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
+        <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-foreground">Profile</h1>
+            <h1 className="text-3xl sm:text-2xl font-semibold text-foreground">Profile</h1>
             <Button
               size="icon"
               variant="ghost"
-              className="rounded-full hover:bg-muted"
+              className="rounded-full hover:bg-muted min-h-[44px] min-w-[44px]"
             >
               <Settings className="w-5 h-5" strokeWidth={1.5} />
             </Button>
@@ -23,13 +23,13 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-5 py-6 space-y-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 space-y-6">
         {/* Profile Card */}
         <div className="glass rounded-3xl p-6 text-center shadow-soft">
           <div className="relative inline-block mb-4">
-            <Avatar className="w-20 h-20 ring-2 ring-primary/20">
+            <Avatar className="w-24 h-24 sm:w-20 sm:h-20 ring-2 ring-primary/20">
               <AvatarImage src="" alt="You" />
-              <AvatarFallback className="bg-primary/10 text-primary text-xl font-semibold">
+              <AvatarFallback className="bg-primary/10 text-primary text-2xl sm:text-xl font-semibold">
                 YN
               </AvatarFallback>
             </Avatar>
@@ -40,7 +40,7 @@ const Profile = () => {
           
           <Button 
             variant="outline" 
-            className="mt-6 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
+            className="mt-6 w-full sm:w-auto border-primary/20 text-primary hover:bg-primary/10 hover:text-primary min-h-[44px]"
           >
             Edit Profile
           </Button>
@@ -48,7 +48,7 @@ const Profile = () => {
 
         {/* Connected Services */}
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-3">
+          <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             Connected Services
           </h3>
           <div className="space-y-3">
@@ -77,40 +77,40 @@ const Profile = () => {
 
         {/* Permissions & Access */}
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+          <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
             <Shield className="w-5 h-5 text-primary" strokeWidth={1.5} />
             Permissions & Access
           </h3>
-          <div className="glass rounded-2xl p-4 space-y-4 shadow-soft">
-            <div className="flex items-center justify-between">
-              <div>
+          <div className="glass rounded-2xl p-5 sm:p-4 space-y-4 shadow-soft">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">Email Automation</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">Allow automated email sorting</p>
               </div>
-              <Switch defaultChecked />
+              <Switch defaultChecked className="scale-110 sm:scale-100" />
             </div>
             <div className="h-px bg-border" />
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">Calendar Sync</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">Sync events automatically</p>
               </div>
-              <Switch defaultChecked />
+              <Switch defaultChecked className="scale-110 sm:scale-100" />
             </div>
             <div className="h-px bg-border" />
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">Payment Processing</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">Enable payment automations</p>
               </div>
-              <Switch />
+              <Switch className="scale-110 sm:scale-100" />
             </div>
           </div>
         </section>
 
         {/* Activity Summary */}
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-3">
+          <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             Activity Summary
           </h3>
           <div className="glass rounded-2xl p-4 shadow-soft">
@@ -142,31 +142,31 @@ const Profile = () => {
 
         {/* App Settings */}
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-3">
+          <h3 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             App Settings
           </h3>
-          <div className="glass rounded-2xl p-4 space-y-3 shadow-soft">
+          <div className="glass rounded-2xl p-4 space-y-2 shadow-soft">
             <Button
               variant="ghost"
-              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary"
+              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary min-h-[44px]"
             >
               Theme Preferences
             </Button>
             <Button
               variant="ghost"
-              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary"
+              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary min-h-[44px]"
             >
               Language & Region
             </Button>
             <Button
               variant="ghost"
-              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary"
+              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary min-h-[44px]"
             >
               Security & Privacy
             </Button>
             <Button
               variant="ghost"
-              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary"
+              className="w-full justify-start text-foreground hover:bg-primary/10 hover:text-primary min-h-[44px]"
             >
               Data Export
             </Button>

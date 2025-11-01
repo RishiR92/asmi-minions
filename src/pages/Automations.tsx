@@ -97,24 +97,24 @@ const Automations = () => {
     : automations.filter(a => a.category === activeTab);
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pt-safe pb-safe pb-20">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 py-6">
+      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
+        <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-between mb-4"
           >
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Automations</h1>
+              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">Automations</h1>
               <p className="text-sm text-muted-foreground">
                 {automations.filter(a => automationStates[a.id]).length} active
               </p>
             </div>
             <Button
               onClick={() => setIsGalleryOpen(true)}
-              className="rounded-2xl gradient-primary shadow-glow"
+              className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft min-h-[44px] px-4"
             >
               <Plus className="w-4 h-4 mr-2" />
               Browse
@@ -127,9 +127,9 @@ const Automations = () => {
               <motion.button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-5 py-2.5 sm:px-4 sm:py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all min-h-[44px] sm:min-h-0 ${
                   activeTab === tab.id
-                    ? "gradient-primary text-white shadow-glow"
+                    ? "bg-primary text-primary-foreground shadow-soft"
                     : "glass text-muted-foreground hover:text-foreground"
                 }`}
                 whileTap={{ scale: 0.96 }}
@@ -142,7 +142,7 @@ const Automations = () => {
       </div>
 
       {/* Automations List */}
-      <div className="max-w-lg mx-auto px-6 py-6 space-y-3">
+      <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-6 py-5 sm:py-6 space-y-3">
         {filteredAutomations.map((automation, index) => (
           <AutomationCard
             key={automation.id}

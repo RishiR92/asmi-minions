@@ -67,16 +67,16 @@ const todayActivities = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen pb-24 relative bg-gradient-subtle">
+    <div className="min-h-screen pt-safe pb-safe pb-24 relative">
       {/* Header */}
-      <div className="glass border-b border-border/50 sticky top-0 z-40">
-        <div className="max-w-md mx-auto px-5 py-6 relative">
+      <div className="glass border-b border-border/50 sticky top-0 pt-safe z-40">
+        <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 relative">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <h1 className="text-2xl font-semibold text-foreground mb-1">
+            <h1 className="text-3xl sm:text-2xl font-semibold text-foreground mb-1">
               {getGreeting()}
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed">{getDate()}</p>
@@ -85,27 +85,36 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-5 py-6 space-y-6">
+      <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-5 py-5 sm:py-6 space-y-6">
         {/* Quick Access - Horizontal Scroll */}
-        <section>
-          <h2 className="text-lg font-semibold text-foreground mb-3">
+        <section className="relative">
+          <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             Quick Access
           </h2>
-          <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-5 px-5">
-            {quickAccessItems.map((item) => (
-              <div key={item.title} className="snap-start">
-                <ServiceCard {...item} />
-              </div>
-            ))}
+          <div className="relative">
+            {/* Left fade gradient */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background/80 to-transparent z-10 pointer-events-none" />
+            
+            {/* Scrollable content */}
+            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 scroll-smooth">
+              {quickAccessItems.map((item) => (
+                <div key={item.title} className="snap-start">
+                  <ServiceCard {...item} />
+                </div>
+              ))}
+            </div>
+            
+            {/* Right fade gradient */}
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-10 pointer-events-none" />
           </div>
         </section>
 
         {/* Today's Activity - Timeline */}
         <section>
-          <h2 className="text-lg font-semibold text-foreground mb-3">
+          <h2 className="text-xl sm:text-lg font-semibold text-foreground mb-3">
             Today's Activity
           </h2>
-          <div className="glass rounded-3xl p-4">
+          <div className="glass rounded-3xl p-5 sm:p-4">
             {todayActivities.map((activity, index) => (
               <TimelineItem
                 key={index}

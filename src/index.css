@@ -8,25 +8,32 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Mist & Muted Purple-Grey Color System */
+    /* Aurora Gradient Background Colors */
+    --bg-start: 260 60% 92%;
+    --bg-mid-1: 280 50% 94%;
+    --bg-mid-2: 320 65% 94%;
+    --bg-accent: 340 70% 94%;
+    --bg-end: 30 80% 92%;
+    
+    /* Base Colors - Adjusted for colorful background */
     --background: 240 20% 98%;
     --background-secondary: 240 15% 96%;
-    --foreground: 240 15% 25%;
+    --foreground: 240 25% 20%;
     
     --card: 0 0% 100%;
-    --card-foreground: 240 15% 25%;
+    --card-foreground: 240 25% 20%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 240 15% 25%;
+    --popover-foreground: 240 25% 20%;
     
-    --primary: 270 15% 65%;
+    --primary: 270 15% 60%;
     --primary-foreground: 270 15% 25%;
     
     --secondary: 240 10% 90%;
-    --secondary-foreground: 240 15% 25%;
+    --secondary-foreground: 240 25% 20%;
     
     --muted: 240 10% 90%;
-    --muted-foreground: 240 10% 55%;
+    --muted-foreground: 240 15% 45%;
     
     --accent: 270 15% 95%;
     --accent-foreground: 270 15% 25%;
@@ -40,15 +47,21 @@ All colors MUST be HSL.
 
     --radius: 1.5rem;
     
-    /* Minimal gradient utilities - very subtle */
+    /* Enhanced Liquid Glass */
+    --glass-bg: 0 0% 100%;
+    --glass-opacity: 0.7;
+    --glass-blur: 24px;
+    --glass-border: 0 0% 100% / 0.35;
+    
+    /* Minimal gradient utilities */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(270 18% 70%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background-secondary)) 100%);
     
     /* Shadows */
-    --shadow-soft: 0 2px 12px hsl(var(--primary) / 0.08);
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
     
     --sidebar-background: 240 20% 98%;
-    --sidebar-foreground: 240 15% 25%;
+    --sidebar-foreground: 240 25% 20%;
     --sidebar-primary: 270 15% 65%;
     --sidebar-primary-foreground: 240 20% 98%;
     --sidebar-accent: 270 15% 95%;
@@ -58,6 +71,13 @@ All colors MUST be HSL.
   }
 
   .dark {
+    /* Dark mode Aurora colors - slightly more muted */
+    --bg-start: 250 50% 12%;
+    --bg-mid-1: 270 45% 14%;
+    --bg-mid-2: 300 50% 13%;
+    --bg-accent: 330 55% 14%;
+    --bg-end: 20 60% 13%;
+    
     --background: 240 15% 12%;
     --background-secondary: 240 15% 10%;
     --foreground: 240 5% 92%;
@@ -87,9 +107,13 @@ All colors MUST be HSL.
     --input: 240 10% 20%;
     --ring: 270 15% 70%;
     
+    --glass-opacity: 0.6;
+    --glass-blur: 24px;
+    --glass-border: 0 0% 100% / 0.2;
+    
     --gradient-primary: linear-gradient(135deg, hsl(270 15% 60%) 0%, hsl(270 18% 65%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(240 15% 12%) 0%, hsl(240 15% 10%) 100%);
-    --shadow-soft: 0 2px 12px hsl(270 15% 70% / 0.15);
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
   }
 }
 
@@ -100,15 +124,53 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background: var(--gradient-subtle);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--bg-start)) 0%,
+      hsl(var(--bg-mid-1)) 20%,
+      hsl(var(--bg-mid-2)) 45%,
+      hsl(var(--bg-accent)) 70%,
+      hsl(var(--bg-end)) 100%
+    );
     background-attachment: fixed;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
   
-  /* Glass morphism effect */
+  /* Subtle animated floating orbs */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(
+        circle at 20% 30%, 
+        hsl(280 60% 95% / 0.4) 0%, 
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 70%, 
+        hsl(340 70% 95% / 0.4) 0%, 
+        transparent 50%
+      );
+    pointer-events: none;
+    z-index: 0;
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  @keyframes floatOrbs {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+  }
+  
+  /* Enhanced Liquid Glass Effect */
   .glass {
-    background: hsl(var(--card) / 0.5);
-    backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.2);
+    background: hsl(var(--glass-bg) / var(--glass-opacity));
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 
+      var(--shadow-soft),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
   }
   
   /* Gradient utilities */

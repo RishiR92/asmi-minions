@@ -18,16 +18,16 @@ export const ConnectionCard = ({
   lastSync,
 }: ConnectionCardProps) => {
   return (
-    <div className="glass rounded-2xl p-4 shadow-soft">
-      <div className="flex items-start justify-between">
-        <div className="flex gap-3 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
+    <div className="glass rounded-2xl p-5 sm:p-4 shadow-soft">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex gap-3 flex-1 min-w-0">
+          <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Icon className="w-7 h-7 sm:w-6 sm:h-6 text-primary" strokeWidth={1.5} />
           </div>
           
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-semibold text-foreground">{service}</h4>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h4 className="font-semibold text-foreground text-base sm:text-sm">{service}</h4>
               {isConnected && (
                 <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-0">
                   Connected
@@ -44,7 +44,7 @@ export const ConnectionCard = ({
         <Button
           variant="ghost"
           size="sm"
-          className="text-primary hover:text-primary hover:bg-primary/10"
+          className="text-primary hover:text-primary hover:bg-primary/10 min-h-[44px] px-4 flex-shrink-0"
         >
           Manage
         </Button>
