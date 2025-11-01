@@ -71,23 +71,23 @@ export const GestureNav = () => {
                         key={item.path}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleNavigate(item.path)}
-                        className={`glass rounded-3xl p-8 sm:p-6 cursor-pointer flex flex-col items-center gap-3 transition-all duration-300 min-h-[140px] sm:min-h-[120px] ${
+                        className={`glass rounded-3xl p-6 sm:p-5 cursor-pointer flex flex-col items-center gap-2.5 transition-all duration-300 min-h-[120px] sm:min-h-[110px] ${
                           isActive 
                             ? 'ring-2 ring-primary shadow-md' 
                             : 'hover:shadow-md'
                         }`}
                       >
-                        <div className={`w-20 h-20 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center transition-colors duration-300 ${
+                        <div className={`w-14 h-14 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${
                           isActive ? 'bg-primary/20' : 'bg-primary/10'
                         }`}>
                           <item.icon 
-                            className={`w-10 h-10 sm:w-8 sm:h-8 transition-colors duration-300 ${
+                            className={`w-6 h-6 sm:w-5 sm:h-5 transition-colors duration-300 ${
                               isActive ? 'text-primary' : 'text-muted-foreground'
                             }`} 
                             strokeWidth={1.5}
                           />
                         </div>
-                        <span className={`text-base sm:text-sm font-medium transition-colors duration-300 ${
+                        <span className={`text-sm sm:text-xs font-medium transition-colors duration-300 ${
                           isActive ? 'text-primary' : 'text-foreground'
                         }`}>
                           {item.label}

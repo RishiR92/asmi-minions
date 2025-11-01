@@ -47,9 +47,9 @@ All colors MUST be HSL.
     
     /* Enhanced Liquid Glass - Cards are the focus */
     --glass-bg: 0 0% 100%;
-    --glass-opacity: 0.85;
-    --glass-blur: 20px;
-    --glass-border: 0 0% 100% / 0.5;
+    --glass-opacity: 0.65;
+    --glass-blur: 28px;
+    --glass-border: 0 0% 100% / 0.4;
     
     /* Minimal gradient utilities */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(270 18% 70%) 100%);
@@ -162,11 +162,11 @@ All colors MUST be HSL.
   /* Enhanced Liquid Glass Effect */
   .glass {
     background: hsl(var(--glass-bg) / var(--glass-opacity));
-    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border: 1px solid hsl(var(--glass-border));
     box-shadow: 
-      0 4px 24px 0 rgba(31, 38, 135, 0.08),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+      0 8px 32px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
   }
   
   /* Gradient utilities */
