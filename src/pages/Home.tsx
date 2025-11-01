@@ -57,7 +57,7 @@ const upcomingEvents = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-background">
+    <div className="h-screen fixed inset-0 overflow-hidden bg-background">
       {/* Upper Hero Section - Fixed calm design */}
       <HeroSection />
 
