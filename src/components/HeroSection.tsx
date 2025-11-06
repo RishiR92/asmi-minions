@@ -33,7 +33,7 @@ export const HeroSection = () => {
         preload="auto"
         onEnded={() => setVideoEnded(true)}
         className="absolute inset-0 w-full h-full object-cover opacity-100"
-        style={{ transform: "translateZ(0) scale(1.1)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        style={{ transform: "translateZ(0) scale(0.95)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
