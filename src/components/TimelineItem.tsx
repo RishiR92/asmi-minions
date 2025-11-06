@@ -9,21 +9,21 @@ interface TimelineItemProps {
 
 export const TimelineItem = ({ icon: Icon, title, time, isLast = false }: TimelineItemProps) => {
   return (
-    <div className="flex gap-3 sm:gap-3 relative">
+    <div className="flex gap-4 relative">
       {/* Timeline connector */}
       {!isLast && (
-        <div className="absolute left-[21px] sm:left-[19px] top-[44px] sm:top-[40px] w-[1px] h-[calc(100%+12px)] bg-border" />
+        <div className="absolute left-[23px] top-[52px] w-[1px] h-[calc(100%+8px)] bg-border/50" />
       )}
       
       {/* Icon */}
-      <div className="w-12 h-12 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 relative z-10">
-        <Icon className="w-6 h-6 sm:w-5 sm:h-5 text-primary" strokeWidth={1.5} />
+      <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 relative z-10 shadow-soft">
+        <Icon className="w-6 h-6 text-primary-foreground" strokeWidth={1.5} />
       </div>
       
       {/* Content */}
-      <div className="flex-1 pt-2 pb-4 sm:pb-4">
-        <p className="text-base sm:text-sm font-medium text-foreground leading-relaxed">{title}</p>
-        <p className="text-xs text-muted-foreground mt-1">{time}</p>
+      <div className="flex-1 pt-2 pb-5">
+        <p className="text-base font-heading font-medium text-foreground leading-relaxed mb-1">{title}</p>
+        <p className="text-sm font-accent text-muted-foreground">{time}</p>
       </div>
     </div>
   );

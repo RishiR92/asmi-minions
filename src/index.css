@@ -2,30 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Liquid Glass Design System - Fresh, Modern, Light
+/* Intelligent Calm Design System - Deep Space Purple with Mint-Lilac Accents
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Lavender Mist - Subtle Pokémon-Inspired Palette */
-    --bg-base: 250 35% 96%;
-    --bg-subtle-1: 250 30% 97%;
-    --bg-subtle-2: 250 40% 95%;
-    
-    /* Base Colors - Soft and calm */
+    /* Light mode (fallback) */
     --background: 240 20% 98%;
-    --background-secondary: 240 15% 96%;
     --foreground: 240 15% 25%;
+    --primary: 260 35% 60%;
+    --primary-foreground: 0 0% 100%;
     
     --card: 0 0% 100%;
     --card-foreground: 240 15% 25%;
     
     --popover: 0 0% 100%;
     --popover-foreground: 240 15% 25%;
-    
-    --primary: 260 35% 60%;
-    --primary-foreground: 0 0% 100%;
     
     --secondary: 240 10% 90%;
     --secondary-foreground: 240 15% 25%;
@@ -43,21 +36,7 @@ All colors MUST be HSL.
     --input: 240 10% 90%;
     --ring: 260 35% 60%;
 
-    --radius: 1.5rem;
-    
-    /* Apple Liquid Glass - Enhanced transparency and blur */
-    --glass-bg: 0 0% 100%;
-    --glass-opacity: 0.55;
-    --glass-blur: 40px;
-    --glass-border: 0 0% 100% / 0.18;
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
-    
-    /* Minimal gradient utilities */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(270 18% 70%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background-secondary)) 100%);
-    
-    /* Shadows */
-    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+    --radius: 0.75rem;
     
     --sidebar-background: 240 20% 98%;
     --sidebar-foreground: 240 15% 25%;
@@ -70,50 +49,67 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode Aurora colors - slightly more muted */
-    --bg-start: 250 50% 12%;
-    --bg-mid-1: 270 45% 14%;
-    --bg-mid-2: 300 50% 13%;
-    --bg-accent: 330 55% 14%;
-    --bg-end: 20 60% 13%;
+    /* Deep Space Purple → Cosmic Lilac - Intelligent Calm Palette */
+    --space-purple: 270 45% 12%;
+    --cosmic-lilac: 265 30% 20%;
+    --deep-void: 268 50% 8%;
     
-    --background: 240 15% 12%;
-    --background-secondary: 240 15% 10%;
-    --foreground: 240 5% 92%;
+    --background: 270 45% 12%;
+    --background-secondary: 268 50% 8%;
+    --foreground: 268 10% 97%;
     
-    --card: 240 15% 15%;
-    --card-foreground: 240 5% 92%;
+    --card: 0 0% 100% / 0.04;
+    --card-foreground: 268 10% 97%;
     
-    --popover: 240 15% 15%;
-    --popover-foreground: 240 5% 92%;
+    --popover: 265 30% 20%;
+    --popover-foreground: 268 10% 97%;
     
-    --primary: 270 15% 70%;
-    --primary-foreground: 240 15% 12%;
+    /* Mint-Lilac gradient accent */
+    --primary: 175 65% 60%;
+    --primary-foreground: 270 45% 12%;
+    --primary-glow: 270 70% 70%;
     
-    --secondary: 240 10% 20%;
-    --secondary-foreground: 240 5% 92%;
+    --secondary: 265 25% 18%;
+    --secondary-foreground: 268 10% 97%;
     
-    --muted: 240 10% 20%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 265 25% 18%;
+    --muted-foreground: 265 15% 70%;
     
-    --accent: 270 15% 18%;
-    --accent-foreground: 240 5% 92%;
+    /* Interactive state - Soft Mint pulse */
+    --accent: 178 65% 65%;
+    --accent-foreground: 270 45% 12%;
     
-    --destructive: 0 65% 45%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 240 10% 20%;
-    --input: 240 10% 20%;
-    --ring: 270 15% 70%;
+    --border: 265 20% 25%;
+    --input: 265 20% 25%;
+    --ring: 175 65% 60%;
     
-    --glass-opacity: 0.65;
-    --glass-blur: 32px;
-    --glass-border: 0 0% 100% / 0.15;
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+    /* Glass surfaces with inner light edges */
+    --glass-bg: 0 0% 100%;
+    --glass-opacity: 0.04;
+    --glass-blur: 40px;
+    --glass-border: 0 0% 100% / 0.08;
+    --glass-shadow: 0 8px 32px 0 rgba(71, 224, 193, 0.05);
     
-    --gradient-primary: linear-gradient(135deg, hsl(270 15% 60%) 0%, hsl(270 18% 65%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(240 15% 12%) 0%, hsl(240 15% 10%) 100%);
-    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    /* Gradients with slow subtle animation */
+    --gradient-primary: linear-gradient(135deg, hsl(175 65% 60%) 0%, hsl(270 70% 70%) 100%);
+    --gradient-bg: linear-gradient(180deg, hsl(270 45% 12%) 0%, hsl(265 30% 20%) 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 8px 32px 0 rgba(71, 224, 193, 0.08);
+    --shadow-glow: 0 0 40px rgba(92, 225, 230, 0.15);
+    
+    --sidebar-background: 270 45% 12%;
+    --sidebar-foreground: 268 10% 97%;
+    --sidebar-primary: 175 65% 60%;
+    --sidebar-primary-foreground: 270 45% 12%;
+    --sidebar-accent: 265 25% 18%;
+    --sidebar-accent-foreground: 268 10% 97%;
+    --sidebar-border: 265 20% 25%;
+    --sidebar-ring: 175 65% 60%;
   }
 }
 
@@ -124,103 +120,222 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background: radial-gradient(
-      ellipse at 50% 30%,
-      hsl(var(--bg-subtle-2)) 0%,
-      hsl(var(--bg-base)) 40%,
-      hsl(var(--bg-subtle-1)) 100%
+    background: linear-gradient(
+      180deg,
+      hsl(270 45% 12%) 0%,
+      hsl(265 30% 20%) 50%,
+      hsl(270 45% 12%) 100%
     );
     background-attachment: fixed;
     min-height: 100vh;
     min-height: 100dvh;
+    line-height: 1.6;
+    animation: breatheBackground 15s ease-in-out infinite;
   }
   
-  /* Subtle floating orbs - barely noticeable */
+  /* Subtle background breathing animation */
+  @keyframes breatheBackground {
+    0%, 100% {
+      background: linear-gradient(
+        180deg,
+        hsl(270 45% 12%) 0%,
+        hsl(265 30% 20%) 50%,
+        hsl(270 45% 12%) 100%
+      );
+    }
+    50% {
+      background: linear-gradient(
+        180deg,
+        hsl(268 50% 8%) 0%,
+        hsl(270 45% 12%) 50%,
+        hsl(265 30% 20%) 100%
+      );
+    }
+  }
+  
+  /* Ambient glow layer - unified moving light field */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background: 
       radial-gradient(
-        circle at 20% 30%, 
-        hsl(260 30% 94% / 0.3) 0%, 
+        circle at 30% 20%, 
+        rgba(71, 224, 193, 0.08) 0%, 
         transparent 50%
       ),
       radial-gradient(
-        circle at 80% 70%, 
-        hsl(270 35% 93% / 0.3) 0%, 
+        circle at 70% 80%, 
+        rgba(169, 127, 255, 0.06) 0%, 
         transparent 50%
       );
     pointer-events: none;
     z-index: 0;
-    animation: float 25s ease-in-out infinite;
+    animation: glowMove 20s ease-in-out infinite;
   }
   
-  @keyframes floatOrbs {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.05); }
+  @keyframes glowMove {
+    0%, 100% { 
+      transform: translate(0, 0) scale(1); 
+      opacity: 1;
+    }
+    50% { 
+      transform: translate(20px, -20px) scale(1.05); 
+      opacity: 0.8;
+    }
   }
   
-  /* Apple Liquid Glass Effect */
+  /* Translucent glass with inner light edges - Apple liquid glass style */
   .glass {
-    background: hsl(var(--glass-bg) / var(--glass-opacity));
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: var(--glass-shadow);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+      0 8px 32px 0 rgba(71, 224, 193, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
   }
 
   .liquid-glass {
     background: linear-gradient(
       135deg,
-      hsl(0 0% 100% / 0.12) 0%,
-      hsl(0 0% 100% / 0.06) 100%
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.03) 100%
     );
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
-      0 8px 32px 0 rgba(31, 38, 135, 0.1),
+      0 8px 32px 0 rgba(71, 224, 193, 0.08),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.05);
   }
   
   .glass-sheet {
-    background: hsl(var(--glass-bg) / 0.75);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
     backdrop-filter: blur(60px) saturate(190%);
     -webkit-backdrop-filter: blur(60px) saturate(190%);
-    border: 1px solid hsl(var(--glass-border));
+    border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.15),
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
       0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   }
   
   /* Gradient utilities */
-.gradient-primary {
-  background: var(--gradient-primary);
-}
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(175 65% 60%) 0%, hsl(270 70% 70%) 100%);
+  }
 
-.gradient-subtle {
-  background: var(--gradient-subtle);
-}
+  .gradient-subtle {
+    background: linear-gradient(180deg, hsl(270 45% 12%) 0%, hsl(265 30% 20%) 100%);
+  }
+  
+  .gradient-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  }
   
   /* Shadow utilities */
   .shadow-soft {
-    box-shadow: var(--shadow-soft);
+    box-shadow: 0 8px 32px 0 rgba(71, 224, 193, 0.08);
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 40px rgba(92, 225, 230, 0.15);
   }
 }
 
 @layer utilities {
-  /* Float animation */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
+  /* Soft glow pulse - 200ms tap feedback */
+  .tap-glow {
+    position: relative;
+    transition: all 0.2s ease-out;
   }
   
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
+  .tap-glow:active::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: radial-gradient(circle, rgba(92, 225, 230, 0.3) 0%, transparent 70%);
+    border-radius: inherit;
+    animation: glowPulse 0.2s ease-out;
+    pointer-events: none;
+  }
+  
+  @keyframes glowPulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
     }
     50% {
-      transform: translateY(-10px);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+  
+  /* Gentle parallax - 2-3px movement */
+  .parallax-subtle {
+    transition: transform 0.3s ease-out;
+  }
+  
+  /* CTA inner glow */
+  .cta-glow {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cta-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(71, 224, 193, 0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+  }
+  
+  .cta-glow:active::after {
+    opacity: 1;
+  }
+  
+  /* Breathing pulse - footer animation */
+  .breathe {
+    animation: breathe 20s ease-in-out infinite;
+  }
+  
+  @keyframes breathe {
+    0%, 100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  /* Fade up motion - 0.5s ease-out */
+  .animate-fade-up {
+    animation: fadeUp 0.5s ease-out;
+  }
+  
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
   
@@ -231,7 +346,7 @@ All colors MUST be HSL.
   
   @keyframes scaleIn {
     0% {
-      transform: scale(0.9);
+      transform: scale(0.95);
       opacity: 0;
     }
     100% {
@@ -240,39 +355,7 @@ All colors MUST be HSL.
     }
   }
   
-  /* Fade in animation */
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Slide up animation */
-  .animate-slide-up {
-    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  @keyframes slideUp {
-    0% {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  
-  /* Subtle tap effect */
+  /* Subtle tap effect with scale */
   .tap-subtle {
     transition: transform 0.15s ease;
     cursor: pointer;

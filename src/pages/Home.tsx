@@ -70,18 +70,18 @@ const upcomingEvents = [
 const Home = () => {
   return (
     <div className="h-screen fixed inset-0 overflow-hidden bg-background">
-      {/* Upper Hero Section - Fixed calm design */}
+      {/* Upper Hero Section - Fixed calm design with breathing animation */}
       <HeroSection />
 
-      {/* Lower Swipeable Content */}
+      {/* Lower Swipeable Content - Smooth scroll with momentum */}
       <SwipeableContent>
-        <div className="space-y-6 py-4">
-          {/* Quick Access - Horizontal Scroll */}
+        <div className="space-y-8 py-6 animate-fade-up">
+          {/* Quick Access - Horizontal Scroll with frictionless gestures */}
           <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">
+            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5 px-6">
               Quick Access
             </h2>
-            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide -mx-5 px-5">
+            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-6">
               {quickAccessItems.map((item) => (
                 <div key={item.title} className="snap-start">
                   <ServiceCard {...item} />
@@ -90,12 +90,12 @@ const Home = () => {
             </div>
           </section>
 
-          {/* What's Coming Up */}
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">
+          {/* What's Coming Up - generous padding, large tap zones */}
+          <section className="px-6 pb-safe">
+            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5">
               What's Coming Up
             </h2>
-            <div className="glass rounded-3xl p-5">
+            <div className="liquid-glass rounded-2xl p-6 shadow-soft">
               {upcomingEvents.map((event, index) => (
                 <TimelineItem
                   key={index}
