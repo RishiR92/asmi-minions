@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Satoshi', 'Poppins', 'SF Pro Display', 'Inter', 'sans-serif'],
-        accent: ['Inter', 'Manrope', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Inter', 'Manrope', '-apple-system', 'sans-serif'],
+        accent: ['Manrope', 'Inter', 'sans-serif'],
         label: ['Inter', 'sans-serif'],
       },
       colors: {
