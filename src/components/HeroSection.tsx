@@ -45,7 +45,7 @@ export const HeroSection = () => {
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
           videoFading ? 'opacity-25' : 'opacity-100'
         }`}
-        style={{ transform: "translateZ(0) scale(1.1)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        style={{ transform: "translateZ(0) scale(1.35)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
