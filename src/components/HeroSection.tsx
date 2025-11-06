@@ -21,6 +21,7 @@ const getDate = () => {
 export const HeroSection = () => {
   const [videoEnded, setVideoEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const loopStartRef = useRef(0);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -34,9 +35,34 @@ export const HeroSection = () => {
     v.setAttribute("x5-playsinline", "true");
 
     const tryPlay = () => v.play().catch(() => {});
+    
+    const onLoadedMetadata = () => {
+      loopStartRef.current = Math.max(0, v.duration - 2);
+      v.currentTime = loopStartRef.current;
+      setVideoEnded(true); // Show greeting immediately
+      tryPlay();
+    };
+
+    const onTimeUpdate = () => {
+      if (v.currentTime >= v.duration - 0.02) {
+        v.currentTime = loopStartRef.current;
+      }
+    };
+
     const onCanPlay = () => tryPlay();
 
+    v.addEventListener("loadedmetadata", onLoadedMetadata, { once: true });
+    v.addEventListener("timeupdate", onTimeUpdate);
     v.addEventListener("canplay", onCanPlay, { once: true });
+    
+    // Visibility change to resume on tab focus
+    const onVisibilityChange = () => {
+      if (!document.hidden && v.paused) {
+        tryPlay();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     tryPlay();
 
     // Fallback for some mobile browsers: start on first tap
@@ -47,7 +73,10 @@ export const HeroSection = () => {
     document.addEventListener("touchstart", onFirstTap, { once: true });
 
     return () => {
+      v.removeEventListener("loadedmetadata", onLoadedMetadata);
+      v.removeEventListener("timeupdate", onTimeUpdate);
       v.removeEventListener("canplay", onCanPlay);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       document.removeEventListener("touchstart", onFirstTap);
     };
   }, []);
@@ -59,14 +88,13 @@ export const HeroSection = () => {
         ref={videoRef}
         autoPlay
         muted
-        loop
         playsInline
         preload="auto"
         disablePictureInPicture
+        disableRemotePlayback
         controls={false}
-        onEnded={() => setVideoEnded(true)}
-        className="absolute inset-0 w-full h-full object-cover opacity-100"
-        style={{ transform: "translateZ(0) scale(1.06)", backfaceVisibility: "hidden", objectPosition: "center 22%" }}
+        controlsList="nodownload noplaybackrate noremoteplayback"
+        className="hero-video absolute inset-0 w-full h-full object-cover opacity-100"
         aria-hidden="true"
         tabIndex={-1}
       >
