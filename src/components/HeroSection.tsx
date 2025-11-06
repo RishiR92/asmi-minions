@@ -31,9 +31,11 @@ export const HeroSection = () => {
         loop
         playsInline
         preload="auto"
+        webkit-playsinline="true"
+        x5-playsinline="true"
         onEnded={() => setVideoEnded(true)}
         className="absolute inset-0 w-full h-full object-cover opacity-100"
-        style={{ transform: "translateZ(0) scale(1.1)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        style={{ transform: "translateZ(0) scale(1.05)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
