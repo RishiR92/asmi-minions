@@ -1,6 +1,6 @@
 import { User } from "lucide-react";
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import minionVideo from "@/assets/minion-hero.mp4";
 
 const getGreeting = () => {
@@ -19,38 +19,32 @@ const getDate = () => {
 };
 
 export const HeroSection = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoEnded, setVideoEnded] = useState(false);
 
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    const tryPlay = () => v.play().catch(() => {});
-    if (v.readyState >= 2) tryPlay();
-    else v.addEventListener('canplay', tryPlay, { once: true });
-    return () => v.removeEventListener('canplay', tryPlay);
-  }, []);
 
   return (
     <div className="relative h-[35vh] min-h-[280px] overflow-hidden bg-gradient-to-b from-background-gradient-start via-background to-background-gradient-end">
       {/* Video Background - portrait optimized, autoplay muted loop */}
       <video
-        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
+        onEnded={() => setVideoEnded(true)}
         className="absolute inset-0 w-full h-full object-cover opacity-100"
-        style={{ transform: "translateZ(0) scale(1.03)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        style={{ transform: "translateZ(0) scale(1.1)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
       
-      {/* Luminous overlay - keep subtle, no fade-out */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/30 to-background"
-        style={{ transform: "translateZ(0)", opacity: 0.3 }}
+      {/* Luminous overlay - dimensional fade */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/40 to-background"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: videoEnded ? 1 : 0.3 }}
+        transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
+        style={{ transform: "translateZ(0)" }}
       />
       
       <div className="relative h-full flex flex-col justify-between p-6 sm:p-8 pt-safe">
@@ -66,22 +60,26 @@ export const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* Bottom greeting */}
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="flex flex-col justify-end pb-8 breathe"
-        >
-          <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-foreground mb-3 tracking-tight leading-tight" 
-              style={{ textShadow: '0 4px 16px rgba(139, 110, 255, 0.25), 0 2px 8px rgba(83, 211, 194, 0.15)' }}>
-            {getGreeting()}
-          </h1>
-          <p className="text-lg font-accent text-muted-foreground tracking-wide" 
-             style={{ textShadow: '0 2px 8px rgba(255, 255, 255, 0.9)' }}>
-            {getDate()}
-          </p>
-        </motion.div>
+        {/* Bottom greeting - Dimensional fade with glow */}
+        <AnimatePresence>
+        {videoEnded && (
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
+              className="flex flex-col justify-end pb-8 breathe"
+            >
+              <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-foreground mb-3 tracking-tight leading-tight" 
+                  style={{ textShadow: '0 4px 16px rgba(139, 110, 255, 0.25), 0 2px 8px rgba(83, 211, 194, 0.15)' }}>
+                {getGreeting()}
+              </h1>
+              <p className="text-lg font-accent text-muted-foreground tracking-wide" 
+                 style={{ textShadow: '0 2px 8px rgba(255, 255, 255, 0.9)' }}>
+                {getDate()}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Bottom spacer for swipeable content indicator */}
         <div className="h-8" />
