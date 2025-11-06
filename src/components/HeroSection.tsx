@@ -20,16 +20,7 @@ const getDate = () => {
 
 export const HeroSection = () => {
   const [videoEnded, setVideoEnded] = useState(false);
-  const [videoFading, setVideoFading] = useState(false);
 
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const video = e.currentTarget;
-    const timeLeft = video.duration - video.currentTime;
-    // Start fading 1 second before the end
-    if (timeLeft <= 1 && timeLeft > 0 && !videoFading) {
-      setVideoFading(true);
-    }
-  };
 
   return (
     <div className="relative h-[35vh] min-h-[280px] overflow-hidden bg-gradient-to-b from-background-gradient-start via-background to-background-gradient-end">
@@ -41,11 +32,8 @@ export const HeroSection = () => {
         playsInline
         preload="auto"
         onEnded={() => setVideoEnded(true)}
-        onTimeUpdate={handleTimeUpdate}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-          videoFading ? 'opacity-25' : 'opacity-100'
-        }`}
-        style={{ transform: "translateZ(0) scale(1.35)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        className="absolute inset-0 w-full h-full object-cover opacity-100"
+        style={{ transform: "translateZ(0) scale(1.1)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
@@ -54,7 +42,7 @@ export const HeroSection = () => {
       <motion.div 
         className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/40 to-background"
         initial={{ opacity: 0 }}
-        animate={{ opacity: videoEnded ? 1 : (videoFading ? 0.95 : 0.3) }}
+        animate={{ opacity: videoEnded ? 1 : 0.3 }}
         transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
         style={{ transform: "translateZ(0)" }}
       />

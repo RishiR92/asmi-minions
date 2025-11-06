@@ -143,6 +143,9 @@ const galleryCategories = [
       { icon: Music, title: "YouTube Playlist Manager", description: "Track new videos from subscribed channels" },
       { icon: Globe, title: "Domain & SSL Monitor", description: "Track domain expiration and SSL certificate status" },
       { icon: TrendingDown, title: "API Health Monitor", description: "Monitor your favorite APIs uptime status" },
+      { icon: ShoppingCart, title: "Amazon Price Tracker", description: "Track Amazon product prices and get alerts on deals" },
+      { icon: Clock, title: "Website Uptime Monitor", description: "Monitor your website uptime and get instant downtime alerts" },
+      { icon: FileText, title: "RSS Feed Aggregator", description: "Aggregate and summarize RSS feeds from your favorite blogs" },
     ],
   },
   {
@@ -174,7 +177,7 @@ const galleryCategories = [
     ],
   },
   {
-    title: "Smart Minions",
+    title: "Smart Mins",
     items: [
       { icon: Music, title: "Concert Ticket Finder", description: "Auto-search for tickets when concerts are announced" },
       { icon: TrendingDown, title: "Price Drop Alert", description: "Track products and get alerted when prices drop" },
@@ -239,7 +242,7 @@ const Automations = () => {
     <div className="min-h-screen pt-safe pb-safe pb-20">
       {/* Header */}
       <div className="glass-sheet border-b border-border/30 sticky top-0 pt-safe z-40">
-        <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-6 py-5 sm:py-6">
+        <div className="max-w-full sm:max-w-lg mx-auto px-6 py-5 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -281,7 +284,7 @@ const Automations = () => {
       </div>
 
       {/* Automations List */}
-      <div className="max-w-full sm:max-w-lg mx-auto px-4 sm:px-6 py-5 sm:py-6 space-y-3">
+      <div className="max-w-full sm:max-w-lg mx-auto px-6 py-5 sm:py-6 space-y-3">
         {filteredAutomations.map((automation) => (
           <AutomationCard
             key={automation.id}
