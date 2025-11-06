@@ -1,6 +1,6 @@
 import { User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import minionVideo from "@/assets/minion-hero.mp4";
 
 const getGreeting = () => {
@@ -20,22 +20,55 @@ const getDate = () => {
 
 export const HeroSection = () => {
   const [videoEnded, setVideoEnded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    // iOS inline autoplay requirements
+    v.muted = true;
+    v.playsInline = true;
+    v.setAttribute("playsinline", "true");
+    v.setAttribute("webkit-playsinline", "true");
+    v.setAttribute("x5-playsinline", "true");
+
+    const tryPlay = () => v.play().catch(() => {});
+    const onCanPlay = () => tryPlay();
+
+    v.addEventListener("canplay", onCanPlay, { once: true });
+    tryPlay();
+
+    // Fallback for some mobile browsers: start on first tap
+    const onFirstTap = () => {
+      tryPlay();
+      document.removeEventListener("touchstart", onFirstTap);
+    };
+    document.addEventListener("touchstart", onFirstTap, { once: true });
+
+    return () => {
+      v.removeEventListener("canplay", onCanPlay);
+      document.removeEventListener("touchstart", onFirstTap);
+    };
+  }, []);
 
   return (
     <div className="relative h-[35vh] min-h-[280px] overflow-hidden bg-gradient-to-b from-background-gradient-start via-background to-background-gradient-end">
       {/* Video Background - portrait optimized, autoplay muted loop */}
       <video
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
-        webkit-playsinline="true"
-        x5-playsinline="true"
+        disablePictureInPicture
+        controls={false}
         onEnded={() => setVideoEnded(true)}
         className="absolute inset-0 w-full h-full object-cover opacity-100"
-        style={{ transform: "translateZ(0) scale(1.05)", backfaceVisibility: "hidden", objectPosition: "center top" }}
+        style={{ transform: "translateZ(0) scale(1.06)", backfaceVisibility: "hidden", objectPosition: "center 22%" }}
+        aria-hidden="true"
+        tabIndex={-1}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
