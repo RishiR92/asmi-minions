@@ -78,7 +78,7 @@ const Home = () => {
         <div className="space-y-8 py-6 animate-fade-up">
           {/* Quick Access - Horizontal Scroll with frictionless gestures */}
           <section>
-            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5 px-6">
+            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5 px-6 tracking-tight">
               Quick Access
             </h2>
             <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-6">
@@ -92,10 +92,10 @@ const Home = () => {
 
           {/* What's Coming Up - generous padding, large tap zones */}
           <section className="px-6 pb-safe">
-            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5">
+            <h2 className="text-2xl font-heading font-semibold text-foreground mb-5 tracking-tight">
               What's Coming Up
             </h2>
-            <div className="liquid-glass rounded-2xl p-6 shadow-soft">
+            <div className="liquid-glass rounded-2xl p-6 shadow-soft hover:shadow-hover transition-all duration-300">
               {upcomingEvents.map((event, index) => (
                 <TimelineItem
                   key={index}

@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Enable dark mode by default for Intelligent Calm design
-document.documentElement.classList.add('dark');
+// Light mode by default for Morning Clarity theme
+document.documentElement.classList.remove('dark');
 
 createRoot(document.getElementById("root")!).render(<App />);

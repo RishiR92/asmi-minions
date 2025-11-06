@@ -32,7 +32,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <div className="relative h-[60vh] min-h-[500px] overflow-hidden bg-background">
+    <div className="relative h-[60vh] min-h-[500px] overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background">
       {/* Video Background - portrait optimized, autoplay muted loop */}
       <video
         autoPlay
@@ -43,18 +43,18 @@ export const HeroSection = () => {
         onEnded={() => setVideoEnded(true)}
         onTimeUpdate={handleTimeUpdate}
         className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-          videoFading ? 'opacity-20' : 'opacity-100'
+          videoFading ? 'opacity-30' : 'opacity-100'
         }`}
         style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
       
-      {/* Gradient overlay - fades in gradually with gentle parallax depth */}
+      {/* Gradient overlay - fades in gradually with gentle depth */}
       <motion.div 
-        className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background parallax-subtle"
+        className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background"
         initial={{ opacity: 0 }}
-        animate={{ opacity: videoEnded ? 1 : (videoFading ? 0.8 : 0.3) }}
+        animate={{ opacity: videoEnded ? 1 : (videoFading ? 0.9 : 0.4) }}
         transition={{ duration: 1.5, ease: "easeOut" }}
         style={{ transform: "translateZ(0)" }}
       />
@@ -72,21 +72,21 @@ export const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* Bottom greeting - Fades in smoothly after video ends with calm breathing feel */}
+        {/* Bottom greeting - Fades in smoothly after video ends */}
         <AnimatePresence>
         {videoEnded && (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-              className="flex flex-col justify-end pb-6 breathe"
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col justify-end pb-8"
             >
-              <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-foreground mb-3 tracking-tight" 
-                  style={{ textShadow: '0 4px 12px rgba(71, 224, 193, 0.3)' }}>
+              <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-foreground mb-3 tracking-tight leading-tight" 
+                  style={{ textShadow: '0 2px 8px rgba(107, 78, 255, 0.2)' }}>
                 {getGreeting()}
               </h1>
-              <p className="text-lg font-accent text-muted-foreground" 
-                 style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)' }}>
+              <p className="text-lg font-accent text-muted-foreground tracking-wide" 
+                 style={{ textShadow: '0 1px 4px rgba(255, 255, 255, 0.8)' }}>
                 {getDate()}
               </p>
             </motion.div>
