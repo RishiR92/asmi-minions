@@ -1,22 +1,7 @@
 import { User } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import minionVideo from "@/assets/minion-hero.mp4";
-
-const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning, Rishi";
-  if (hour < 18) return "Good afternoon, Rishi";
-  return "Good evening, Rishi";
-};
-
-const getDate = () => {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-};
 
 export const HeroSection = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -27,9 +12,12 @@ export const HeroSection = () => {
     const v = videoRef.current;
     if (!v) return;
 
-    // iOS inline autoplay requirements
+    // iOS inline autoplay requirements - strengthen for iOS Safari
+    v.defaultMuted = true;
     v.muted = true;
     v.playsInline = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("autoplay", "");
     v.setAttribute("playsinline", "true");
     v.setAttribute("webkit-playsinline", "true");
     v.setAttribute("x5-playsinline", "true");
@@ -50,10 +38,12 @@ export const HeroSection = () => {
     };
 
     const onCanPlay = () => tryPlay();
+    const onCanPlayThrough = () => tryPlay();
 
     v.addEventListener("loadedmetadata", onLoadedMetadata, { once: true });
     v.addEventListener("timeupdate", onTimeUpdate);
     v.addEventListener("canplay", onCanPlay, { once: true });
+    v.addEventListener("canplaythrough", onCanPlayThrough, { once: true });
     
     // Visibility change to resume on tab focus
     const onVisibilityChange = () => {
@@ -76,6 +66,7 @@ export const HeroSection = () => {
       v.removeEventListener("loadedmetadata", onLoadedMetadata);
       v.removeEventListener("timeupdate", onTimeUpdate);
       v.removeEventListener("canplay", onCanPlay);
+      v.removeEventListener("canplaythrough", onCanPlayThrough);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       document.removeEventListener("touchstart", onFirstTap);
     };
@@ -101,14 +92,8 @@ export const HeroSection = () => {
         <source src={minionVideo} type="video/mp4" />
       </video>
       
-      {/* Luminous overlay - dimensional fade */}
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/40 to-background"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: videoEnded ? 1 : 0.3 }}
-        transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
-        style={{ transform: "translateZ(0)" }}
-      />
+      {/* Luminous overlay - static dimensional fade */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/40 to-background" />
       
       <div className="relative h-full flex flex-col justify-between p-6 sm:p-8 pt-safe">
         {/* Top section with profile */}
@@ -123,28 +108,7 @@ export const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* Bottom greeting - Dimensional fade with glow */}
-        <AnimatePresence>
-        {videoEnded && (
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-              className="flex flex-col justify-end pb-8 breathe"
-            >
-              <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-foreground mb-3 tracking-tight leading-tight" 
-                  style={{ textShadow: '0 4px 16px rgba(139, 110, 255, 0.25), 0 2px 8px rgba(83, 211, 194, 0.15)' }}>
-                {getGreeting()}
-              </h1>
-              <p className="text-lg font-accent text-muted-foreground tracking-wide" 
-                 style={{ textShadow: '0 2px 8px rgba(255, 255, 255, 0.9)' }}>
-                {getDate()}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Bottom spacer for swipeable content indicator */}
+        {/* Bottom spacer */}
         <div className="h-8" />
       </div>
     </div>
