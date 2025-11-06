@@ -89,7 +89,7 @@ const automations = [
     title: "Paris Flight Tracker",
     description: "Alert me on Paris flight price drops",
     enabled: false,
-    category: "internet",
+    category: "web",
   },
   {
     id: 6,
@@ -115,11 +115,36 @@ const automations = [
     title: "Doctor Appointment Finder",
     description: "Check my dentist's availability in next 10 days",
     enabled: false,
-    category: "internet",
+    category: "web",
   },
 ];
 
 const galleryCategories = [
+  {
+    title: "Web",
+    items: [
+      { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stock prices and get notified of changes" },
+      { icon: Globe, title: "Website Change Monitor", description: "Track changes on specific websites automatically" },
+      { icon: Music, title: "Concert Alerts", description: "Get notified when your favorite artists announce shows" },
+      { icon: Stethoscope, title: "Doctor Appointment Finder", description: "Find available appointment slots at your doctor's office" },
+      { icon: Droplet, title: "Water Bill Tracker", description: "Monitor water usage and predict monthly bills" },
+      { icon: ShoppingCart, title: "Grocery Deals", description: "Find best deals on your regular grocery items" },
+      { icon: Tv, title: "Streaming Service Tracker", description: "Track shows across multiple streaming platforms" },
+      { icon: Utensils, title: "Restaurant Wait Times", description: "Check real-time wait times at favorite restaurants" },
+      { icon: TrendingUp, title: "Competitor Monitoring", description: "Track competitor pricing and product launches" },
+      { icon: Briefcase, title: "Job Posting Alerts", description: "Alert for job postings at target companies" },
+      { icon: Users, title: "Social Media Monitor", description: "Track mentions and posts across social platforms" },
+      { icon: FileText, title: "News Aggregator", description: "Curate news from favorite sources daily" },
+      { icon: TrendingUp, title: "Cryptocurrency Tracker", description: "Monitor crypto portfolio and price alerts" },
+      { icon: Clock, title: "Weather & Traffic Combo", description: "Morning commute optimization with weather" },
+      { icon: Layout, title: "GitHub Activity Tracker", description: "Monitor repos, PRs, and issues" },
+      { icon: Briefcase, title: "LinkedIn Job Scanner", description: "Track job postings matching your skills" },
+      { icon: Users, title: "Reddit Trend Tracker", description: "Monitor specific subreddits for trends" },
+      { icon: Music, title: "YouTube Playlist Manager", description: "Track new videos from subscribed channels" },
+      { icon: Globe, title: "Domain & SSL Monitor", description: "Track domain expiration and SSL certificate status" },
+      { icon: TrendingDown, title: "API Health Monitor", description: "Monitor your favorite APIs uptime status" },
+    ],
+  },
   {
     title: "Email",
     items: [
@@ -146,21 +171,6 @@ const galleryCategories = [
       { icon: Utensils, title: "Meal Prep Reminders", description: "Plan and schedule weekly meal preparation sessions" },
       { icon: Users, title: "1-on-1 Meeting Scheduler", description: "Auto-schedule recurring 1-on-1s with team members" },
       { icon: TrendingUp, title: "Quarterly Planning Blocks", description: "Block time for OKR and quarterly planning sessions" },
-    ],
-  },
-  {
-    title: "Internet",
-    items: [
-      { icon: TrendingUp, title: "Stock Price Alerts", description: "Monitor stock prices and get notified of changes" },
-      { icon: Globe, title: "Website Change Monitor", description: "Track changes on specific websites automatically" },
-      { icon: Music, title: "Concert Alerts", description: "Get notified when your favorite artists announce shows" },
-      { icon: Stethoscope, title: "Doctor Appointment Finder", description: "Find available appointment slots at your doctor's office" },
-      { icon: Droplet, title: "Water Bill Tracker", description: "Monitor water usage and predict monthly bills" },
-      { icon: ShoppingCart, title: "Grocery Deals", description: "Find best deals on your regular grocery items" },
-      { icon: Tv, title: "Streaming Service Tracker", description: "Track shows across multiple streaming platforms" },
-      { icon: Utensils, title: "Restaurant Wait Times", description: "Check real-time wait times at favorite restaurants" },
-      { icon: TrendingUp, title: "Competitor Monitoring", description: "Track competitor pricing and product launches" },
-      { icon: Briefcase, title: "Job Posting Alerts", description: "Alert for job postings at target companies" },
     ],
   },
   {
@@ -195,9 +205,9 @@ const Automations = () => {
 
   const tabs = [
     { id: "all", label: "All" },
+    { id: "web", label: "Web" },
     { id: "email", label: "Emails" },
     { id: "calendar", label: "Calendar" },
-    { id: "internet", label: "Internet" },
   ];
 
   const filteredAutomations = activeTab === "all" 
@@ -236,7 +246,7 @@ const Automations = () => {
             className="flex items-center justify-between mb-4"
           >
             <div>
-              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">AI Minions</h1>
+              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">AI Mins</h1>
               <p className="text-sm text-muted-foreground">
                 {automations.filter(a => automationStates[a.id]).length} active
               </p>
@@ -296,7 +306,7 @@ const Automations = () => {
       <BottomSheet
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
-        title="AI Minions in Demand"
+        title="AI Mins in Demand"
       >
         <div className="space-y-8">
           {galleryCategories.map((category, catIndex) => (

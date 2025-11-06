@@ -6,9 +6,9 @@ interface SwipeableContentProps {
 }
 
 const SNAP_POINTS = {
-  COLLAPSED: 0.5, // 50% of screen
-  HALF: 0.75, // 75% of screen
-  FULL: 0.95, // 95% of screen
+  COLLAPSED: 0.65, // 65% of screen height - pulled up higher
+  HALF: 0.8, // 80% of screen height
+  FULL: 0.95, // 95% of screen height
 };
 
 const DRAG_THRESHOLD = 50; // pixels

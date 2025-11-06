@@ -32,7 +32,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <div className="relative h-[60vh] min-h-[500px] overflow-hidden bg-gradient-to-b from-background-gradient-start via-background to-background-gradient-end">
+    <div className="relative h-[35vh] min-h-[280px] overflow-hidden bg-gradient-to-b from-background-gradient-start via-background to-background-gradient-end">
       {/* Video Background - portrait optimized, autoplay muted loop */}
       <video
         autoPlay
@@ -42,10 +42,10 @@ export const HeroSection = () => {
         preload="auto"
         onEnded={() => setVideoEnded(true)}
         onTimeUpdate={handleTimeUpdate}
-        className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
           videoFading ? 'opacity-25' : 'opacity-100'
         }`}
-        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
+        style={{ transform: "translateZ(0) scale(1.35)", backfaceVisibility: "hidden", objectPosition: "center top" }}
       >
         <source src={minionVideo} type="video/mp4" />
       </video>
