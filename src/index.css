@@ -491,17 +491,7 @@ All colors MUST be HSL.
     padding-top: env(safe-area-inset-top, 0);
   }
 
-  /* Voice-First UI Styles */
-  .voice-glass {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 
-      0 0 0 1px rgba(139, 110, 255, 0.08),
-      0 8px 32px rgba(31, 29, 52, 0.12),
-      0 0 60px rgba(139, 110, 255, 0.12);
-  }
+  /* Voice-First UI Styles - duplicate removed, kept lines 232-237 */
 
   .asmi-message {
     font-size: 1.125rem;
@@ -554,5 +544,28 @@ All colors MUST be HSL.
 
   .animate-pulse-glow {
     animation: pulseGlow 3s ease-in-out infinite;
+  }
+
+  /* New Enhanced Animations */
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes orbitalRing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes pulseExpand {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  @keyframes floatParticle {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(15px, -20px); }
+    50% { transform: translate(-10px, -35px); }
+    75% { transform: translate(-20px, -15px); }
   }
 }

@@ -220,19 +220,18 @@ const Home = () => {
 
       {/* Main content */}
       <div className="relative h-full flex flex-col">
-        {/* Hero Section - Voice Interface or Chat */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-safe pb-24">
+      {/* Hero Section - Voice Interface or Chat */}
+        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pt-safe pb-32 sm:pb-24">
           <AnimatePresence mode="wait">
             {!conversationMode ? (
-              /* Initial Voice State */
               <motion.div
                 key="voice-mode"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="flex flex-col items-center gap-8 w-full max-w-2xl"
+                className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl"
               >
-                {/* Large Animated Asmi Avatar */}
+                {/* Large Animated Asmi Avatar - Responsive */}
                 <motion.div
                   animate={{
                     scale: [1, 1.05, 1],
@@ -246,17 +245,17 @@ const Home = () => {
                   <AsmiAvatar isThinking={isProcessing} isListening={false} />
                 </motion.div>
 
-                {/* Greeting */}
+                {/* Greeting - Responsive Text */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-center space-y-2"
+                  className="text-center space-y-2 px-4"
                 >
-                  <h1 className="text-4xl font-heading font-semibold text-foreground">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-semibold text-foreground">
                     Hey there, I'm Asmi
                   </h1>
-                  <p className="text-lg text-muted-foreground asmi-message">
+                  <p className="text-base sm:text-lg md:text-xl text-muted-foreground asmi-message">
                     What can I help you with today?
                   </p>
                 </motion.div>
@@ -271,27 +270,26 @@ const Home = () => {
                 </motion.div>
               </motion.div>
             ) : (
-              /* Conversation Mode */
               <motion.div
                 key="chat-mode"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full max-w-3xl h-full flex flex-col"
+                className="w-full max-w-3xl h-full flex flex-col px-4 sm:px-6"
               >
-                {/* Small Avatar at Top */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="scale-50">
+                {/* Small Avatar at Top - Mobile Scaled */}
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <div className="scale-[0.35] sm:scale-50 origin-left">
                     <AsmiAvatar isThinking={isProcessing || isExecuting} isListening={false} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-heading font-semibold text-foreground">Asmi</h2>
-                    <p className="text-sm text-muted-foreground">Your AI assistant</p>
+                    <h2 className="text-lg sm:text-xl font-heading font-semibold text-foreground">Asmi</h2>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Your AI assistant</p>
                   </div>
                 </div>
 
                 {/* Scrollable Chat Container */}
-                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-4 pb-4">
+                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 sm:space-y-4 pb-4">
                   {/* Conversation Messages */}
                   <AnimatePresence mode="popLayout">
                     {messages.map((message, index) => (
@@ -371,7 +369,7 @@ const Home = () => {
           </AnimatePresence>
         </div>
 
-        {/* Quick Actions - Bottom - Only show when not in conversation */}
+        {/* Quick Actions - Mobile First Design */}
         <AnimatePresence>
           {!conversationMode && (
             <motion.div
@@ -379,14 +377,21 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ delay: 0.7 }}
-              className="fixed bottom-0 left-0 right-0 pb-safe px-6 py-6 bg-gradient-to-t from-background via-background to-transparent"
+              className="fixed bottom-0 left-0 right-0 pb-safe"
             >
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-                {quickActions.map((action) => (
-                  <div key={action.label} className="snap-start">
-                    <QuickActionChip {...action} />
-                  </div>
-                ))}
+              <div className="px-4 sm:px-6 py-6 bg-background/90 backdrop-blur-xl border-t border-border">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
+                  {quickActions.map((action, index) => (
+                    <motion.div
+                      key={action.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 + index * 0.1 }}
+                    >
+                      <QuickActionChip {...action} />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}

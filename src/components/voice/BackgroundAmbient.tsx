@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const BackgroundAmbient = () => {
+  const isMobile = useIsMobile();
+  const particleCount = isMobile ? 6 : 15;
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Subtle ambient orbs - solid colors */}
+      {/* Enhanced ambient orbs - more visible */}
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-[0.08] blur-3xl bg-primary"
+        className="absolute w-[500px] h-[500px] rounded-full opacity-[0.15] blur-3xl bg-primary"
         style={{
           top: "-15%",
           left: "-5%",
@@ -23,7 +27,7 @@ export const BackgroundAmbient = () => {
       />
 
       <motion.div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-[0.06] blur-3xl bg-secondary"
+        className="absolute w-[400px] h-[400px] rounded-full opacity-[0.12] blur-3xl bg-secondary"
         style={{
           bottom: "-15%",
           right: "-5%",
@@ -41,7 +45,7 @@ export const BackgroundAmbient = () => {
       />
 
       <motion.div
-        className="absolute w-[350px] h-[350px] rounded-full opacity-[0.04] blur-3xl bg-accent"
+        className="absolute w-[350px] h-[350px] rounded-full opacity-[0.08] blur-3xl bg-accent"
         style={{
           top: "35%",
           right: "15%",
@@ -57,6 +61,29 @@ export const BackgroundAmbient = () => {
           ease: "easeInOut",
         }}
       />
+
+      {/* Floating particles */}
+      {Array.from({ length: particleCount }).map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-primary/20"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [-20, -40, -20],
+            x: [0, Math.random() * 20 - 10, 0],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: 8 + Math.random() * 4,
+            repeat: Infinity,
+            delay: Math.random() * 3,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
 
       {/* Fine grain texture for depth */}
       <div
