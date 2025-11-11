@@ -29,6 +29,11 @@ interface ExecutionStepType {
 
 const quickActions = [
   {
+    icon: Bot,
+    label: "AI Mins",
+    href: "/automations",
+  },
+  {
     icon: CreditCard,
     label: "Subscriptions",
     href: "/payments",
@@ -39,13 +44,8 @@ const quickActions = [
     href: "/bills",
   },
   {
-    icon: Bot,
-    label: "AI Mins",
-    href: "/automations",
-  },
-  {
     icon: User,
-    label: "Profile",
+    label: "Admin",
     href: "/profile",
   },
 ];
@@ -261,7 +261,7 @@ const Home = () => {
   };
 
   return (
-    <div className="h-screen fixed inset-0 overflow-hidden">
+    <div className="h-screen fixed inset-0 overflow-hidden w-full">
       <BackgroundAmbient />
 
       <div className="relative h-full flex flex-col">
@@ -306,9 +306,9 @@ const Home = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe"
+              className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10"
             >
-              <div className="flex justify-center items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
+              <div className="flex justify-center items-center gap-4 px-4 py-3 max-w-screen-sm mx-auto">
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={action.label}
