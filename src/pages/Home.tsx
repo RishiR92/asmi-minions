@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { CreditCard, Bell, Activity } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
-import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
 import { ExecutionProgress } from "@/components/voice/ExecutionProgress";
 import { ResultCard } from "@/components/voice/ResultCard";
@@ -28,27 +26,6 @@ interface ExecutionStep {
   result?: string;
 }
 
-const quickActions = [
-  {
-    icon: CreditCard,
-    label: "Subscriptions",
-    stat: "$127/mo",
-    href: "/payments",
-  },
-  {
-    icon: Bell,
-    label: "Bills",
-    stat: "4 due",
-    href: "/bills",
-  },
-  {
-    icon: Activity,
-    label: "Activity",
-    stat: "View all",
-    href: "/automations",
-  },
-];
-
 const Home = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
@@ -57,26 +34,19 @@ const Home = () => {
   const [showResult, setShowResult] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
 
+  const handleModify = () => {
+    setActionPlan(null);
+    const assistantMessage: Message = {
+      role: "assistant",
+      content: "Sure! What would you like me to change?",
+    };
+    setMessages((prev) => [...prev, assistantMessage]);
+  };
+
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
 
     const lowerText = text.toLowerCase();
-
-    // Check if this is a confirmation response
-    if (actionPlan && actionPlan.status === "pending") {
-      if (lowerText.includes("yes") || lowerText.includes("sure") || lowerText.includes("go ahead") || lowerText.includes("do it") || lowerText.includes("okay")) {
-        handleConfirm();
-        return;
-      } else if (lowerText.includes("no") || lowerText.includes("cancel") || lowerText.includes("stop")) {
-        setActionPlan(null);
-        const assistantMessage: Message = {
-          role: "assistant",
-          content: "No problem! What else can I help you with?",
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-        return;
-      }
-    }
 
     // Add user message
     const userMessage: Message = { role: "user", content: text };
@@ -257,13 +227,15 @@ const Home = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className="w-full"
-                >
-                  <ActionPlanCard
-                    plan={actionPlan.plan}
-                    steps={actionPlan.steps}
-                    status={actionPlan.status}
-                  />
-                </motion.div>
+          >
+            <ActionPlanCard
+              plan={actionPlan.plan}
+              steps={actionPlan.steps}
+              status={actionPlan.status}
+              onConfirm={handleConfirm}
+              onModify={handleModify}
+            />
+          </motion.div>
               )}
             </AnimatePresence>
 
@@ -303,36 +275,22 @@ const Home = () => {
               )}
             </AnimatePresence>
 
-            {/* Conversation History */}
-            <div className="w-full space-y-4 max-h-[200px] overflow-y-auto scrollbar-hide">
-              <AnimatePresence>
-                {messages.slice(-3).map((message, index) => (
-                  <ConversationMessage
-                    key={index}
-                    role={message.role}
-                    content={message.content}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
+            {/* Conversation History - Positioned below avatar */}
+            {messages.length > 0 && (
+              <div className="w-full space-y-3 mt-8">
+                <AnimatePresence mode="popLayout">
+                  {messages.slice(-4).map((message, index) => (
+                    <ConversationMessage
+                      key={`msg-${messages.length - 4 + index}`}
+                      role={message.role}
+                      content={message.content}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
           </motion.div>
         </div>
-
-        {/* Quick Actions - Bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="pb-safe px-6 py-6"
-        >
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-            {quickActions.map((action) => (
-              <div key={action.label} className="snap-start">
-                <QuickActionChip {...action} />
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );

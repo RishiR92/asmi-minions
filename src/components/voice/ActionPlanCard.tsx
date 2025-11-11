@@ -5,12 +5,16 @@ interface ActionPlanCardProps {
   plan: string;
   steps?: string[];
   status?: "pending" | "executing" | "completed";
+  onConfirm?: () => void;
+  onModify?: () => void;
 }
 
 export const ActionPlanCard = ({
   plan,
   steps,
   status = "pending",
+  onConfirm,
+  onModify,
 }: ActionPlanCardProps) => {
   return (
     <motion.div
@@ -55,6 +59,30 @@ export const ActionPlanCard = ({
               <span>{step}</span>
             </motion.div>
           ))}
+        </div>
+      )}
+
+      {/* Action buttons - only show when pending */}
+      {status === "pending" && onConfirm && (
+        <div className="flex gap-3 pt-2">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onConfirm}
+            className="flex-1 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
+          >
+            Confirm
+          </motion.button>
+          {onModify && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onModify}
+              className="flex-1 bg-secondary text-secondary-foreground px-6 py-3 rounded-xl font-medium hover:bg-secondary/90 transition-colors"
+            >
+              Modify
+            </motion.button>
+          )}
         </div>
       )}
     </motion.div>
