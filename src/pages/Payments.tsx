@@ -58,11 +58,11 @@ const Payments = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl gradient-accent flex items-center justify-center shadow-glow">
-                <CreditCard className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-secondary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Subscriptions</h1>
+                <h1 className="text-xl font-bold text-foreground">Subscriptions</h1>
                 <p className="text-sm text-muted-foreground">{subscriptions.length} active plans</p>
               </div>
             </div>
@@ -80,12 +80,12 @@ const Payments = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground mb-1">Monthly Spending</p>
-              <p className="text-4xl font-bold gradient-primary bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-primary">
                 ${totalMonthly.toFixed(2)}
               </p>
             </div>
-            <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-              <TrendingUp className="w-8 h-8 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center">
+              <TrendingUp className="w-7 h-7 text-primary-foreground" />
             </div>
           </div>
         </motion.div>
@@ -110,10 +110,10 @@ const Payments = () => {
               className="glass rounded-2xl p-5 sm:p-6 space-y-4 hover:scale-[1.01] transition-all duration-200"
               style={{ transform: "translateZ(0)" }}
             >
-              <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-medium flex-shrink-0">
-                    <CreditCard className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                    <CreditCard className="w-6 h-6 text-primary-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">

@@ -92,7 +92,7 @@ const Bills = () => {
 
   const getIconComponent = (iconName: string) => {
     const Icon = (LucideIcons as any)[iconName];
-    return Icon ? <Icon className="w-4 h-4" /> : <LucideIcons.Circle className="w-4 h-4" />;
+    return Icon ? <Icon className="w-5 h-5" /> : <LucideIcons.Circle className="w-5 h-5" />;
   };
 
   return (
@@ -122,30 +122,30 @@ const Bills = () => {
             {upcomingBills.map((bill, index) => (
               <motion.div
                 key={index}
-                className="glass rounded-xl p-3 flex items-center gap-3"
+                className="glass rounded-2xl p-4 space-y-3"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                {/* Smaller icon */}
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  {getIconComponent(bill.icon)}
-                </div>
-                
-                {/* Bill info - takes remaining space */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-sm text-foreground truncate">{bill.name}</h3>
-                    {getStatusBadge(bill.status)}
+                {/* Top row - icon, name, status */}
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <div className="text-primary">
+                      {getIconComponent(bill.icon)}
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">{bill.dueDate}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-base text-foreground mb-1">{bill.name}</h3>
+                    <p className="text-sm text-muted-foreground">{bill.dueDate}</p>
+                  </div>
+                  {getStatusBadge(bill.status)}
                 </div>
                 
-                {/* Amount and button in one row */}
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <p className="text-lg font-bold text-foreground">{bill.amount}</p>
-                  <Button size="sm" className="rounded-full h-8 text-xs px-4">
-                    Pay
+                {/* Bottom row - amount and button */}
+                <div className="flex items-center justify-between pt-2 border-t border-border/30">
+                  <p className="text-xl font-bold text-foreground">{bill.amount}</p>
+                  <Button size="sm" className="rounded-full h-9 px-6">
+                    Pay Now
                   </Button>
                 </div>
               </motion.div>

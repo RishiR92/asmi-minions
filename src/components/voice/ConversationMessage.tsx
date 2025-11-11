@@ -19,16 +19,16 @@ export const ConversationMessage = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      className={`flex gap-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}
     >
       {/* Avatar */}
       <div className="flex-shrink-0">
         {isUser ? (
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-voice-primary to-voice-accent flex items-center justify-center">
-            <User className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <User className="w-4 h-4 text-primary-foreground" />
           </div>
         ) : (
-          <div className="scale-[0.42] origin-top-left">
+          <div className="scale-[0.35] origin-top-left">
             <AsmiAvatar isThinking={isThinking} />
           </div>
         )}
@@ -36,14 +36,14 @@ export const ConversationMessage = ({
 
       {/* Message bubble */}
       <div
-        className={`flex-1 max-w-[80%] ${
+        className={`flex-1 max-w-[85%] ${
           isUser ? "text-right" : "text-left"
         }`}
       >
         <div
-          className={`inline-block px-4 py-3 rounded-2xl ${
+          className={`inline-block px-3 py-2 rounded-xl ${
             isUser
-              ? "bg-gradient-to-r from-voice-primary to-voice-accent text-white"
+              ? "bg-primary text-primary-foreground"
               : "voice-glass text-foreground"
           }`}
         >
@@ -52,7 +52,7 @@ export const ConversationMessage = ({
               {[...Array(3)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="w-2 h-2 rounded-full bg-voice-primary"
+                  className="w-2 h-2 rounded-full bg-primary"
                   animate={{
                     scale: [1, 1.3, 1],
                     opacity: [0.5, 1, 0.5],
@@ -66,7 +66,7 @@ export const ConversationMessage = ({
               ))}
             </div>
           ) : (
-            <p className={isUser ? "text-white" : "asmi-message"}>{content}</p>
+            <p className={`text-sm ${isUser ? "text-primary-foreground" : "asmi-message"}`}>{content}</p>
           )}
         </div>
       </div>

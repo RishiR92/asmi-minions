@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreditCard, Bell, Bot, CheckCircle2 } from "lucide-react";
+import { CreditCard, Bell, Bot } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
@@ -7,6 +7,7 @@ import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
 import { ExecutionStep } from "@/components/voice/ExecutionStep";
+import { ConfirmationCard } from "@/components/voice/ConfirmationCard";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -30,19 +31,16 @@ const quickActions = [
   {
     icon: CreditCard,
     label: "Subscriptions",
-    stat: "$127/mo",
     href: "/payments",
   },
   {
     icon: Bell,
     label: "Bills",
-    stat: "4 due",
     href: "/bills",
   },
   {
     icon: Bot,
     label: "AI Mins",
-    stat: "View all",
     href: "/automations",
   },
 ];
@@ -75,17 +73,48 @@ const getRandomResponse = (type: keyof typeof asmiResponses) => {
   return responses[Math.floor(Math.random() * responses.length)];
 };
 
-const generateConfirmation = (plan: string): string => {
+const generateConfirmation = (plan: string) => {
   const lowerPlan = plan.toLowerCase();
   
   if (lowerPlan.includes('movie') || lowerPlan.includes('ticket')) {
-    return `All done! 🎬\n\n**Booking Confirmation**\nMovie: Dune: Part Three\nTheater: AMC Downtown\nTime: Friday, 7:30 PM\nSeats: 2 tickets (Row G, Seats 12-13)\nTotal: $28.00\n\nConfirmation sent to your email. Have a great time!`;
+    return {
+      type: "movie" as const,
+      data: {
+        title: "Dune: Part Three",
+        location: "AMC Downtown",
+        datetime: "Friday, 7:30 PM",
+        seats: "2 tickets (Row G, Seats 12-13)",
+        amount: "$28.00",
+        confirmationNumber: "BK-" + Math.random().toString(36).substr(2, 6).toUpperCase()
+      }
+    };
   } else if (lowerPlan.includes('bill') || lowerPlan.includes('payment')) {
-    return `Payment complete! ✓\n\n**Transaction Details**\nAmount: $127.50\nMethod: •••• 4242\nConfirmation: #TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}\n\nReceipt sent to your email.`;
+    return {
+      type: "payment" as const,
+      data: {
+        amount: "$127.50",
+        method: "•••• 4242",
+        transactionId: "TXN-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        datetime: new Date().toLocaleString()
+      }
+    };
   } else if (lowerPlan.includes('schedule') || lowerPlan.includes('calendar')) {
-    return `Event added! 📅\n\n**Calendar Details**\nTitle: Team Meeting\nDate: Tomorrow, 2:00 PM\nDuration: 1 hour\nLocation: Conference Room B\n\nReminder set for 15 minutes before.`;
+    return {
+      type: "calendar" as const,
+      data: {
+        title: "Team Meeting",
+        datetime: "Tomorrow, 2:00 PM",
+        duration: "1 hour",
+        location: "Conference Room B"
+      }
+    };
   } else {
-    return `All set! ${getRandomResponse('success')}\n\nYour request has been completed successfully. Check your notifications for details.`;
+    return {
+      type: "generic" as const,
+      data: {
+        description: `All set! ${getRandomResponse('success')}\n\nYour request has been completed successfully.`
+      }
+    };
   }
 };
 
@@ -96,7 +125,7 @@ const Home = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStepType[]>([]);
   const [showResult, setShowResult] = useState(false);
-  const [finalResult, setFinalResult] = useState<string | null>(null);
+  const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -242,7 +271,7 @@ const Home = () => {
                   scale: [1, 1.02, 1],
                 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="w-32 h-32 sm:w-40 sm:h-40"
+                className="w-24 h-24 sm:w-32 sm:h-32"
               >
                 <AsmiAvatar isThinking={isProcessing} />
               </motion.div>
@@ -253,10 +282,10 @@ const Home = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center space-y-2"
               >
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-semibold text-foreground">
+                <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground">
                   Hey there, I'm Asmi
                 </h1>
-                <p className="text-base sm:text-lg text-muted-foreground">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   Tell me what you'd like me to help with today
                 </p>
               </motion.div>
@@ -270,18 +299,17 @@ const Home = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="mt-8 px-4 sm:px-6 pb-safe"
+              className="mt-8 w-full pb-safe"
             >
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2">
+              <div className="flex gap-6 overflow-x-auto scrollbar-hide px-6 py-2" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={action.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
-                    className="snap-start"
                   >
-                    <QuickActionChip {...action} size="sm" />
+                    <QuickActionChip {...action} />
                   </motion.div>
                 ))}
               </div>
@@ -295,14 +323,14 @@ const Home = () => {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 py-4 pt-safe border-b border-border"
+              className="flex items-center gap-3 py-3 pt-safe border-b border-border"
             >
-              <div className="w-12 h-12">
+              <div className="w-10 h-10">
                 <AsmiAvatar isThinking={isProcessing} />
               </div>
               <div>
-                <h2 className="text-lg font-heading font-semibold">Asmi</h2>
-                <p className="text-sm text-muted-foreground">Your personal assistant</p>
+                <h2 className="text-base font-heading font-semibold">Asmi</h2>
+                <p className="text-xs text-muted-foreground">Your personal assistant</p>
               </div>
             </motion.div>
 
@@ -339,19 +367,10 @@ const Home = () => {
 
                 {/* Final Confirmation - renders AFTER all steps */}
                 {finalResult && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="voice-glass rounded-2xl p-5 space-y-2"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <CheckCircle2 className="w-6 h-6 text-secondary" />
-                      <h3 className="font-semibold text-lg">Complete!</h3>
-                    </div>
-                    <div className="text-sm text-foreground whitespace-pre-line">
-                      {finalResult}
-                    </div>
-                  </motion.div>
+                  <ConfirmationCard 
+                    confirmationType={finalResult.type} 
+                    data={finalResult.data} 
+                  />
                 )}
               </AnimatePresence>
             </div>
