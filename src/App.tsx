@@ -15,7 +15,6 @@ import SubscriptionDetail from "./pages/SubscriptionDetail";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { GestureNav } from "./components/GestureNav";
-import { VideoShowcase } from "./components/VideoShowcase";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +27,6 @@ const App = () => (
         <div className="min-h-screen">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/showcase" element={<VideoShowcase />} />
             <Route path="/automations" element={<Automations />} />
             <Route path="/automation-detail" element={<AutomationDetail />} />
             <Route path="/mail" element={<MailHub />} />
