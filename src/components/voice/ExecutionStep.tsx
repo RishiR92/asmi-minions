@@ -25,7 +25,7 @@ export const ExecutionStep = ({ step, status }: ExecutionStepProps) => {
       ) : (
         <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
       )}
-      <span className={`text-sm ${status === "completed" ? "line-through text-muted-foreground" : "text-foreground"}`}>
+      <span className={`text-xs leading-relaxed ${status === "completed" ? "line-through text-muted-foreground" : "text-foreground"}`}>
         {step}
       </span>
     </motion.div>

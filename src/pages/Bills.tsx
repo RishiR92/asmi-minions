@@ -66,21 +66,21 @@ const Bills = () => {
     switch (status) {
       case "overdue":
         return (
-          <Badge variant="destructive" className="gap-1">
+          <Badge variant="destructive" className="gap-1 text-xs">
             <AlertCircle className="w-3 h-3" />
             Overdue
           </Badge>
         );
       case "due-soon":
         return (
-          <Badge variant="default" className="gap-1 bg-orange-500">
+          <Badge variant="default" className="gap-1 text-xs">
             <Clock className="w-3 h-3" />
             Due Soon
           </Badge>
         );
       case "upcoming":
         return (
-          <Badge variant="secondary" className="gap-1">
+          <Badge variant="secondary" className="gap-1 text-xs">
             <Clock className="w-3 h-3" />
             Upcoming
           </Badge>
@@ -167,8 +167,8 @@ const Bills = () => {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{bill.description}</p>

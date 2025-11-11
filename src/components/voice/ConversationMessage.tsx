@@ -41,7 +41,7 @@ export const ConversationMessage = ({
         }`}
       >
         <div
-          className={`inline-block px-3 py-2 rounded-xl ${
+          className={`inline-block px-2.5 py-1.5 rounded-xl ${
             isUser
               ? "bg-primary text-primary-foreground"
               : "voice-glass text-foreground"
@@ -66,7 +66,7 @@ export const ConversationMessage = ({
               ))}
             </div>
           ) : (
-            <p className={`text-sm ${isUser ? "text-primary-foreground" : "asmi-message"}`}>{content}</p>
+            <p className={`text-xs leading-relaxed ${isUser ? "text-primary-foreground" : "asmi-message"}`}>{content}</p>
           )}
         </div>
       </div>

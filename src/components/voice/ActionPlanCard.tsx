@@ -33,17 +33,17 @@ export const ActionPlanCard = ({
             <Clock className="w-5 h-5 text-voice-primary" />
           </motion.div>
         ) : status === "completed" ? (
-          <CheckCircle2 className="w-5 h-5 text-green-500" />
+          <CheckCircle2 className="w-5 h-5 text-primary" />
         ) : (
           <div className="w-5 h-5 rounded-full bg-voice-primary/20" />
         )}
-        <span className="text-sm font-medium text-muted-foreground">
+        <span className="text-xs font-medium text-muted-foreground">
           {status === "executing" ? "Working on it..." : status === "completed" ? "Done!" : "Action Plan"}
         </span>
       </div>
 
       {/* Plan description */}
-      <div className="asmi-message text-foreground">{plan}</div>
+      <div className="asmi-message text-foreground text-xs leading-relaxed">{plan}</div>
 
       {/* Steps if provided */}
       {steps.length > 0 && (
@@ -54,7 +54,7 @@ export const ActionPlanCard = ({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="text-sm text-muted-foreground flex items-start gap-2"
+              className="text-xs text-muted-foreground flex items-start gap-2"
             >
               <span className="text-voice-primary font-semibold">{index + 1}.</span>
               <span>{step}</span>
