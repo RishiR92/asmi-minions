@@ -6,6 +6,8 @@ import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
+import { ExecutionProgress } from "@/components/voice/ExecutionProgress";
+import { ResultCard } from "@/components/voice/ResultCard";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -17,6 +19,13 @@ interface ActionPlan {
   plan: string;
   steps: string[];
   status: "pending" | "executing" | "completed";
+}
+
+interface ExecutionStep {
+  id: number;
+  label: string;
+  status: "pending" | "in-progress" | "completed";
+  result?: string;
 }
 
 const quickActions = [
@@ -44,9 +53,30 @@ const Home = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
+  const [showResult, setShowResult] = useState(false);
+  const [isExecuting, setIsExecuting] = useState(false);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
+
+    const lowerText = text.toLowerCase();
+
+    // Check if this is a confirmation response
+    if (actionPlan && actionPlan.status === "pending") {
+      if (lowerText.includes("yes") || lowerText.includes("sure") || lowerText.includes("go ahead") || lowerText.includes("do it") || lowerText.includes("okay")) {
+        handleConfirm();
+        return;
+      } else if (lowerText.includes("no") || lowerText.includes("cancel") || lowerText.includes("stop")) {
+        setActionPlan(null);
+        const assistantMessage: Message = {
+          role: "assistant",
+          content: "No problem! What else can I help you with?",
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        return;
+      }
+    }
 
     // Add user message
     const userMessage: Message = { role: "user", content: text };
@@ -55,28 +85,27 @@ const Home = () => {
 
     // Simulate AI processing with action plan generation
     setTimeout(() => {
-      // Generate action plan based on user input
       let plan = "";
       let steps: string[] = [];
 
-      if (text.toLowerCase().includes("movie") || text.toLowerCase().includes("tickets")) {
-        plan = "I'll find the best-rated movies playing this Friday evening and book 2 tickets at your preferred theater.";
+      if (lowerText.includes("movie") || lowerText.includes("tickets")) {
+        plan = "Sounds great! I'll find the top-rated movies showing Friday evening and grab 2 tickets at your favorite theater. Should I go ahead with that?";
         steps = [
           "Search for highly-rated movies (IMDB 7+)",
           "Find showtimes for Friday 7-9PM",
           "Check availability at AMC Downtown",
           "Book 2 tickets and send confirmation",
         ];
-      } else if (text.toLowerCase().includes("dinner") || text.toLowerCase().includes("restaurant")) {
-        plan = "I'll make a reservation at a top-rated Japanese restaurant for this Sunday at 7PM.";
+      } else if (lowerText.includes("dinner") || lowerText.includes("restaurant")) {
+        plan = "Perfect! I'll book a table at a top-rated Japanese restaurant for this Sunday at 7PM. Sound good?";
         steps = [
           "Search for Japanese restaurants (4.5+ rating)",
           "Check availability for Sunday 7PM",
           "Make reservation for 2 people",
           "Add to your calendar",
         ];
-      } else if (text.toLowerCase().includes("bill") || text.toLowerCase().includes("pay")) {
-        plan = "I'll review your upcoming bills and set up automatic payments for recurring charges.";
+      } else if (lowerText.includes("bill") || lowerText.includes("pay")) {
+        plan = "Got it! I'll review your upcoming bills and set up automatic payments. Want me to proceed?";
         steps = [
           "Identify upcoming bill due dates",
           "Verify account balances",
@@ -84,7 +113,7 @@ const Home = () => {
           "Set up payment confirmations",
         ];
       } else {
-        plan = "I'll help you with that. Let me create a plan to get this done.";
+        plan = "I'll help you with that! Let me create a plan to get this done. Should I go ahead?";
         steps = [
           "Analyze your request",
           "Find the best approach",
@@ -102,28 +131,81 @@ const Home = () => {
     if (!actionPlan) return;
 
     setActionPlan({ ...actionPlan, status: "executing" });
+    setIsExecuting(true);
+    setShowResult(false);
 
-    // Simulate execution
-    setTimeout(() => {
-      setActionPlan({ ...actionPlan, status: "completed" });
-      
-      // Add assistant response
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: "Done! I've completed the task successfully. You'll receive a confirmation shortly.",
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
+    // Add "Awesome, working on it" message
+    const workingMessage: Message = {
+      role: "assistant",
+      content: "Awesome, working on it now! This'll just take a moment...",
+    };
+    setMessages((prev) => [...prev, workingMessage]);
 
-      // Clear action plan after 2 seconds
+    // Initialize execution steps
+    const steps: ExecutionStep[] = actionPlan.steps.map((step, index) => ({
+      id: index,
+      label: step,
+      status: "pending",
+    }));
+    setExecutionSteps(steps);
+
+    // Execute steps sequentially
+    let currentStep = 0;
+    const executeNextStep = () => {
+      if (currentStep >= steps.length) {
+        // All steps completed
+        setTimeout(() => {
+          setIsExecuting(false);
+          setShowResult(true);
+          setActionPlan({ ...actionPlan, status: "completed" });
+
+          // Add completion message
+          const completionMessage: Message = {
+            role: "assistant",
+            content: "All set! You're booked for Dune 3 at AMC Downtown, Friday 7:30 PM. I sent the confirmation to your email. Enjoy the movie! 🎬",
+          };
+          setMessages((prev) => [...prev, completionMessage]);
+
+          // Clear everything after showing result
+          setTimeout(() => {
+            setActionPlan(null);
+            setExecutionSteps([]);
+            setShowResult(false);
+          }, 5000);
+        }, 1000);
+        return;
+      }
+
+      // Mark current step as in-progress
+      setExecutionSteps((prev) =>
+        prev.map((s, i) =>
+          i === currentStep ? { ...s, status: "in-progress" } : s
+        )
+      );
+
+      // Complete current step after delay
       setTimeout(() => {
-        setActionPlan(null);
-      }, 2000);
-    }, 3000);
-  };
+        const results = [
+          "Found 3 movies (Dune 3, Oppenheimer 2, Avatar 4)",
+          "Found 5 available showtimes",
+          "Tickets booked successfully",
+          "Confirmation sent to your inbox",
+        ];
 
-  const handleModify = () => {
-    // For now, just clear the plan - in real app would allow editing
-    setActionPlan(null);
+        setExecutionSteps((prev) =>
+          prev.map((s, i) =>
+            i === currentStep
+              ? { ...s, status: "completed", result: results[currentStep] || "Done" }
+              : s
+          )
+        );
+
+        currentStep++;
+        executeNextStep();
+      }, 1500);
+    };
+
+    executeNextStep();
   };
 
   return (
@@ -141,7 +223,7 @@ const Home = () => {
             className="flex flex-col items-center gap-8 w-full max-w-2xl"
           >
             {/* Asmi Avatar */}
-            <AsmiAvatar isThinking={isProcessing} isListening={false} />
+            <AsmiAvatar isThinking={isProcessing || isExecuting} isListening={false} />
 
             {/* Greeting */}
             <motion.div
@@ -151,9 +233,9 @@ const Home = () => {
               className="text-center space-y-2"
             >
               <h1 className="text-3xl font-heading font-semibold text-foreground">
-                Hi there, I'm Asmi
+                Hey there, I'm Asmi
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground asmi-message">
                 What can I help you with today?
               </p>
             </motion.div>
@@ -169,7 +251,7 @@ const Home = () => {
 
             {/* Action Plan Card */}
             <AnimatePresence>
-              {actionPlan && (
+              {actionPlan && !isExecuting && !showResult && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -180,8 +262,42 @@ const Home = () => {
                     plan={actionPlan.plan}
                     steps={actionPlan.steps}
                     status={actionPlan.status}
-                    onConfirm={handleConfirm}
-                    onModify={handleModify}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Execution Progress */}
+            <AnimatePresence>
+              {isExecuting && executionSteps.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="w-full glass-sheet rounded-2xl p-5"
+                >
+                  <ExecutionProgress steps={executionSteps} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Result Card */}
+            <AnimatePresence>
+              {showResult && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full"
+                >
+                  <ResultCard
+                    title="Dune 3"
+                    subtitle="AMC Downtown"
+                    details={[
+                      "📅 Friday, 7:30 PM",
+                      "🎟️ 2 tickets - Seats G12, G13",
+                      "✅ Confirmation sent to your email",
+                    ]}
                   />
                 </motion.div>
               )}

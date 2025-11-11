@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AutomationCard } from "@/components/AutomationCard";
-import { BottomSheet } from "@/components/BottomSheet";
+
 import { HorizontalScroll } from "@/components/HorizontalScroll";
 import { Button } from "@/components/ui/button";
 
@@ -160,11 +160,9 @@ const galleryCategories = [
 const Automations = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [automationStates, setAutomationStates] = useState(
     automations.reduce((acc, auto) => ({ ...acc, [auto.id]: auto.enabled }), {})
   );
-  const [addedAutomations, setAddedAutomations] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const tabs = [
@@ -177,27 +175,6 @@ const Automations = () => {
   const filteredAutomations = activeTab === "all" 
     ? automations 
     : automations.filter(a => a.category === activeTab);
-
-  const handleAddAutomation = (title: string) => {
-    const automationKey = title.toLowerCase().replace(/\s+/g, '-');
-    if (addedAutomations.has(automationKey)) {
-      setAddedAutomations(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(automationKey);
-        return newSet;
-      });
-      toast({
-        title: "Automation removed",
-        description: `${title} has been removed.`,
-      });
-    } else {
-      setAddedAutomations(prev => new Set(prev).add(automationKey));
-      toast({
-        title: "Automation added",
-        description: `${title} has been added successfully!`,
-      });
-    }
-  };
 
   return (
     <div className="min-h-screen pt-safe pb-safe pb-20">
@@ -216,7 +193,7 @@ const Automations = () => {
               </p>
             </div>
             <Button
-              onClick={() => setIsGalleryOpen(true)}
+              onClick={() => toast({ title: "Coming soon!", description: "AI Mins gallery will be available soon." })}
               size="icon"
               className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft min-h-[44px] min-w-[44px]"
             >
@@ -265,63 +242,6 @@ const Automations = () => {
           />
         ))}
       </div>
-
-      {/* Automation Gallery Bottom Sheet */}
-      <BottomSheet
-        isOpen={isGalleryOpen}
-        onClose={() => setIsGalleryOpen(false)}
-        title="AI Mins in Demand"
-      >
-        <div className="space-y-8">
-          {galleryCategories.map((category, catIndex) => (
-            <div key={catIndex} className="space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">
-                {category.title}
-              </h3>
-              <HorizontalScroll>
-                {category.items.map((item, itemIndex) => {
-                  const Icon = item.icon;
-                  const automationKey = item.title.toLowerCase().replace(/\s+/g, '-');
-                  const isAdded = addedAutomations.has(automationKey);
-                  return (
-                    <div
-                      key={itemIndex}
-                      className="liquid-glass rounded-3xl p-5 min-w-[280px] max-w-[280px] cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex-shrink-0 border border-white/10"
-                      style={{ 
-                        transform: "translateZ(0)",
-                        backdropFilter: "blur(20px) saturate(180%)",
-                        WebkitBackdropFilter: "blur(20px) saturate(180%)"
-                      }}
-                      onClick={() => handleAddAutomation(item.title)}
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <button
-                          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
-                            isAdded 
-                              ? 'bg-primary text-primary-foreground shadow-md' 
-                              : 'bg-white/10 text-muted-foreground hover:bg-white/20'
-                          }`}
-                        >
-                          {isAdded ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                        </button>
-                      </div>
-                      <h4 className="text-base font-semibold text-foreground mb-2 leading-tight">
-                        {item.title}
-                      </h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                        {item.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </HorizontalScroll>
-            </div>
-          ))}
-        </div>
-      </BottomSheet>
     </div>
   );
 };
