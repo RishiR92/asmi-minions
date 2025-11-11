@@ -3,11 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, SkipForward, SkipBack, RotateCcw } from "lucide-react";
 import { SceneHero } from "./showcase/SceneHero";
 import { SceneHome } from "./showcase/SceneHome";
+import { SceneBrowseMins } from "./showcase/SceneBrowseMins";
 import { SceneAutomations } from "./showcase/SceneAutomations";
-import { SceneMail } from "./showcase/SceneMail";
-import { SceneCalendar } from "./showcase/SceneCalendar";
-import { ScenePayments } from "./showcase/ScenePayments";
-import { SceneBills } from "./showcase/SceneBills";
+import { SceneAutomationWork } from "./showcase/SceneAutomationWork";
+import { SceneFinance } from "./showcase/SceneFinance";
 import { SceneProfile } from "./showcase/SceneProfile";
 import { SceneFinal } from "./showcase/SceneFinal";
 
@@ -21,11 +20,10 @@ interface Scene {
 const scenes: Scene[] = [
   { id: "hero", component: SceneHero, duration: 3, title: "Welcome" },
   { id: "home", component: SceneHome, duration: 4, title: "Dashboard" },
-  { id: "automations", component: SceneAutomations, duration: 5, title: "AI Automations" },
-  { id: "mail", component: SceneMail, duration: 4, title: "Mail Hub" },
-  { id: "calendar", component: SceneCalendar, duration: 4, title: "Smart Calendar" },
-  { id: "payments", component: ScenePayments, duration: 4, title: "Subscriptions" },
-  { id: "bills", component: SceneBills, duration: 4, title: "Bill Management" },
+  { id: "browse", component: SceneBrowseMins, duration: 5, title: "Browse AI Mins" },
+  { id: "automations", component: SceneAutomations, duration: 4, title: "My Automations" },
+  { id: "how-it-works", component: SceneAutomationWork, duration: 5, title: "How It Works" },
+  { id: "finance", component: SceneFinance, duration: 4, title: "Finance Hub" },
   { id: "profile", component: SceneProfile, duration: 3, title: "Connected Profile" },
   { id: "final", component: SceneFinal, duration: 4, title: "Get Started" },
 ];
@@ -81,8 +79,8 @@ export const VideoShowcase = () => {
 
   return (
     <div className="fixed inset-0 bg-background flex items-center justify-center">
-      {/* Main showcase container - mobile aspect ratio */}
-      <div className="relative w-full h-full max-w-[1080px] max-h-[1920px] bg-background shadow-2xl overflow-hidden">
+      {/* Main showcase container - mobile portrait optimized */}
+      <div className="relative w-full h-full max-w-[430px] aspect-[9/19.5] mx-auto bg-background shadow-2xl overflow-hidden rounded-3xl border-8 border-foreground/10">
         {/* Scene content */}
         <AnimatePresence mode="wait">
           <motion.div
