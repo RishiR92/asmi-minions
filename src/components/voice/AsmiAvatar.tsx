@@ -70,18 +70,26 @@ export const AsmiAvatar = ({ isThinking, isListening }: AsmiAvatarProps) => {
       {/* Main avatar - solid navy circle with glow */}
       <motion.div
         className="absolute inset-0 rounded-full bg-primary shadow-glow"
-        animate={{
-          boxShadow: isThinking 
-            ? [
-                "0 0 20px hsla(220, 40%, 35%, 0.3)",
-                "0 0 40px hsla(220, 40%, 35%, 0.5)",
-                "0 0 20px hsla(220, 40%, 35%, 0.3)"
-              ]
-            : "0 0 20px hsla(220, 40%, 35%, 0.3)"
-        }}
+        animate={
+          isThinking
+            ? {
+                boxShadow: [
+                  "0 0 20px hsl(var(--voice-primary) / 0.3)",
+                  "0 0 40px hsl(var(--voice-primary) / 0.6)",
+                  "0 0 20px hsl(var(--voice-primary) / 0.3)",
+                ],
+              }
+            : {
+                boxShadow: [
+                  "0 0 30px hsl(var(--voice-primary) / 0.3)",
+                  "0 0 50px hsl(var(--voice-primary) / 0.5)",
+                  "0 0 30px hsl(var(--voice-primary) / 0.3)",
+                ],
+              }
+        }
         transition={{
-          duration: 2,
-          repeat: isThinking ? Infinity : 0,
+          duration: isThinking ? 2 : 4,
+          repeat: Infinity,
           ease: "easeInOut",
         }}
       >
