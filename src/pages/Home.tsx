@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreditCard, Bell, Activity } from "lucide-react";
+import { CreditCard, Bell, Activity, CheckCircle2 } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
@@ -75,6 +75,20 @@ const getRandomResponse = (type: keyof typeof asmiResponses) => {
   return responses[Math.floor(Math.random() * responses.length)];
 };
 
+const generateConfirmation = (plan: string): string => {
+  const lowerPlan = plan.toLowerCase();
+  
+  if (lowerPlan.includes('movie') || lowerPlan.includes('ticket')) {
+    return `All done! 🎬\n\n**Booking Confirmation**\nMovie: Dune: Part Three\nTheater: AMC Downtown\nTime: Friday, 7:30 PM\nSeats: 2 tickets (Row G, Seats 12-13)\nTotal: $28.00\n\nConfirmation sent to your email. Have a great time!`;
+  } else if (lowerPlan.includes('bill') || lowerPlan.includes('payment')) {
+    return `Payment complete! ✓\n\n**Transaction Details**\nAmount: $127.50\nMethod: •••• 4242\nConfirmation: #TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}\n\nReceipt sent to your email.`;
+  } else if (lowerPlan.includes('schedule') || lowerPlan.includes('calendar')) {
+    return `Event added! 📅\n\n**Calendar Details**\nTitle: Team Meeting\nDate: Tomorrow, 2:00 PM\nDuration: 1 hour\nLocation: Conference Room B\n\nReminder set for 15 minutes before.`;
+  } else {
+    return `All set! ${getRandomResponse('success')}\n\nYour request has been completed successfully. Check your notifications for details.`;
+  }
+};
+
 const Home = () => {
   const [conversationMode, setConversationMode] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -82,6 +96,7 @@ const Home = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStepType[]>([]);
   const [showResult, setShowResult] = useState(false);
+  const [finalResult, setFinalResult] = useState<string | null>(null);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -154,7 +169,6 @@ const Home = () => {
 
     setActionPlan({ ...actionPlan, status: "executing" });
     
-    // Initialize execution steps
     const steps = actionPlan.steps.map(step => ({
       text: step,
       status: "pending" as const
@@ -164,26 +178,37 @@ const Home = () => {
     // Execute steps sequentially
     steps.forEach((_, index) => {
       setTimeout(() => {
+        // Mark current step as executing, then completed
         setExecutionSteps(prev => 
           prev.map((step, i) => 
-            i === index ? { ...step, status: "completed" as const } : step
+            i === index 
+              ? { ...step, status: "executing" as const } 
+              : i < index 
+                ? { ...step, status: "completed" as const }
+                : step
           )
         );
         
-        // After last step
-        if (index === steps.length - 1) {
-          setTimeout(() => {
-            setActionPlan(prev => prev ? { ...prev, status: "completed" } : null);
-            setShowResult(true);
-            
-            const successMessage: Message = {
-              role: "assistant",
-              content: getRandomResponse('success')
-            };
-            setMessages(prev => [...prev, successMessage]);
-          }, 500);
-        }
-      }, (index + 1) * 1500);
+        setTimeout(() => {
+          setExecutionSteps(prev => 
+            prev.map((step, i) => 
+              i === index ? { ...step, status: "completed" as const } : step
+            )
+          );
+          
+          // After last step, show final confirmation
+          if (index === steps.length - 1) {
+            setTimeout(() => {
+              setActionPlan(prev => prev ? { ...prev, status: "completed" } : null);
+              setShowResult(true);
+              
+              // Generate detailed confirmation based on the request
+              const confirmationDetails = generateConfirmation(actionPlan.plan);
+              setFinalResult(confirmationDetails);
+            }, 500);
+          }
+        }, 800);
+      }, index * 2000);
     });
   };
 
@@ -197,6 +222,7 @@ const Home = () => {
     setActionPlan(null);
     setExecutionSteps([]);
     setShowResult(false);
+    setFinalResult(null);
     setIsProcessing(false);
   };
 
@@ -309,6 +335,23 @@ const Home = () => {
                     status={step.status}
                   />
                 ))}
+
+                {/* Final Confirmation - renders AFTER all steps */}
+                {finalResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="voice-glass rounded-2xl p-5 space-y-2"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <CheckCircle2 className="w-6 h-6 text-secondary" />
+                      <h3 className="font-semibold text-lg">Complete!</h3>
+                    </div>
+                    <div className="text-sm text-foreground whitespace-pre-line">
+                      {finalResult}
+                    </div>
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
 

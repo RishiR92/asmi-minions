@@ -92,7 +92,7 @@ const Bills = () => {
 
   const getIconComponent = (iconName: string) => {
     const Icon = (LucideIcons as any)[iconName];
-    return Icon ? <Icon className="w-5 h-5" /> : <LucideIcons.Circle className="w-5 h-5" />;
+    return Icon ? <Icon className="w-4 h-4" /> : <LucideIcons.Circle className="w-4 h-4" />;
   };
 
   return (
@@ -118,34 +118,35 @@ const Bills = () => {
         {/* Upcoming Bills Section */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-foreground px-1">Bills & Payments</h2>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {upcomingBills.map((bill, index) => (
               <motion.div
                 key={index}
-                className="glass rounded-2xl p-4"
-                style={{ transform: "translateZ(0)" }}
+                className="glass rounded-xl p-3 flex items-center gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    {getIconComponent(bill.icon)}
+                {/* Smaller icon */}
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  {getIconComponent(bill.icon)}
+                </div>
+                
+                {/* Bill info - takes remaining space */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-semibold text-sm text-foreground truncate">{bill.name}</h3>
+                    {getStatusBadge(bill.status)}
                   </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div>
-                        <h3 className="font-semibold text-foreground">{bill.name}</h3>
-                        <p className="text-sm text-muted-foreground">{bill.dueDate}</p>
-                      </div>
-                      {getStatusBadge(bill.status)}
-                    </div>
-                    
-                    <div className="flex items-center justify-between gap-3 mt-3">
-                      <p className="text-xl font-bold text-foreground">{bill.amount}</p>
-                      <Button size="sm" className="rounded-full">
-                        Pay Now
-                      </Button>
-                    </div>
-                  </div>
+                  <p className="text-xs text-muted-foreground">{bill.dueDate}</p>
+                </div>
+                
+                {/* Amount and button in one row */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <p className="text-lg font-bold text-foreground">{bill.amount}</p>
+                  <Button size="sm" className="rounded-full h-8 text-xs px-4">
+                    Pay
+                  </Button>
                 </div>
               </motion.div>
             ))}
