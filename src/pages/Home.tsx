@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreditCard, Bell, Activity, CheckCircle2 } from "lucide-react";
+import { CreditCard, Bell, Bot, CheckCircle2 } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
@@ -40,8 +40,8 @@ const quickActions = [
     href: "/bills",
   },
   {
-    icon: Activity,
-    label: "Activity",
+    icon: Bot,
+    label: "AI Mins",
     stat: "View all",
     href: "/automations",
   },
@@ -265,22 +265,23 @@ const Home = () => {
               <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
             </motion.div>
 
-            {/* Quick Actions - Mobile optimized grid */}
+            {/* Quick Actions - Horizontal scroll row */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="absolute bottom-0 left-0 right-0 pb-safe px-4 sm:px-6 py-6"
+              className="mt-8 px-4 sm:px-6 pb-safe"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2">
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={action.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
+                    className="snap-start"
                   >
-                    <QuickActionChip {...action} />
+                    <QuickActionChip {...action} size="sm" />
                   </motion.div>
                 ))}
               </div>

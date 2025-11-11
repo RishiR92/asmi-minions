@@ -31,9 +31,9 @@ const AutomationCardComponent = ({
     >
       <div className="flex items-start gap-4">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-          enabled ? "gradient-primary shadow-glow" : "bg-muted"
+          enabled ? "bg-primary shadow-glow" : "bg-muted"
         }`}>
-          <Icon className={`w-6 h-6 ${enabled ? "text-white" : "text-muted-foreground"}`} />
+          <Icon className={`w-6 h-6 ${enabled ? "text-primary-foreground" : "text-muted-foreground"}`} />
         </div>
         
         <div className="flex-1 min-w-0">

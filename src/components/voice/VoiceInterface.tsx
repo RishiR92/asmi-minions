@@ -150,7 +150,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="text-center px-6 py-3 voice-glass rounded-2xl max-w-md"
+            className="relative z-20 text-center px-6 py-3 voice-glass rounded-2xl max-w-md"
           >
             <p className="text-foreground/80 text-sm">{transcript}</p>
           </motion.div>

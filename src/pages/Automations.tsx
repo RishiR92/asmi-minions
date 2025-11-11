@@ -295,8 +295,8 @@ const Automations = () => {
                       onClick={() => handleAddAutomation(item.title)}
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
-                          <Icon className="w-6 h-6 text-white" />
+                        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg">
+                          <Icon className="w-6 h-6 text-primary-foreground" />
                         </div>
                         <button
                           className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
