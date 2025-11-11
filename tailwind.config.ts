@@ -63,6 +63,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        voice: {
+          primary: "hsl(var(--voice-primary))",
+          secondary: "hsl(var(--voice-secondary))",
+          accent: "hsl(var(--voice-accent))",
+          surface: "hsl(var(--voice-surface))",
+          overlay: "hsl(var(--voice-overlay))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

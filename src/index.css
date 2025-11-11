@@ -8,43 +8,50 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Luminous Depth - Mist Lilac → Soft Cloud */
-    --background: 255 100% 99%;
-    --background-gradient-start: 250 100% 98%;
-    --background-gradient-end: 210 20% 98%;
-    --foreground: 254 38% 14%;
-    
-    /* Electric Lilac - Primary Intelligence */
-    --primary: 254 100% 71%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 254 100% 80%;
-    
-    /* Translucent Frost - Card Surface */
-    --card: 0 0% 100% / 0.75;
-    --card-foreground: 254 38% 14%;
-    
-    --popover: 0 0% 100% / 0.9;
-    --popover-foreground: 254 38% 14%;
-    
-    /* Soft Aqua - Calm Energy */
-    --secondary: 173 57% 58%;
-    --secondary-foreground: 254 38% 14%;
-    
-    /* Subtle Mist - Muted */
-    --muted: 250 40% 97%;
-    --muted-foreground: 251 15% 52%;
-    
-    /* Coral Glow - Emotional Warmth */
-    --accent: 10 100% 76%;
-    --accent-foreground: 254 38% 14%;
-    
-    --destructive: 0 65% 50%;
-    --destructive-foreground: 0 0% 100%;
-    
-    /* Soft Borders */
-    --border: 250 30% 94%;
-    --input: 250 30% 94%;
-    --ring: 254 100% 71%;
+  /* Luminous Depth - Mist Lilac → Soft Cloud */
+  --background: 255 100% 99%;
+  --background-gradient-start: 250 100% 98%;
+  --background-gradient-end: 210 20% 98%;
+  --foreground: 254 38% 14%;
+  
+  /* Electric Lilac - Primary Intelligence */
+  --primary: 254 100% 71%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 254 100% 80%;
+  
+  /* Translucent Frost - Card Surface */
+  --card: 0 0% 100% / 0.75;
+  --card-foreground: 254 38% 14%;
+  
+  --popover: 0 0% 100% / 0.9;
+  --popover-foreground: 254 38% 14%;
+  
+  /* Soft Aqua - Calm Energy */
+  --secondary: 173 57% 58%;
+  --secondary-foreground: 254 38% 14%;
+  
+  /* Subtle Mist - Muted */
+  --muted: 250 40% 97%;
+  --muted-foreground: 251 15% 52%;
+  
+  /* Coral Glow - Emotional Warmth */
+  --accent: 10 100% 76%;
+  --accent-foreground: 254 38% 14%;
+  
+  --destructive: 0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Soft Borders */
+  --border: 250 30% 94%;
+  --input: 250 30% 94%;
+  --ring: 254 100% 71%;
+
+  /* Voice-First Theme Colors */
+  --voice-primary: 254 100% 71%;
+  --voice-secondary: 173 57% 58%;
+  --voice-accent: 280 90% 65%;
+  --voice-surface: 0 0% 100%;
+  --voice-overlay: 252 38% 16%;
 
     --radius: 1.25rem;
     
@@ -91,6 +98,13 @@ All colors MUST be HSL.
     --border: 265 20% 25%;
     --input: 265 20% 25%;
     --ring: 175 65% 60%;
+
+    /* Voice-First Theme Colors - Dark Mode */
+    --voice-primary: 254 100% 71%;
+    --voice-secondary: 173 57% 58%;
+    --voice-accent: 280 90% 65%;
+    --voice-surface: 252 38% 16%;
+    --voice-overlay: 252 38% 12%;
   }
 }
 
@@ -539,5 +553,70 @@ All colors MUST be HSL.
   
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0);
+  }
+
+  /* Voice-First UI Styles */
+  .voice-glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 0 0 1px rgba(139, 110, 255, 0.08),
+      0 8px 32px rgba(31, 29, 52, 0.12),
+      0 0 60px rgba(139, 110, 255, 0.12);
+  }
+
+  .asmi-message {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+
+  @keyframes voiceRipple {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  .animate-voice-ripple {
+    animation: voiceRipple 1.5s ease-out infinite;
+  }
+
+  @keyframes ambientBreathing {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.05) translateY(-10px); }
+  }
+
+  .animate-ambient-breathing {
+    animation: ambientBreathing 8s ease-in-out infinite;
+  }
+
+  @keyframes soundWave {
+    0%, 100% { height: 20%; }
+    50% { height: 100%; }
+  }
+
+  .animate-sound-wave {
+    animation: soundWave 0.6s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { 
+      box-shadow: 
+        0 0 20px rgba(139, 110, 255, 0.4),
+        0 0 40px rgba(139, 110, 255, 0.2),
+        0 0 60px rgba(83, 211, 194, 0.1);
+    }
+    50% { 
+      box-shadow: 
+        0 0 40px rgba(139, 110, 255, 0.6),
+        0 0 80px rgba(139, 110, 255, 0.4),
+        0 0 120px rgba(83, 211, 194, 0.2);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
   }
 }
