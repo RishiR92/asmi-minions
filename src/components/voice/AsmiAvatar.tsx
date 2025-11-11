@@ -7,17 +7,18 @@ interface AsmiAvatarProps {
 
 export const AsmiAvatar = ({ isThinking = false, isListening = false }: AsmiAvatarProps) => {
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full h-full">
       {/* Outer glow rings */}
       <motion.div
-        className="absolute w-32 h-32 rounded-full"
+        className="absolute inset-0 rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(139, 110, 255, 0.2) 0%, transparent 70%)",
+          background: "rgba(220, 40, 35, 0.15)",
+          filter: "blur(20px)",
         }}
         animate={
           isListening
             ? {
-                scale: [1, 1.3, 1],
+                scale: [1, 1.2, 1],
                 opacity: [0.5, 0.8, 0.5],
               }
             : {}
@@ -27,9 +28,10 @@ export const AsmiAvatar = ({ isThinking = false, isListening = false }: AsmiAvat
 
       {/* Main avatar orb */}
       <motion.div
-        className="relative w-24 h-24 rounded-full overflow-hidden animate-pulse-glow"
+        className="relative w-full h-full rounded-full overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, hsl(254 100% 71%) 0%, hsl(280 90% 65%) 50%, hsl(173 57% 58%) 100%)",
+          background: "hsl(220, 40%, 35%)",
+          boxShadow: "0 0 40px rgba(220, 40, 35, 0.4), 0 0 80px rgba(220, 40, 35, 0.2)",
         }}
         animate={
           isThinking
@@ -38,37 +40,40 @@ export const AsmiAvatar = ({ isThinking = false, isListening = false }: AsmiAvat
               }
             : isListening
             ? {
-                scale: [1, 1.1, 1],
+                scale: [1, 1.05, 1],
               }
-            : {}
+            : {
+                scale: [1, 1.02, 1],
+              }
         }
         transition={
           isThinking
             ? { duration: 3, repeat: Infinity, ease: "linear" }
-            : { duration: 1.5, repeat: Infinity }
+            : { duration: 3, repeat: Infinity, ease: "easeInOut" }
         }
       >
         {/* Inner shimmer */}
         <motion.div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)",
+            background: "linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)",
           }}
           animate={{
             x: ["-100%", "100%"],
           }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
 
         {/* Pulsing core */}
         <motion.div
-          className="absolute inset-4 rounded-full"
+          className="absolute inset-[30%] rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%)",
+            background: "rgba(255, 255, 255, 0.6)",
+            filter: "blur(10px)",
           }}
           animate={{
             scale: [0.8, 1, 0.8],
-            opacity: [0.6, 1, 0.6],
+            opacity: [0.4, 0.8, 0.4],
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />

@@ -69,7 +69,7 @@ export const ActionPlanCard = ({
           {onConfirm && (
             <Button
               onClick={onConfirm}
-              className="flex-1 bg-gradient-to-r from-voice-primary to-voice-accent text-white hover:opacity-90"
+              className="flex-1 bg-primary text-white hover:bg-primary/90"
             >
               Confirm
             </Button>

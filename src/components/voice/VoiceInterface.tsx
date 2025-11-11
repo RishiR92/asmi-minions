@@ -99,18 +99,18 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
 
         {/* Main button */}
         <motion.div
-          className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
+          className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all duration-300 ${
             isListening
-              ? "bg-gradient-to-br from-voice-primary to-voice-accent shadow-lg shadow-voice-primary/50"
+              ? "bg-primary shadow-lg shadow-primary/50"
               : "voice-glass"
           } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
           animate={isListening ? { scale: [1, 1.05, 1] } : {}}
           transition={{ duration: 1, repeat: isListening ? Infinity : 0 }}
         >
           {isListening ? (
-            <Mic className="w-8 h-8 text-white" />
+            <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           ) : (
-            <MicOff className="w-8 h-8 text-voice-primary" />
+            <MicOff className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
           )}
         </motion.div>
       </motion.button>
@@ -127,7 +127,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-1 bg-gradient-to-t from-voice-primary to-voice-secondary rounded-full"
+                className="w-1 bg-primary rounded-full"
                 animate={{
                   height: ["20%", "100%", "20%"],
                 }}

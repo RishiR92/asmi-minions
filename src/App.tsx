@@ -14,7 +14,6 @@ import Bills from "./pages/Bills";
 import SubscriptionDetail from "./pages/SubscriptionDetail";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import { GestureNav } from "./components/GestureNav";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +38,6 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <GestureNav />
         </div>
       </BrowserRouter>
     </TooltipProvider>

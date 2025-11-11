@@ -6,6 +6,8 @@ import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
+import { ExecutionStep } from "@/components/voice/ExecutionStep";
+import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -16,6 +18,11 @@ interface Message {
 interface ActionPlan {
   plan: string;
   steps: string[];
+  status: "pending" | "executing" | "completed";
+}
+
+interface ExecutionStepType {
+  text: string;
   status: "pending" | "executing" | "completed";
 }
 
@@ -40,22 +47,60 @@ const quickActions = [
   },
 ];
 
+const asmiResponses = {
+  greeting: [
+    "Hey there! What can I do for you today?",
+    "Hi! I'm here to help - what's on your mind?",
+    "Hello! Ready to make your day easier?"
+  ],
+  processing: [
+    "Got it! Let me work on that for you...",
+    "On it! Give me just a second...",
+    "Perfect! I'll take care of that right away..."
+  ],
+  planPresentation: [
+    "Here's what I'm thinking - does this look good?",
+    "I've put together a plan for you. What do you think?",
+    "This is how I'll handle it - sound good?"
+  ],
+  success: [
+    "All done! That was easy 😊",
+    "Complete! You're all set.",
+    "Finished! Anything else I can help with?"
+  ]
+};
+
+const getRandomResponse = (type: keyof typeof asmiResponses) => {
+  const responses = asmiResponses[type];
+  return responses[Math.floor(Math.random() * responses.length)];
+};
+
 const Home = () => {
+  const [conversationMode, setConversationMode] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [executionSteps, setExecutionSteps] = useState<ExecutionStepType[]>([]);
+  const [showResult, setShowResult] = useState(false);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
 
-    // Add user message
+    // Switch to conversation mode
+    setConversationMode(true);
+
+    // Add user message with warm Asmi response
     const userMessage: Message = { role: "user", content: text };
-    setMessages((prev) => [...prev, userMessage]);
+    const processingMessage: Message = { 
+      role: "assistant", 
+      content: getRandomResponse('processing') 
+    };
+    
+    setMessages([userMessage, processingMessage]);
     setIsProcessing(true);
 
     // Simulate AI processing with action plan generation
     setTimeout(() => {
-      // Generate action plan based on user input
       let plan = "";
       let steps: string[] = [];
 
@@ -93,6 +138,12 @@ const Home = () => {
         ];
       }
 
+      // Add plan presentation message
+      const planMessage: Message = {
+        role: "assistant",
+        content: getRandomResponse('planPresentation')
+      };
+      setMessages(prev => [...prev, planMessage]);
       setActionPlan({ plan, steps, status: "pending" });
       setIsProcessing(false);
     }, 2000);
@@ -102,80 +153,145 @@ const Home = () => {
     if (!actionPlan) return;
 
     setActionPlan({ ...actionPlan, status: "executing" });
+    
+    // Initialize execution steps
+    const steps = actionPlan.steps.map(step => ({
+      text: step,
+      status: "pending" as const
+    }));
+    setExecutionSteps(steps);
 
-    // Simulate execution
-    setTimeout(() => {
-      setActionPlan({ ...actionPlan, status: "completed" });
-      
-      // Add assistant response
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: "Done! I've completed the task successfully. You'll receive a confirmation shortly.",
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-
-      // Clear action plan after 2 seconds
+    // Execute steps sequentially
+    steps.forEach((_, index) => {
       setTimeout(() => {
-        setActionPlan(null);
-      }, 2000);
-    }, 3000);
+        setExecutionSteps(prev => 
+          prev.map((step, i) => 
+            i === index ? { ...step, status: "completed" as const } : step
+          )
+        );
+        
+        // After last step
+        if (index === steps.length - 1) {
+          setTimeout(() => {
+            setActionPlan(prev => prev ? { ...prev, status: "completed" } : null);
+            setShowResult(true);
+            
+            const successMessage: Message = {
+              role: "assistant",
+              content: getRandomResponse('success')
+            };
+            setMessages(prev => [...prev, successMessage]);
+          }, 500);
+        }
+      }, (index + 1) * 1500);
+    });
   };
 
   const handleModify = () => {
-    // For now, just clear the plan - in real app would allow editing
     setActionPlan(null);
+  };
+
+  const resetConversation = () => {
+    setConversationMode(false);
+    setMessages([]);
+    setActionPlan(null);
+    setExecutionSteps([]);
+    setShowResult(false);
+    setIsProcessing(false);
   };
 
   return (
     <div className="h-screen fixed inset-0 overflow-hidden">
-      {/* Ambient animated background */}
       <BackgroundAmbient />
 
-      {/* Main content */}
       <div className="relative h-full flex flex-col">
-        {/* Hero Section - Voice Interface */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-safe">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center gap-8 w-full max-w-2xl"
-          >
-            {/* Asmi Avatar */}
-            <AsmiAvatar isThinking={isProcessing} isListening={false} />
+        {!conversationMode ? (
+          /* Initial Voice State */
+          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
+            <motion.div className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl">
+              
+              {/* Large Animated Avatar */}
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.02, 1],
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="w-32 h-32 sm:w-40 sm:h-40"
+              >
+                <AsmiAvatar isThinking={isProcessing} />
+              </motion.div>
 
-            {/* Greeting */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-center space-y-2"
-            >
-              <h1 className="text-3xl font-heading font-semibold text-foreground">
-                Hi there, I'm Asmi
-              </h1>
-              <p className="text-muted-foreground">
-                What can I help you with today?
-              </p>
-            </motion.div>
+              {/* Warm Greeting */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center space-y-2"
+              >
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-semibold text-foreground">
+                  Hey there, I'm Asmi
+                </h1>
+                <p className="text-base sm:text-lg text-muted-foreground">
+                  Tell me what you'd like me to help with today
+                </p>
+              </motion.div>
 
-            {/* Voice Interface */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-            >
+              {/* Voice Interface */}
               <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
             </motion.div>
 
-            {/* Action Plan Card */}
-            <AnimatePresence>
-              {actionPlan && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="w-full"
-                >
+            {/* Quick Actions - Mobile optimized grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-0 left-0 right-0 pb-safe px-4 sm:px-6 py-6"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
+                {quickActions.map((action, index) => (
+                  <motion.div
+                    key={action.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1 }}
+                  >
+                    <QuickActionChip {...action} />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        ) : (
+          /* Chat Mode */
+          <div className="w-full h-full flex flex-col px-4 sm:px-6 max-w-3xl mx-auto">
+            
+            {/* Header with small Asmi */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-3 py-4 pt-safe border-b border-border"
+            >
+              <div className="w-12 h-12">
+                <AsmiAvatar isThinking={isProcessing} />
+              </div>
+              <div>
+                <h2 className="text-lg font-heading font-semibold">Asmi</h2>
+                <p className="text-sm text-muted-foreground">Your personal assistant</p>
+              </div>
+            </motion.div>
+
+            {/* Scrollable Chat Messages */}
+            <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-hide">
+              <AnimatePresence mode="popLayout">
+                {messages.map((message, index) => (
+                  <ConversationMessage
+                    key={index}
+                    role={message.role}
+                    content={message.content}
+                  />
+                ))}
+
+                {/* Action Plan Card */}
+                {actionPlan && (
                   <ActionPlanCard
                     plan={actionPlan.plan}
                     steps={actionPlan.steps}
@@ -183,40 +299,37 @@ const Home = () => {
                     onConfirm={handleConfirm}
                     onModify={handleModify}
                   />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                )}
 
-            {/* Conversation History */}
-            <div className="w-full space-y-4 max-h-[200px] overflow-y-auto scrollbar-hide">
-              <AnimatePresence>
-                {messages.slice(-3).map((message, index) => (
-                  <ConversationMessage
+                {/* Execution Steps */}
+                {executionSteps.map((step, index) => (
+                  <ExecutionStep
                     key={index}
-                    role={message.role}
-                    content={message.content}
+                    step={step.text}
+                    status={step.status}
                   />
                 ))}
               </AnimatePresence>
             </div>
-          </motion.div>
-        </div>
 
-        {/* Quick Actions - Bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="pb-safe px-6 py-6"
-        >
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-            {quickActions.map((action) => (
-              <div key={action.label} className="snap-start">
-                <QuickActionChip {...action} />
-              </div>
-            ))}
+            {/* Reset Button */}
+            {showResult && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="py-4 pb-safe"
+              >
+                <Button 
+                  onClick={resetConversation}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Start New Conversation
+                </Button>
+              </motion.div>
+            )}
           </div>
-        </motion.div>
+        )}
       </div>
     </div>
   );
