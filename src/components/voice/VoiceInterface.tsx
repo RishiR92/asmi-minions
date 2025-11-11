@@ -70,7 +70,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Microphone Button - Mobile optimized */}
+      {/* Microphone Button */}
       <motion.button
         onClick={toggleListening}
         disabled={isProcessing}
@@ -82,13 +82,13 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
           {isListening && (
             <>
               <motion.div
-                className="absolute inset-0 rounded-full border-2 border-primary/40"
+                className="absolute inset-0 rounded-full bg-voice-primary/30"
                 initial={{ scale: 1, opacity: 0.8 }}
                 animate={{ scale: 2.5, opacity: 0 }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
               <motion.div
-                className="absolute inset-0 rounded-full border-2 border-primary/30"
+                className="absolute inset-0 rounded-full bg-voice-secondary/20"
                 initial={{ scale: 1, opacity: 0.6 }}
                 animate={{ scale: 2.5, opacity: 0 }}
                 transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
@@ -97,66 +97,46 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
           )}
         </AnimatePresence>
 
-        {/* Main button - responsive sizing */}
+        {/* Main button */}
         <motion.div
-          animate={{
-            scale: isListening ? [1, 1.05, 1] : 1,
-            boxShadow: isListening 
-              ? [
-                  "0 0 20px hsla(220, 40%, 35%, 0.2)",
-                  "0 0 30px hsla(220, 40%, 35%, 0.4)",
-                  "0 0 20px hsla(220, 40%, 35%, 0.2)"
-                ]
-              : "0 2px 8px 2px rgba(60, 54, 48, 0.08)"
-          }}
-          transition={{
-            duration: 2,
-            repeat: isListening ? Infinity : 0,
-            ease: "easeInOut"
-          }}
-          className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-colors ${
+          className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
             isListening
-              ? "bg-primary"
-              : "bg-card hover:bg-primary/10"
+              ? "bg-gradient-to-br from-voice-primary to-voice-accent shadow-lg shadow-voice-primary/50"
+              : "voice-glass"
           } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+          animate={isListening ? { scale: [1, 1.05, 1] } : {}}
+          transition={{ duration: 1, repeat: isListening ? Infinity : 0 }}
         >
           {isListening ? (
-            <Mic className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-white" />
+            <Mic className="w-8 h-8 text-white" />
           ) : (
-            <MicOff className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-primary" />
+            <MicOff className="w-8 h-8 text-voice-primary" />
           )}
         </motion.div>
       </motion.button>
 
-      {/* Sound wave visualization - responsive */}
+      {/* Sound wave visualization */}
       <AnimatePresence>
         {isListening && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center gap-1.5 sm:gap-2 h-10 sm:h-12"
+            className="flex items-center gap-1 h-12"
           >
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-1 sm:w-1.5 rounded-full bg-primary"
+                className="w-1 bg-gradient-to-t from-voice-primary to-voice-secondary rounded-full"
                 animate={{
-                  height: isListening
-                    ? [
-                        "20%",
-                        `${Math.random() * 80 + 20}%`,
-                        "20%",
-                      ]
-                    : "20%",
-                  opacity: isListening ? [0.6, 1, 0.6] : 0.6,
+                  height: ["20%", "100%", "20%"],
                 }}
                 transition={{
-                  duration: 0.5,
+                  duration: 0.6,
                   repeat: Infinity,
                   delay: i * 0.1,
-                  ease: "easeInOut"
                 }}
+                style={{ height: "20%" }}
               />
             ))}
           </motion.div>
@@ -170,9 +150,9 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="text-center px-6 py-3 sm:px-8 sm:py-4 voice-glass rounded-2xl max-w-md"
+            className="text-center px-6 py-3 voice-glass rounded-2xl max-w-md"
           >
-            <p className="text-foreground/80 text-sm sm:text-base">{transcript}</p>
+            <p className="text-foreground/80 text-sm">{transcript}</p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -6,8 +6,6 @@ import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
-import { ExecutionProgress } from "@/components/voice/ExecutionProgress";
-import { ResultCard } from "@/components/voice/ResultCard";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -19,13 +17,6 @@ interface ActionPlan {
   plan: string;
   steps: string[];
   status: "pending" | "executing" | "completed";
-}
-
-interface ExecutionStep {
-  id: number;
-  label: string;
-  status: "pending" | "in-progress" | "completed";
-  result?: string;
 }
 
 const quickActions = [
@@ -53,27 +44,9 @@ const Home = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
-  const [showResult, setShowResult] = useState(false);
-  const [isExecuting, setIsExecuting] = useState(false);
-  const [conversationMode, setConversationMode] = useState(false); // Track if we're in conversation mode
-
-  const handleModify = () => {
-    setActionPlan(null);
-    const assistantMessage: Message = {
-      role: "assistant",
-      content: "Sure! What would you like me to change?",
-    };
-    setMessages((prev) => [...prev, assistantMessage]);
-  };
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
-
-    const lowerText = text.toLowerCase();
-
-    // Enter conversation mode
-    setConversationMode(true);
 
     // Add user message
     const userMessage: Message = { role: "user", content: text };
@@ -82,27 +55,28 @@ const Home = () => {
 
     // Simulate AI processing with action plan generation
     setTimeout(() => {
+      // Generate action plan based on user input
       let plan = "";
       let steps: string[] = [];
 
-      if (lowerText.includes("movie") || lowerText.includes("tickets")) {
-        plan = "Sounds great! I'll find the top-rated movies showing Friday evening and grab 2 tickets at your favorite theater. Should I go ahead with that?";
+      if (text.toLowerCase().includes("movie") || text.toLowerCase().includes("tickets")) {
+        plan = "I'll find the best-rated movies playing this Friday evening and book 2 tickets at your preferred theater.";
         steps = [
           "Search for highly-rated movies (IMDB 7+)",
           "Find showtimes for Friday 7-9PM",
           "Check availability at AMC Downtown",
           "Book 2 tickets and send confirmation",
         ];
-      } else if (lowerText.includes("dinner") || lowerText.includes("restaurant")) {
-        plan = "Perfect! I'll book a table at a top-rated Japanese restaurant for this Sunday at 7PM. Sound good?";
+      } else if (text.toLowerCase().includes("dinner") || text.toLowerCase().includes("restaurant")) {
+        plan = "I'll make a reservation at a top-rated Japanese restaurant for this Sunday at 7PM.";
         steps = [
           "Search for Japanese restaurants (4.5+ rating)",
           "Check availability for Sunday 7PM",
           "Make reservation for 2 people",
           "Add to your calendar",
         ];
-      } else if (lowerText.includes("bill") || lowerText.includes("pay")) {
-        plan = "Got it! I'll review your upcoming bills and set up automatic payments. Want me to proceed?";
+      } else if (text.toLowerCase().includes("bill") || text.toLowerCase().includes("pay")) {
+        plan = "I'll review your upcoming bills and set up automatic payments for recurring charges.";
         steps = [
           "Identify upcoming bill due dates",
           "Verify account balances",
@@ -110,7 +84,7 @@ const Home = () => {
           "Set up payment confirmations",
         ];
       } else {
-        plan = "I'll help you with that! Let me create a plan to get this done. Should I go ahead?";
+        plan = "I'll help you with that. Let me create a plan to get this done.";
         steps = [
           "Analyze your request",
           "Find the best approach",
@@ -128,89 +102,28 @@ const Home = () => {
     if (!actionPlan) return;
 
     setActionPlan({ ...actionPlan, status: "executing" });
-    setIsExecuting(true);
-    setShowResult(false);
 
-    // Add "Awesome, working on it" message
-    const workingMessage: Message = {
-      role: "assistant",
-      content: "Awesome, working on it now! This'll just take a moment...",
-    };
-    setMessages((prev) => [...prev, workingMessage]);
+    // Simulate execution
+    setTimeout(() => {
+      setActionPlan({ ...actionPlan, status: "completed" });
+      
+      // Add assistant response
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: "Done! I've completed the task successfully. You'll receive a confirmation shortly.",
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
 
-    // Initialize execution steps
-    const steps: ExecutionStep[] = actionPlan.steps.map((step, index) => ({
-      id: index,
-      label: step,
-      status: "pending",
-    }));
-    setExecutionSteps(steps);
-
-    // Execute steps sequentially
-    let currentStep = 0;
-    const executeNextStep = () => {
-      if (currentStep >= steps.length) {
-        // All steps completed
-        setTimeout(() => {
-          setIsExecuting(false);
-          setShowResult(true);
-          setActionPlan({ ...actionPlan, status: "completed" });
-
-          // Add completion message
-          const completionMessage: Message = {
-            role: "assistant",
-            content: "All set! You're booked for Dune 3 at AMC Downtown, Friday 7:30 PM. I sent the confirmation to your email. Enjoy the movie! 🎬",
-          };
-          setMessages((prev) => [...prev, completionMessage]);
-
-          // Clear everything after showing result
-          setTimeout(() => {
-            setShowResult(false);
-            // Keep messages and action plan for user to review
-          }, 5000);
-        }, 1000);
-        return;
-      }
-
-      // Mark current step as in-progress
-      setExecutionSteps((prev) =>
-        prev.map((s, i) =>
-          i === currentStep ? { ...s, status: "in-progress" } : s
-        )
-      );
-
-      // Complete current step after delay
+      // Clear action plan after 2 seconds
       setTimeout(() => {
-        const results = [
-          "Found 3 movies (Dune 3, Oppenheimer 2, Avatar 4)",
-          "Found 5 available showtimes",
-          "Tickets booked successfully",
-          "Confirmation sent to your inbox",
-        ];
-
-        setExecutionSteps((prev) =>
-          prev.map((s, i) =>
-            i === currentStep
-              ? { ...s, status: "completed", result: results[currentStep] || "Done" }
-              : s
-          )
-        );
-
-        currentStep++;
-        executeNextStep();
-      }, 1500);
-    };
-
-    executeNextStep();
+        setActionPlan(null);
+      }, 2000);
+    }, 3000);
   };
 
-  const resetConversation = () => {
-    setMessages([]);
+  const handleModify = () => {
+    // For now, just clear the plan - in real app would allow editing
     setActionPlan(null);
-    setExecutionSteps([]);
-    setShowResult(false);
-    setIsExecuting(false);
-    setConversationMode(false);
   };
 
   return (
@@ -220,182 +133,90 @@ const Home = () => {
 
       {/* Main content */}
       <div className="relative h-full flex flex-col">
-      {/* Hero Section - Voice Interface or Chat */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pt-safe pb-32 sm:pb-24">
-          <AnimatePresence mode="wait">
-            {!conversationMode ? (
-              <motion.div
-                key="voice-mode"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl"
-              >
-                {/* Large Animated Asmi Avatar - Responsive */}
+        {/* Hero Section - Voice Interface */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-safe">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center gap-8 w-full max-w-2xl"
+          >
+            {/* Asmi Avatar */}
+            <AsmiAvatar isThinking={isProcessing} isListening={false} />
+
+            {/* Greeting */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-center space-y-2"
+            >
+              <h1 className="text-3xl font-heading font-semibold text-foreground">
+                Hi there, I'm Asmi
+              </h1>
+              <p className="text-muted-foreground">
+                What can I help you with today?
+              </p>
+            </motion.div>
+
+            {/* Voice Interface */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
+            </motion.div>
+
+            {/* Action Plan Card */}
+            <AnimatePresence>
+              {actionPlan && (
                 <motion.div
-                  animate={{
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="w-full"
                 >
-                  <AsmiAvatar isThinking={isProcessing} isListening={false} />
+                  <ActionPlanCard
+                    plan={actionPlan.plan}
+                    steps={actionPlan.steps}
+                    status={actionPlan.status}
+                    onConfirm={handleConfirm}
+                    onModify={handleModify}
+                  />
                 </motion.div>
+              )}
+            </AnimatePresence>
 
-                {/* Greeting - Responsive Text */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-center space-y-2 px-4"
-                >
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-semibold text-foreground">
-                    Hey there, I'm Asmi
-                  </h1>
-                  <p className="text-base sm:text-lg md:text-xl text-muted-foreground asmi-message">
-                    What can I help you with today?
-                  </p>
-                </motion.div>
-
-                {/* Voice Interface */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
-                </motion.div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="chat-mode"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="w-full max-w-3xl h-full flex flex-col px-4 sm:px-6"
-              >
-                {/* Small Avatar at Top - Mobile Scaled */}
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="scale-[0.35] sm:scale-50 origin-left">
-                    <AsmiAvatar isThinking={isProcessing || isExecuting} isListening={false} />
-                  </div>
-                  <div>
-                    <h2 className="text-lg sm:text-xl font-heading font-semibold text-foreground">Asmi</h2>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Your AI assistant</p>
-                  </div>
-                </div>
-
-                {/* Scrollable Chat Container */}
-                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 sm:space-y-4 pb-4">
-                  {/* Conversation Messages */}
-                  <AnimatePresence mode="popLayout">
-                    {messages.map((message, index) => (
-                      <ConversationMessage
-                        key={`msg-${index}`}
-                        role={message.role}
-                        content={message.content}
-                      />
-                    ))}
-                  </AnimatePresence>
-
-                  {/* Action Plan Card */}
-                  <AnimatePresence>
-                    {actionPlan && !isExecuting && !showResult && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                      >
-                        <ActionPlanCard
-                          plan={actionPlan.plan}
-                          steps={actionPlan.steps}
-                          status={actionPlan.status}
-                          onConfirm={handleConfirm}
-                          onModify={handleModify}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Execution Progress */}
-                  <AnimatePresence>
-                    {isExecuting && executionSteps.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="voice-glass rounded-2xl p-5"
-                      >
-                        <ExecutionProgress steps={executionSteps} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Result Card */}
-                  <AnimatePresence>
-                    {showResult && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                      >
-                        <ResultCard
-                          title="Dune 3"
-                          subtitle="AMC Downtown"
-                          details={[
-                            "📅 Friday, 7:30 PM",
-                            "🎟️ 2 tickets - Seats G12, G13",
-                            "✅ Confirmation sent to your email",
-                          ]}
-                        />
-                        <motion.button
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5 }}
-                          onClick={resetConversation}
-                          className="mt-4 w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
-                        >
-                          Start New Conversation
-                        </motion.button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            {/* Conversation History */}
+            <div className="w-full space-y-4 max-h-[200px] overflow-y-auto scrollbar-hide">
+              <AnimatePresence>
+                {messages.slice(-3).map((message, index) => (
+                  <ConversationMessage
+                    key={index}
+                    role={message.role}
+                    content={message.content}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Quick Actions - Mobile First Design */}
-        <AnimatePresence>
-          {!conversationMode && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{ delay: 0.7 }}
-              className="fixed bottom-0 left-0 right-0 pb-safe"
-            >
-              <div className="px-4 sm:px-6 py-6 bg-background/90 backdrop-blur-xl border-t border-border">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
-                  {quickActions.map((action, index) => (
-                    <motion.div
-                      key={action.label}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 + index * 0.1 }}
-                    >
-                      <QuickActionChip {...action} />
-                    </motion.div>
-                  ))}
-                </div>
+        {/* Quick Actions - Bottom */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="pb-safe px-6 py-6"
+        >
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+            {quickActions.map((action) => (
+              <div key={action.label} className="snap-start">
+                <QuickActionChip {...action} />
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

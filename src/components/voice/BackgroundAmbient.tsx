@@ -1,59 +1,53 @@
 import { motion } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export const BackgroundAmbient = () => {
-  const isMobile = useIsMobile();
-  const particleCount = isMobile ? 6 : 15;
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Enhanced ambient orbs - more visible */}
+      {/* Main gradient background */}
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-[0.15] blur-3xl bg-primary"
+        className="absolute inset-0"
         style={{
-          top: "-15%",
-          left: "-5%",
+          background: "linear-gradient(135deg, hsl(254 100% 95%) 0%, hsl(173 57% 95%) 100%)",
         }}
         animate={{
-          x: [0, 30, 0],
-          y: [0, 20, 0],
-          scale: [1, 1.05, 1],
+          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
         }}
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: "linear",
         }}
       />
 
+      {/* Floating orbs */}
       <motion.div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-[0.12] blur-3xl bg-secondary"
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20"
         style={{
-          bottom: "-15%",
-          right: "-5%",
+          background: "radial-gradient(circle, hsl(254 100% 71%) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
         animate={{
-          x: [0, -25, 0],
-          y: [0, -15, 0],
-          scale: [1, 1.08, 1],
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.2, 1],
         }}
         transition={{
-          duration: 22,
+          duration: 15,
           repeat: Infinity,
           ease: "easeInOut",
         }}
       />
 
       <motion.div
-        className="absolute w-[350px] h-[350px] rounded-full opacity-[0.08] blur-3xl bg-accent"
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-20"
         style={{
-          top: "35%",
-          right: "15%",
+          background: "radial-gradient(circle, hsl(173 57% 58%) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
         animate={{
-          x: [0, 20, 0],
-          y: [0, -12, 0],
-          scale: [1, 1.1, 1],
+          x: [0, -40, 0],
+          y: [0, 40, 0],
+          scale: [1, 1.3, 1],
         }}
         transition={{
           duration: 18,
@@ -62,34 +56,20 @@ export const BackgroundAmbient = () => {
         }}
       />
 
-      {/* Floating particles */}
-      {Array.from({ length: particleCount }).map((_, i) => (
-        <motion.div
-          key={`particle-${i}`}
-          className="absolute w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-primary/20"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [-20, -40, -20],
-            x: [0, Math.random() * 20 - 10, 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 8 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 3,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* Fine grain texture for depth */}
-      <div
-        className="absolute inset-0 opacity-[0.02]"
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-10"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          background: "radial-gradient(circle, hsl(280 90% 65%) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+        animate={{
+          scale: [1, 1.4, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
         }}
       />
     </div>

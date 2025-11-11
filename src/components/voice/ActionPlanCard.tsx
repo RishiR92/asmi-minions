@@ -1,20 +1,21 @@
 import { motion } from "framer-motion";
-import { Clock, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ActionPlanCardProps {
   plan: string;
   steps?: string[];
-  status?: "pending" | "executing" | "completed";
   onConfirm?: () => void;
   onModify?: () => void;
+  status?: "pending" | "executing" | "completed";
 }
 
 export const ActionPlanCard = ({
   plan,
-  steps,
-  status = "pending",
+  steps = [],
   onConfirm,
   onModify,
+  status = "pending",
 }: ActionPlanCardProps) => {
   return (
     <motion.div
@@ -29,12 +30,12 @@ export const ActionPlanCard = ({
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <Clock className="w-5 h-5 text-primary" />
+            <Clock className="w-5 h-5 text-voice-primary" />
           </motion.div>
         ) : status === "completed" ? (
-          <CheckCircle2 className="w-5 h-5 text-secondary" />
+          <CheckCircle2 className="w-5 h-5 text-green-500" />
         ) : (
-          <div className="w-5 h-5 rounded-full bg-primary/20" />
+          <div className="w-5 h-5 rounded-full bg-voice-primary/20" />
         )}
         <span className="text-sm font-medium text-muted-foreground">
           {status === "executing" ? "Working on it..." : status === "completed" ? "Done!" : "Action Plan"}
@@ -45,8 +46,8 @@ export const ActionPlanCard = ({
       <div className="asmi-message text-foreground">{plan}</div>
 
       {/* Steps if provided */}
-      {steps && steps.length > 0 && (
-        <div className="space-y-2 pl-4 border-l-2 border-primary/30">
+      {steps.length > 0 && (
+        <div className="space-y-2 pl-4 border-l-2 border-voice-primary/30">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -55,33 +56,28 @@ export const ActionPlanCard = ({
               transition={{ delay: index * 0.1 }}
               className="text-sm text-muted-foreground flex items-start gap-2"
             >
-              <span className="text-primary font-semibold">{index + 1}.</span>
+              <span className="text-voice-primary font-semibold">{index + 1}.</span>
               <span>{step}</span>
             </motion.div>
           ))}
         </div>
       )}
 
-      {/* Action buttons - only show when pending */}
-      {status === "pending" && onConfirm && (
+      {/* Action buttons */}
+      {status === "pending" && (onConfirm || onModify) && (
         <div className="flex gap-3 pt-2">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onConfirm}
-            className="flex-1 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
-          >
-            Confirm
-          </motion.button>
-          {onModify && (
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onModify}
-              className="flex-1 bg-secondary text-secondary-foreground px-6 py-3 rounded-xl font-medium hover:bg-secondary/90 transition-colors"
+          {onConfirm && (
+            <Button
+              onClick={onConfirm}
+              className="flex-1 bg-gradient-to-r from-voice-primary to-voice-accent text-white hover:opacity-90"
             >
+              Confirm
+            </Button>
+          )}
+          {onModify && (
+            <Button onClick={onModify} variant="outline" className="flex-1">
               Modify
-            </motion.button>
+            </Button>
           )}
         </div>
       )}
