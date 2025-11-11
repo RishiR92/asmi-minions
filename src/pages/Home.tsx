@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { CreditCard, Bell, Activity } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
+import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
 import { ExecutionProgress } from "@/components/voice/ExecutionProgress";
 import { ResultCard } from "@/components/voice/ResultCard";
@@ -25,6 +27,27 @@ interface ExecutionStep {
   status: "pending" | "in-progress" | "completed";
   result?: string;
 }
+
+const quickActions = [
+  {
+    icon: CreditCard,
+    label: "Subscriptions",
+    stat: "$127/mo",
+    href: "/payments",
+  },
+  {
+    icon: Bell,
+    label: "Bills",
+    stat: "4 due",
+    href: "/bills",
+  },
+  {
+    icon: Activity,
+    label: "Activity",
+    stat: "View all",
+    href: "/automations",
+  },
+];
 
 const Home = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -294,6 +317,22 @@ const Home = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Quick Actions - Bottom */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="pb-safe px-6 py-6"
+        >
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+            {quickActions.map((action) => (
+              <div key={action.label} className="snap-start">
+                <QuickActionChip {...action} />
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
