@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, GraduationCap, CreditCard, Home, PartyPopper, ArrowLeft } from "lucide-react";
+import { Users, GraduationCap, Home, PartyPopper, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -16,10 +16,6 @@ const Family = () => {
     { id: 3, title: "School Fundraiser", date: "This Saturday", time: "10:00 AM" },
   ];
 
-  const familyBills = [
-    { id: 1, title: "Electric Bill", amount: "$127.50", dueDate: "Due today" },
-    { id: 2, title: "Kids' School Fees", amount: "$450", dueDate: "Due in 3 days" },
-  ];
 
   const projects = [
     { id: 1, title: "Renovate kids' room", status: "In progress" },
@@ -71,9 +67,15 @@ const Family = () => {
                     {item.day} {item.time}
                   </p>
                 </div>
-                <Button size="sm" variant="outline" className="rounded-full h-8 px-4 text-xs">
-                  Add to Cal
-                </Button>
+                {item.activity === "School Project Due" ? (
+                  <Button size="sm" variant="outline" className="rounded-full h-8 px-4 text-xs">
+                    Remind Thu, 5PM
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="outline" className="rounded-full h-8 px-4 text-xs">
+                    Add to Cal
+                  </Button>
+                )}
               </div>
             ))}
           </div>
@@ -109,42 +111,11 @@ const Family = () => {
           </div>
         </motion.div>
 
-        {/* Family Bills */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="liquid-glass rounded-2xl p-4 space-y-3"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-primary" />
-            </div>
-            <h2 className="text-base font-semibold text-foreground">Family Bills</h2>
-          </div>
-          <div className="space-y-2">
-            {familyBills.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40">
-                <div>
-                  <p className="text-sm font-medium text-foreground">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.dueDate}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-foreground">{item.amount}</p>
-                  <Button size="sm" className="rounded-full h-8 px-4 text-xs">
-                    Pay
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Family Projects */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           className="liquid-glass rounded-2xl p-4 space-y-3"
         >
           <div className="flex items-center gap-3">
@@ -172,7 +143,7 @@ const Family = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="liquid-glass rounded-2xl p-4 space-y-3"
         >
           <div className="flex items-center gap-3">

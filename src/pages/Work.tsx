@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Calendar, CheckSquare, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const Work = () => {
   const meetings = [
@@ -12,10 +11,10 @@ const Work = () => {
   ];
 
   const tasks = [
-    { id: 1, title: "Review marketing strategy", priority: "High", dueDate: "Today" },
-    { id: 2, title: "Approve budget proposal", priority: "High", dueDate: "Tomorrow" },
-    { id: 3, title: "Sign contracts", priority: "High", dueDate: "Urgent" },
-    { id: 4, title: "Update project roadmap", priority: "Medium", dueDate: "This week" },
+    { id: 1, title: "Review marketing strategy", deadline: "Today, 5:00 PM" },
+    { id: 2, title: "Approve budget proposal", deadline: "Tomorrow, 12:00 PM" },
+    { id: 3, title: "Sign vendor contracts", deadline: "Wed, 3:00 PM" },
+    { id: 4, title: "Update project roadmap", deadline: "Friday" },
   ];
 
   return (
@@ -78,22 +77,9 @@ const Work = () => {
           </div>
           <div className="space-y-2">
             {tasks.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="text-sm font-medium text-foreground">{item.title}</p>
-                    <Badge 
-                      variant={item.priority === "High" ? "default" : "secondary"} 
-                      className="h-5 text-xs"
-                    >
-                      {item.priority}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Due: {item.dueDate}</p>
-                </div>
-                <Button size="sm" className="rounded-full h-8 px-4 text-xs">
-                  Complete
-                </Button>
+              <div key={item.id} className="p-3 rounded-xl bg-background/40">
+                <p className="text-sm font-medium text-foreground">{item.title}</p>
+                <p className="text-xs text-muted-foreground mt-1">{item.deadline}</p>
               </div>
             ))}
           </div>

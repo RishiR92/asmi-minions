@@ -53,8 +53,8 @@ const Today = () => {
                   <p className="text-sm font-medium text-foreground">{item.title}</p>
                   <p className="text-xs text-muted-foreground">{item.time}</p>
                 </div>
-                <Button size="sm" className="rounded-full h-8 px-4 text-xs">
-                  Mark Done
+                <Button size="sm" variant="ghost" className="rounded-full h-8 px-4 text-xs text-primary">
+                  Notes
                 </Button>
               </div>
             ))}

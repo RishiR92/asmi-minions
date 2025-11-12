@@ -48,16 +48,6 @@ const quickActions = [
     label: "Family",
     href: "/family",
   },
-  {
-    icon: DollarSign,
-    label: "Expenses",
-    href: "/expenses",
-  },
-  {
-    icon: Settings,
-    label: "Admin",
-    href: "/profile",
-  },
 ];
 
 const asmiResponses = {
@@ -306,8 +296,15 @@ const Home = () => {
                   </p>
                 </motion.div>
 
-                {/* Voice Interface */}
-                <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
+                {/* Wake Word Hint */}
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-xs text-muted-foreground"
+                >
+                  Say "Hey Asmi" to start
+                </motion.p>
               </motion.div>
             </div>
           
