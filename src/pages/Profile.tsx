@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ConnectionCard } from "@/components/ConnectionCard";
+import johnProfile from "@/assets/john-profile.jpg";
 
 const Profile = () => {
   return (
@@ -28,15 +29,15 @@ const Profile = () => {
         <div className="glass rounded-3xl p-6 sm:p-5 text-center hover:scale-[1.01] transition-all duration-300">
           <div className="relative inline-block mb-4">
             <Avatar className="w-24 h-24 sm:w-20 sm:h-20 ring-2 ring-primary/20">
-              <AvatarImage src="" alt="You" />
+              <AvatarImage src={johnProfile} alt="John" />
               <AvatarFallback className="bg-primary/10 text-primary text-2xl sm:text-xl font-semibold">
-                YN
+                J
               </AvatarFallback>
             </Avatar>
           </div>
           
-          <h2 className="text-xl font-semibold text-foreground mb-1">Your Name</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">@yourname</p>
+          <h2 className="text-xl font-semibold text-foreground mb-1">John</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">@john</p>
           
           <Button 
             variant="outline" 
