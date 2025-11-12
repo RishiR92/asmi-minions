@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreditCard, Bell, Bot, User } from "lucide-react";
+import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
@@ -34,17 +34,27 @@ const quickActions = [
     href: "/automations",
   },
   {
-    icon: CreditCard,
-    label: "Subscriptions",
-    href: "/payments",
+    icon: CalendarIcon,
+    label: "Today",
+    href: "/today",
   },
   {
-    icon: Bell,
-    label: "Bills",
-    href: "/bills",
+    icon: Briefcase,
+    label: "Work",
+    href: "/work",
   },
   {
-    icon: User,
+    icon: Users,
+    label: "Family",
+    href: "/family",
+  },
+  {
+    icon: DollarSign,
+    label: "Expenses",
+    href: "/expenses",
+  },
+  {
+    icon: Settings,
     label: "Admin",
     href: "/profile",
   },
@@ -308,7 +318,7 @@ const Home = () => {
               transition={{ delay: 0.5 }}
               className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10"
             >
-              <div className="flex justify-center items-center gap-4 px-4 py-3 max-w-screen-sm mx-auto">
+              <div className="flex justify-start items-center gap-4 px-4 py-3 overflow-x-auto scrollbar-hide">
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={action.label}
