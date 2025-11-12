@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { Mic } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/components/ui/sonner";
 
 interface VoiceInterfaceProps {
   onTranscript: (text: string) => void;
@@ -8,27 +9,65 @@ interface VoiceInterfaceProps {
   onListeningChange?: (isListening: boolean) => void;
   onTranscriptChange?: (text: string) => void;
   overlayMode?: boolean;
+  onUnsupported?: () => void;
+  onPermissionError?: (reason: "iframe" | "denied") => void;
 }
 
 export const VoiceInterface = forwardRef<
   { startListening: () => void },
   VoiceInterfaceProps
->(({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, overlayMode = false }, ref) => {
+>(({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, overlayMode = false, onUnsupported, onPermissionError }, ref) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
+  const retriesRef = useRef(0);
+  const lastStartAtRef = useRef(0);
+
+  const ensureMicAccess = async () => {
+    const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
+    const isEmbedded = window.self !== window.top;
+    
+    if (isIOS && isEmbedded) {
+      toast("Microphone blocked in preview", { 
+        description: "iOS blocks mic in embedded previews. Open the app in a new tab and try again." 
+      });
+      onPermissionError?.("iframe");
+      return false;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices?.getUserMedia?.({ audio: true });
+      stream?.getTracks?.().forEach(t => t.stop());
+      return true;
+    } catch (err: any) {
+      if (err?.name === "NotAllowedError" || err?.name === "SecurityError") {
+        toast("Microphone permission denied", { 
+          description: "Enable mic access in Safari Settings or try again." 
+        });
+        onPermissionError?.("denied");
+      } else {
+        toast("Couldn't access microphone", { 
+          description: err?.message || "Please try again." 
+        });
+      }
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       console.error("Speech recognition not supported on this device");
-      alert("Voice input is not supported on this browser. Please try Chrome on Android or Safari on iOS.");
+      toast("Voice not supported", { 
+        description: "Your browser doesn't support speech recognition." 
+      });
+      onUnsupported?.();
       return;
     }
 
     const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = isIOS ? true : false;
+    recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = 'en-US';
     recognitionRef.current.maxAlternatives = 1;
@@ -73,13 +112,38 @@ export const VoiceInterface = forwardRef<
 
     recognitionRef.current.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error, event);
-      if (event.error === 'not-allowed') {
-        alert("Microphone access denied. Please enable microphone permissions in your browser settings.");
-      } else if (event.error === 'no-speech') {
-        console.log("No speech detected");
+      
+      if (event.error === "not-allowed") {
+        toast("Microphone blocked", { 
+          description: "Check Safari permissions. On iOS embedded preview, open in a new tab." 
+        });
+        onPermissionError?.("denied");
+      } else if (event.error === "aborted") {
+        const timeSinceStart = Date.now() - lastStartAtRef.current;
+        if (retriesRef.current < 1 && timeSinceStart < 2000) {
+          console.log("Aborted immediately after start, retrying once...");
+          retriesRef.current++;
+          setTimeout(() => {
+            try {
+              recognitionRef.current?.start();
+            } catch (e) {
+              console.error("Retry failed:", e);
+            }
+          }, 250);
+          return;
+        } else {
+          toast("Voice was interrupted", { 
+            description: "Please try again." 
+          });
+        }
+      } else if (event.error === "no-speech" || event.error === "network") {
+        console.log("Soft error:", event.error);
       } else {
-        alert(`Speech recognition error: ${event.error}`);
+        toast("Speech recognition error", { 
+          description: event.error 
+        });
       }
+      
       setIsListening(false);
       onListeningChange?.(false);
     };
@@ -91,10 +155,23 @@ export const VoiceInterface = forwardRef<
     };
   }, [onTranscript, onListeningChange]);
 
-  const startListening = () => {
+  const startListening = async () => {
     if (isProcessing || isListening) return;
     console.log("Starting speech recognition");
+    
+    const hasAccess = await ensureMicAccess();
+    if (!hasAccess) return;
+
+    const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
+    
     try {
+      retriesRef.current = 0;
+      lastStartAtRef.current = Date.now();
+      
+      if (isIOS) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
       recognitionRef.current?.start();
       setIsListening(true);
       setTranscript("");
@@ -102,7 +179,9 @@ export const VoiceInterface = forwardRef<
     } catch (error: any) {
       console.error("Failed to start speech recognition:", error);
       if (error.message !== 'recognition already started') {
-        alert("Failed to start voice recognition. Please try again.");
+        toast("Couldn't start voice recognition", { 
+          description: "Please try again." 
+        });
       }
     }
   };

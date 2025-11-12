@@ -9,6 +9,8 @@ import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
 import { ExecutionStep } from "@/components/voice/ExecutionStep";
 import { ConfirmationCard } from "@/components/voice/ConfirmationCard";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -148,6 +150,9 @@ const Home = () => {
   const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState("");
+  const [showVoiceFallback, setShowVoiceFallback] = useState(false);
+  const [fallbackReason, setFallbackReason] = useState<"iframe" | "denied" | "unsupported" | null>(null);
+  const [fallbackText, setFallbackText] = useState("");
   const voiceInterfaceRef = useRef<{ startListening: () => void }>(null);
 
   const handleTranscript = async (text: string) => {
@@ -285,6 +290,14 @@ const Home = () => {
     voiceInterfaceRef.current?.startListening();
   };
 
+  const handleFallbackSubmit = () => {
+    if (!fallbackText.trim()) return;
+    handleTranscript(fallbackText);
+    setShowVoiceFallback(false);
+    setFallbackText("");
+    setFallbackReason(null);
+  };
+
   return (
     <div className="h-screen fixed inset-0 overflow-hidden w-full">
       <BackgroundAmbient />
@@ -297,8 +310,59 @@ const Home = () => {
           isProcessing={isProcessing}
           onListeningChange={setIsListening}
           onTranscriptChange={setCurrentTranscript}
+          onUnsupported={() => {
+            setFallbackReason("unsupported");
+            setShowVoiceFallback(true);
+          }}
+          onPermissionError={(reason) => {
+            setFallbackReason(reason);
+            setShowVoiceFallback(true);
+          }}
         />
       </div>
+
+      {/* Voice Fallback Dialog */}
+      <Dialog open={showVoiceFallback} onOpenChange={setShowVoiceFallback}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {fallbackReason === "iframe" && "Microphone blocked in preview"}
+              {fallbackReason === "denied" && "Microphone permission needed"}
+              {fallbackReason === "unsupported" && "Voice input not supported"}
+            </DialogTitle>
+            <DialogDescription>
+              {fallbackReason === "iframe" && "iOS blocks mic in embedded previews. Type your request below or open the app in a new tab."}
+              {fallbackReason === "denied" && "Enable mic access in Safari Settings, or type your request below."}
+              {fallbackReason === "unsupported" && "Your browser doesn't support voice input. Type your request below."}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              placeholder="Type your request…"
+              value={fallbackText}
+              onChange={(e) => setFallbackText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleFallbackSubmit()}
+              autoFocus
+            />
+            <div className="flex gap-2 justify-end">
+              {fallbackReason === "iframe" && (
+                <Button
+                  variant="outline"
+                  onClick={() => window.open(window.location.href, "_blank")}
+                >
+                  Open in new tab
+                </Button>
+              )}
+              <Button variant="outline" onClick={() => setShowVoiceFallback(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleFallbackSubmit}>
+                Send
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="relative h-full flex flex-col">
         {!conversationMode ? (
@@ -386,6 +450,7 @@ const Home = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
+                    className={action.label === "Voice" && isListening ? "bg-primary/10 rounded-2xl" : ""}
                   >
                     {action.label === "Voice" ? (
                       <div onClick={handleVoiceClick}>
