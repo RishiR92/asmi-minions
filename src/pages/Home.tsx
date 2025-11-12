@@ -48,6 +48,16 @@ const quickActions = [
     label: "Family",
     href: "/family",
   },
+  {
+    icon: DollarSign,
+    label: "Expenses",
+    href: "/expenses",
+  },
+  {
+    icon: Settings,
+    label: "Admin",
+    href: "/profile",
+  },
 ];
 
 const asmiResponses = {
@@ -296,15 +306,8 @@ const Home = () => {
                   </p>
                 </motion.div>
 
-                {/* Wake Word Hint */}
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-xs text-muted-foreground"
-                >
-                  Say "Hey Asmi" to start
-                </motion.p>
+                {/* Voice Interface - Small and Subtle */}
+                <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
               </motion.div>
             </div>
           
@@ -315,7 +318,9 @@ const Home = () => {
               transition={{ delay: 0.5 }}
               className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10"
             >
-              <div className="flex justify-start items-center gap-4 px-4 py-3 overflow-x-auto scrollbar-hide">
+              <div className="flex justify-start items-center gap-3 px-4 py-3 overflow-x-auto scrollbar-hide"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={action.label}

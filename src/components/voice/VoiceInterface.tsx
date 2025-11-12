@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff } from "lucide-react";
+import { Mic } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface VoiceInterfaceProps {
@@ -69,8 +69,8 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
   };
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Microphone Button */}
+    <div className="flex flex-col items-center gap-3">
+      {/* Microphone Button - Small and Subtle */}
       <motion.button
         onClick={toggleListening}
         disabled={isProcessing}
@@ -82,52 +82,42 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
           {isListening && (
             <>
               <motion.div
-                className="absolute inset-0 rounded-full bg-voice-primary/30"
-                initial={{ scale: 1, opacity: 0.8 }}
-                animate={{ scale: 2.5, opacity: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full bg-voice-secondary/20"
+                className="absolute inset-0 rounded-full bg-voice-primary/20"
                 initial={{ scale: 1, opacity: 0.6 }}
-                animate={{ scale: 2.5, opacity: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+                animate={{ scale: 2, opacity: 0 }}
+                transition={{ duration: 1.5, repeat: Infinity }}
               />
             </>
           )}
         </AnimatePresence>
 
-        {/* Main button */}
+        {/* Main button - smaller size */}
         <motion.div
-          className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all duration-300 ${
+          className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 ${
             isListening
-              ? "bg-primary shadow-lg shadow-primary/50"
-              : "voice-glass"
+              ? "bg-primary/80 shadow-md shadow-primary/30"
+              : "bg-muted/40 border border-border/40"
           } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
-          animate={isListening ? { scale: [1, 1.05, 1] } : {}}
+          animate={isListening ? { scale: [1, 1.02, 1] } : {}}
           transition={{ duration: 1, repeat: isListening ? Infinity : 0 }}
         >
-          {isListening ? (
-            <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-          ) : (
-            <MicOff className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
-          )}
+          <Mic className={`w-4 h-4 sm:w-5 sm:h-5 ${isListening ? 'text-white' : 'text-muted-foreground'}`} />
         </motion.div>
       </motion.button>
 
-      {/* Sound wave visualization */}
+      {/* Sound wave visualization - smaller */}
       <AnimatePresence>
         {isListening && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center gap-1 h-12"
+            className="flex items-center gap-1 h-8"
           >
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-1 bg-primary rounded-full"
+                className="w-0.5 bg-primary rounded-full"
                 animate={{
                   height: ["20%", "100%", "20%"],
                 }}
