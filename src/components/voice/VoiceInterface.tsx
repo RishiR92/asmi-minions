@@ -7,11 +7,10 @@ interface VoiceInterfaceProps {
   isProcessing?: boolean;
   onListeningChange?: (isListening: boolean) => void;
   onTranscriptChange?: (text: string) => void;
-  bindControls?: (controls: { start: () => void; stop: () => void; toggle: () => void }) => void;
-  hideUI?: boolean;
+  overlayMode?: boolean;
 }
 
-export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, bindControls, hideUI }: VoiceInterfaceProps) => {
+export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, overlayMode = false }: VoiceInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -23,9 +22,10 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
       return;
     }
 
+    const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false; // Changed to false for better mobile support
+    recognitionRef.current.continuous = isIOS ? true : false;
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = 'en-US';
     recognitionRef.current.maxAlternatives = 1;
@@ -88,7 +88,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
     };
   }, [onTranscript, onListeningChange]);
 
-  const startListening = async () => {
+  const startListening = () => {
     if (isProcessing || isListening) return;
     console.log("Starting speech recognition");
     try {
@@ -96,9 +96,11 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
       setIsListening(true);
       setTranscript("");
       onListeningChange?.(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to start speech recognition:", error);
-      alert("Failed to start voice recognition. Please try again.");
+      if (error.message !== 'recognition already started') {
+        alert("Failed to start voice recognition. Please try again.");
+      }
     }
   };
 
@@ -118,13 +120,17 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
     }
   };
 
-  // Expose controls to parent when requested
-  useEffect(() => {
-    bindControls?.({ start: startListening, stop: stopListening, toggle: toggleListening });
-  }, [bindControls, isProcessing, isListening]);
-  if (hideUI) {
-    return null;
+  if (overlayMode) {
+    return (
+      <button
+        onClick={toggleListening}
+        disabled={isProcessing}
+        className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer opacity-0 bg-transparent"
+        aria-label="Toggle voice input"
+      />
+    );
   }
+
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Microphone Button - Small and Subtle */}

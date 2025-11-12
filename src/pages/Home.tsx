@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
@@ -143,7 +143,6 @@ const Home = () => {
   const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState("");
-  const voiceControls = useRef<{ start: () => void; stop: () => void; toggle: () => void } | null>(null);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -286,20 +285,29 @@ const Home = () => {
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
               <motion.div className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl">
                 
-                {/* Large Animated Avatar - Clickable */}
-                <motion.button
-                  onClick={() => {
-                    voiceControls.current?.toggle?.();
-                  }}
-                  animate={{ 
-                    scale: [1, 1.02, 1],
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-24 h-24 sm:w-32 sm:h-32 cursor-pointer"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <AsmiAvatar isThinking={isProcessing} isListening={isListening} />
-                </motion.button>
+                {/* Large Animated Avatar with Voice Overlay */}
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32">
+                  <VoiceInterface
+                    overlayMode
+                    onTranscript={handleTranscript}
+                    isProcessing={isProcessing}
+                    onListeningChange={setIsListening}
+                    onTranscriptChange={setCurrentTranscript}
+                  />
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.02, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="relative z-0 w-full h-full pointer-events-none"
+                  >
+                    <AsmiAvatar isThinking={isProcessing} isListening={isListening} />
+                  </motion.div>
+                </div>
 
                 {/* Warm Greeting */}
                 <motion.div
@@ -346,17 +354,6 @@ const Home = () => {
                   </AnimatePresence>
                 </motion.div>
 
-                {/* Hidden Voice Interface - Triggered by avatar click */}
-                <div className="hidden">
-                  <VoiceInterface 
-                    onTranscript={handleTranscript} 
-                    isProcessing={isProcessing}
-                    onListeningChange={setIsListening}
-                    onTranscriptChange={setCurrentTranscript}
-                    bindControls={(controls) => { voiceControls.current = controls; }}
-                    hideUI
-                  />
-                </div>
               </motion.div>
             </div>
           
