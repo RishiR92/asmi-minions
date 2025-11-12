@@ -142,6 +142,7 @@ const Home = () => {
   const [showResult, setShowResult] = useState(false);
   const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
   const [isListening, setIsListening] = useState(false);
+  const [currentTranscript, setCurrentTranscript] = useState("");
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -270,6 +271,7 @@ const Home = () => {
     setFinalResult(null);
     setIsProcessing(false);
     setIsListening(false);
+    setCurrentTranscript("");
   };
 
   return (
@@ -312,19 +314,23 @@ const Home = () => {
                   <AnimatePresence mode="wait">
                     {isListening ? (
                       <motion.p
-                        key="listening"
+                        key="transcript"
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -5 }}
-                        className="text-sm sm:text-base text-primary flex items-center justify-center gap-2"
+                        className="text-sm sm:text-base text-primary/90 min-h-[24px] px-4"
                       >
-                        <span>Listening</span>
-                        <motion.span
-                          animate={{ opacity: [0.4, 1, 0.4] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        >
-                          ...
-                        </motion.span>
+                        {currentTranscript || (
+                          <span className="flex items-center justify-center gap-2">
+                            <span>Listening</span>
+                            <motion.span
+                              animate={{ opacity: [0.4, 1, 0.4] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              ...
+                            </motion.span>
+                          </span>
+                        )}
                       </motion.p>
                     ) : (
                       <motion.p
@@ -346,6 +352,7 @@ const Home = () => {
                     onTranscript={handleTranscript} 
                     isProcessing={isProcessing}
                     onListeningChange={setIsListening}
+                    onTranscriptChange={setCurrentTranscript}
                   />
                 </div>
               </motion.div>

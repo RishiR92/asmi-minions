@@ -31,10 +31,10 @@ export const AsmiAvatar = ({ isThinking = false, isListening = false }: AsmiAvat
         className="relative w-full h-full rounded-full overflow-hidden"
         style={{
           background: isListening 
-            ? "hsl(var(--primary))" 
+            ? "linear-gradient(135deg, #00D9FF, #00A8FF)" 
             : "hsl(220, 40%, 35%)",
           boxShadow: isListening
-            ? "0 0 40px hsla(var(--primary), 0.6), 0 0 80px hsla(var(--primary), 0.4)"
+            ? "0 0 60px #00D9FF, 0 0 100px rgba(0, 217, 255, 0.6), 0 0 140px rgba(0, 217, 255, 0.4)"
             : "0 0 40px rgba(220, 40, 35, 0.4), 0 0 80px rgba(220, 40, 35, 0.2)",
         }}
         animate={

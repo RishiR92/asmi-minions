@@ -6,9 +6,10 @@ interface VoiceInterfaceProps {
   onTranscript: (text: string) => void;
   isProcessing?: boolean;
   onListeningChange?: (isListening: boolean) => void;
+  onTranscriptChange?: (text: string) => void;
 }
 
-export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange }: VoiceInterfaceProps) => {
+export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange }: VoiceInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -37,7 +38,9 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
         }
       }
 
-      setTranscript(interimTranscript || finalTranscript);
+      const currentTranscript = interimTranscript || finalTranscript;
+      setTranscript(currentTranscript);
+      onTranscriptChange?.(currentTranscript);
       
       if (finalTranscript) {
         onTranscript(finalTranscript.trim());
