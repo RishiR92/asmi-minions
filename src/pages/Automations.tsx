@@ -210,8 +210,8 @@ const Automations = () => {
             className="flex items-center justify-between mb-4"
           >
             <div>
-              <h1 className="text-3xl sm:text-2xl font-bold text-foreground">AI Mins</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">AI Mins</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {automations.filter(a => automationStates[a.id]).length} active
               </p>
             </div>

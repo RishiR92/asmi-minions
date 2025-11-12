@@ -24,44 +24,44 @@ const Expenses = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/40">
-        <div className="flex items-center gap-3 p-5">
+        <div className="flex items-center gap-2 p-3 sm:p-5">
           <Link to="/">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="w-5 h-5" />
+            <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 sm:h-10 sm:w-10">
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-semibold text-foreground">Expenses</h1>
+          <h1 className="text-lg sm:text-2xl font-semibold text-foreground">Expenses</h1>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-5 space-y-6">
+      <div className="p-3 sm:p-5 space-y-4 sm:space-y-6">
         {/* Monthly Overview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="liquid-glass rounded-2xl p-6"
+          className="liquid-glass rounded-2xl p-4 sm:p-6"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </div>
-            <h2 className="text-base font-semibold text-foreground">Monthly Overview</h2>
+            <h2 className="text-sm sm:text-base font-semibold text-foreground">Monthly Overview</h2>
           </div>
           
-          <div className="text-center mb-4">
-            <p className="text-3xl font-bold text-foreground">${totalMonthly.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground mt-1">Total Monthly Expenses</p>
+          <div className="text-center mb-3 sm:mb-4">
+            <p className="text-2xl sm:text-3xl font-bold text-foreground">${totalMonthly.toFixed(2)}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">Total Monthly Expenses</p>
           </div>
 
-          <div className="flex gap-4 mt-4">
-            <div className="flex-1 p-3 rounded-xl bg-background/40">
-              <p className="text-xs text-muted-foreground mb-1">Subscriptions</p>
-              <p className="text-base font-semibold text-foreground">${subscriptionsTotal.toFixed(2)}</p>
+          <div className="flex gap-3 sm:gap-4 mt-3 sm:mt-4">
+            <div className="flex-1 p-2 sm:p-3 rounded-xl bg-background/40">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">Subscriptions</p>
+              <p className="text-sm sm:text-base font-semibold text-foreground">${subscriptionsTotal.toFixed(2)}</p>
             </div>
-            <div className="flex-1 p-3 rounded-xl bg-background/40">
-              <p className="text-xs text-muted-foreground mb-1">Bills</p>
-              <p className="text-base font-semibold text-foreground">${billsTotal.toFixed(2)}</p>
+            <div className="flex-1 p-2 sm:p-3 rounded-xl bg-background/40">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">Bills</p>
+              <p className="text-sm sm:text-base font-semibold text-foreground">${billsTotal.toFixed(2)}</p>
             </div>
           </div>
         </motion.div>
@@ -71,9 +71,9 @@ const Expenses = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="liquid-glass rounded-2xl p-4 space-y-3"
+          className="liquid-glass rounded-2xl p-3 sm:p-4 space-y-2 sm:space-y-3"
         >
-          <h2 className="text-base font-semibold text-foreground">Bills to Pay</h2>
+          <h2 className="text-sm sm:text-base font-semibold text-foreground">Bills to Pay</h2>
           <div className="space-y-2">
             {upcomingBills.map((bill) => {
               const Icon = bill.icon;
@@ -84,19 +84,19 @@ const Expenses = () => {
               };
               
               return (
-                <div key={bill.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${statusColors[bill.status as keyof typeof statusColors]}`}>
-                      <Icon className="w-5 h-5" />
+                <div key={bill.id} className="flex items-center justify-between p-2 sm:p-3 rounded-xl bg-background/40 gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${statusColors[bill.status as keyof typeof statusColors]}`}>
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{bill.title}</p>
-                      <p className="text-xs text-muted-foreground">{bill.dueDate}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-medium text-foreground">{bill.title}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">{bill.dueDate}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-foreground">${bill.amount.toFixed(2)}</p>
-                    <Button size="sm" className="rounded-full h-8 px-4 text-xs">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <p className="text-xs sm:text-sm font-semibold text-foreground">${bill.amount.toFixed(2)}</p>
+                    <Button size="sm" className="rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs">
                       Pay
                     </Button>
                   </div>
@@ -111,26 +111,26 @@ const Expenses = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="liquid-glass rounded-2xl p-4 space-y-3"
+          className="liquid-glass rounded-2xl p-3 sm:p-4 space-y-2 sm:space-y-3"
         >
-          <h2 className="text-base font-semibold text-foreground">Subscriptions</h2>
+          <h2 className="text-sm sm:text-base font-semibold text-foreground">Subscriptions</h2>
           <div className="space-y-2">
             {activeSubscriptions.map((sub) => {
               const Icon = sub.icon;
               return (
-                <div key={sub.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-primary" />
+                <div key={sub.id} className="flex items-center justify-between p-2 sm:p-3 rounded-xl bg-background/40 gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{sub.name}</p>
-                      <p className="text-xs text-muted-foreground">{sub.renewDate}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-medium text-foreground truncate">{sub.name}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">{sub.renewDate}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-foreground">${sub.amount}/mo</p>
-                    <Button size="sm" variant="outline" className="rounded-full h-8 px-4 text-xs">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <p className="text-xs sm:text-sm font-semibold text-foreground whitespace-nowrap">${sub.amount}/mo</p>
+                    <Button size="sm" variant="outline" className="rounded-full h-7 sm:h-8 px-2 sm:px-4 text-[10px] sm:text-xs">
                       Manage
                     </Button>
                   </div>
