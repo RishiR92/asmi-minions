@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { Mic } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,7 +10,10 @@ interface VoiceInterfaceProps {
   overlayMode?: boolean;
 }
 
-export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, overlayMode = false }: VoiceInterfaceProps) => {
+export const VoiceInterface = forwardRef<
+  { startListening: () => void },
+  VoiceInterfaceProps
+>(({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, overlayMode = false }, ref) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -120,6 +123,10 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    startListening
+  }));
+
   if (overlayMode) {
     return (
       <button
@@ -212,4 +219,4 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
       </AnimatePresence>
     </div>
   );
-};
+});
