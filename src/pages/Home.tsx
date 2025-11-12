@@ -153,7 +153,6 @@ const Home = () => {
   const [showVoiceFallback, setShowVoiceFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState<"iframe" | "denied" | "unsupported" | null>(null);
   const [fallbackText, setFallbackText] = useState("");
-  const voiceInterfaceRef = useRef<{ startListening: () => void }>(null);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -285,11 +284,6 @@ const Home = () => {
     setCurrentTranscript("");
   };
 
-  const handleVoiceClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    voiceInterfaceRef.current?.startListening();
-  };
-
   const handleFallbackSubmit = () => {
     if (!fallbackText.trim()) return;
     handleTranscript(fallbackText);
@@ -301,25 +295,6 @@ const Home = () => {
   return (
     <div className="h-screen fixed inset-0 overflow-hidden w-full">
       <BackgroundAmbient />
-      
-      {/* Hidden Voice Interface */}
-      <div className="hidden">
-        <VoiceInterface
-          ref={voiceInterfaceRef}
-          onTranscript={handleTranscript}
-          isProcessing={isProcessing}
-          onListeningChange={setIsListening}
-          onTranscriptChange={setCurrentTranscript}
-          onUnsupported={() => {
-            setFallbackReason("unsupported");
-            setShowVoiceFallback(true);
-          }}
-          onPermissionError={(reason) => {
-            setFallbackReason(reason);
-            setShowVoiceFallback(true);
-          }}
-        />
-      </div>
 
       {/* Voice Fallback Dialog */}
       <Dialog open={showVoiceFallback} onOpenChange={setShowVoiceFallback}>
@@ -453,8 +428,23 @@ const Home = () => {
                     className={action.label === "Voice" && isListening ? "bg-primary/10 rounded-2xl" : ""}
                   >
                     {action.label === "Voice" ? (
-                      <div onClick={handleVoiceClick}>
+                      <div className="relative">
                         <QuickActionChip {...action} />
+                        <VoiceInterface
+                          overlayMode={true}
+                          onTranscript={handleTranscript}
+                          isProcessing={isProcessing}
+                          onListeningChange={setIsListening}
+                          onTranscriptChange={setCurrentTranscript}
+                          onUnsupported={() => {
+                            setFallbackReason("unsupported");
+                            setShowVoiceFallback(true);
+                          }}
+                          onPermissionError={(reason) => {
+                            setFallbackReason(reason);
+                            setShowVoiceFallback(true);
+                          }}
+                        />
                       </div>
                     ) : (
                       <QuickActionChip {...action} />
