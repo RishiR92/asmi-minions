@@ -75,6 +75,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
         onClick={toggleListening}
         disabled={isProcessing}
         className="relative group"
+        data-voice-button
         whileTap={{ scale: 0.95 }}
       >
         {/* Ripple effect when listening */}
