@@ -429,7 +429,7 @@ const Home = () => {
                   >
                     {action.label === "Voice" ? (
                       <div className="relative">
-                        <QuickActionChip {...action} />
+                        <QuickActionChip icon={action.icon} label={action.label} />
                         <VoiceInterface
                           overlayMode={true}
                           onTranscript={handleTranscript}

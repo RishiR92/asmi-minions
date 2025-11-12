@@ -156,26 +156,39 @@ export const VoiceInterface = forwardRef<
   }, [onTranscript, onListeningChange]);
 
   const startListening = async () => {
-    if (isProcessing || isListening) return;
+    console.log("startListening called - isProcessing:", isProcessing, "isListening:", isListening);
+    if (isProcessing || isListening) {
+      console.log("Aborting: already processing or listening");
+      return;
+    }
     console.log("Starting speech recognition");
     
+    console.log("Checking mic access...");
     const hasAccess = await ensureMicAccess();
-    if (!hasAccess) return;
+    if (!hasAccess) {
+      console.log("No mic access granted");
+      return;
+    }
+    console.log("Mic access granted");
 
     const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
+    console.log("Is iOS:", isIOS);
     
     try {
       retriesRef.current = 0;
       lastStartAtRef.current = Date.now();
       
       if (isIOS) {
+        console.log("iOS detected, adding 300ms delay...");
         await new Promise(resolve => setTimeout(resolve, 300));
       }
       
+      console.log("Calling recognition.start()...");
       recognitionRef.current?.start();
       setIsListening(true);
       setTranscript("");
       onListeningChange?.(true);
+      console.log("setIsListening(true) called, onListeningChange called");
     } catch (error: any) {
       console.error("Failed to start speech recognition:", error);
       if (error.message !== 'recognition already started') {
@@ -195,6 +208,7 @@ export const VoiceInterface = forwardRef<
   };
 
   const toggleListening = () => {
+    console.log("toggleListening called - isListening:", isListening);
     if (isListening) {
       stopListening();
     } else {
@@ -207,12 +221,19 @@ export const VoiceInterface = forwardRef<
   }));
 
   if (overlayMode) {
+    console.log("VoiceInterface overlay clicked, isListening:", isListening, "isProcessing:", isProcessing);
     return (
       <button
-        onClick={toggleListening}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log("Overlay button clicked");
+          toggleListening();
+        }}
         disabled={isProcessing}
-        className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer opacity-0 bg-transparent"
+        className="absolute inset-0 z-20 flex items-center justify-center cursor-pointer"
         aria-label="Toggle voice input"
+        style={{ backgroundColor: 'transparent' }}
       />
     );
   }
