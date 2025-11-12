@@ -13,7 +13,6 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
-  const persistentRefs = useRef<any[]>([]);
 
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -24,12 +23,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
-    
-    // iOS Safari workaround: prevent garbage collection
-    persistentRefs.current.push(recognitionRef.current);
-    (window as any).__speechRecognition = recognitionRef.current;
-    
-    recognitionRef.current.continuous = true; // Better for iOS reliability
+    recognitionRef.current.continuous = false; // Changed to false for better mobile support
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = 'en-US';
     recognitionRef.current.maxAlternatives = 1;
@@ -51,18 +45,14 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
 
       const currentTranscript = interimTranscript || finalTranscript;
       console.log("Current transcript:", currentTranscript);
-      
-      // Update transcript display
       setTranscript(currentTranscript);
       onTranscriptChange?.(currentTranscript);
       
       if (finalTranscript) {
         console.log("Final transcript:", finalTranscript.trim());
-        // iOS fix: Small delay before submitting to ensure state is captured
-        setTimeout(() => {
-          onTranscript(finalTranscript.trim());
-          recognitionRef.current?.stop();
-        }, 100);
+        onTranscript(finalTranscript.trim());
+        // Auto-stop after final result for mobile
+        recognitionRef.current?.stop();
       }
     };
     
@@ -96,7 +86,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
     };
   }, [onTranscript, onListeningChange]);
 
-  const toggleListening = async () => {
+  const toggleListening = () => {
     if (isProcessing) return;
 
     if (isListening) {
@@ -106,46 +96,14 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
       onListeningChange?.(false);
     } else {
       console.log("Starting speech recognition");
-      
-      // iOS: Request microphone permission explicitly
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (error) {
-        console.error("Microphone permission denied:", error);
-        alert("Microphone access is required. Please enable it in your browser settings.");
-        return;
-      }
-
       try {
         recognitionRef.current?.start();
         setIsListening(true);
+        setTranscript("");
         onListeningChange?.(true);
-        
-        // Don't clear transcript immediately - wait for new input
-        setTimeout(() => {
-          if (transcript) {
-            setTranscript("");
-            onTranscriptChange?.("");
-          }
-        }, 100);
       } catch (error) {
         console.error("Failed to start speech recognition:", error);
-        
-        // iOS retry logic
-        if (error instanceof Error && error.message.includes('already started')) {
-          recognitionRef.current?.stop();
-          setTimeout(() => {
-            try {
-              recognitionRef.current?.start();
-              setIsListening(true);
-              onListeningChange?.(true);
-            } catch (retryError) {
-              alert("Failed to start voice recognition. Please try again.");
-            }
-          }, 300);
-        } else {
-          alert("Failed to start voice recognition. Please try again.");
-        }
+        alert("Failed to start voice recognition. Please try again.");
       }
     }
   };

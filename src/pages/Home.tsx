@@ -285,16 +285,21 @@ const Home = () => {
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
               <motion.div className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl">
                 
-                {/* Large Animated Avatar - Direct Voice Trigger */}
-                <motion.div
+                {/* Large Animated Avatar - Clickable */}
+                <motion.button
+                  onClick={() => {
+                    const voiceButton = document.querySelector('[data-voice-button]') as HTMLButtonElement;
+                    if (voiceButton) voiceButton.click();
+                  }}
                   animate={{ 
                     scale: [1, 1.02, 1],
                   }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-24 h-24 sm:w-32 sm:h-32"
+                  className="w-24 h-24 sm:w-32 sm:h-32 cursor-pointer"
+                  whileTap={{ scale: 0.95 }}
                 >
                   <AsmiAvatar isThinking={isProcessing} isListening={isListening} />
-                </motion.div>
+                </motion.button>
 
                 {/* Warm Greeting */}
                 <motion.div
@@ -341,13 +346,15 @@ const Home = () => {
                   </AnimatePresence>
                 </motion.div>
 
-                {/* Voice Interface - Direct Integration */}
-                <VoiceInterface 
-                  onTranscript={handleTranscript} 
-                  isProcessing={isProcessing}
-                  onListeningChange={setIsListening}
-                  onTranscriptChange={setCurrentTranscript}
-                />
+                {/* Hidden Voice Interface - Triggered by avatar click */}
+                <div className="hidden">
+                  <VoiceInterface 
+                    onTranscript={handleTranscript} 
+                    isProcessing={isProcessing}
+                    onListeningChange={setIsListening}
+                    onTranscriptChange={setCurrentTranscript}
+                  />
+                </div>
               </motion.div>
             </div>
           
