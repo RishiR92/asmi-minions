@@ -66,7 +66,7 @@ export const ConversationMessage = ({
               ))}
             </div>
           ) : (
-            <p className={`text-xs leading-relaxed ${isUser ? "text-primary-foreground" : "asmi-message"}`}>{content}</p>
+            <p className={`${isUser ? "text-xs text-primary-foreground" : "asmi-message"} leading-relaxed`}>{content}</p>
           )}
         </div>
       </div>

@@ -43,7 +43,7 @@ export const ActionPlanCard = ({
       </div>
 
       {/* Plan description */}
-      <div className="asmi-message text-foreground text-xs leading-relaxed">{plan}</div>
+      <div className="asmi-message text-foreground leading-relaxed">{plan}</div>
 
       {/* Steps if provided */}
       {steps.length > 0 && (
