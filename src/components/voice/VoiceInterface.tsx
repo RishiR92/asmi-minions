@@ -7,9 +7,11 @@ interface VoiceInterfaceProps {
   isProcessing?: boolean;
   onListeningChange?: (isListening: boolean) => void;
   onTranscriptChange?: (text: string) => void;
+  bindControls?: (controls: { start: () => void; stop: () => void; toggle: () => void }) => void;
+  hideUI?: boolean;
 }
 
-export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange }: VoiceInterfaceProps) => {
+export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange, onTranscriptChange, bindControls, hideUI }: VoiceInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -86,28 +88,43 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false, onListening
     };
   }, [onTranscript, onListeningChange]);
 
-  const toggleListening = () => {
-    if (isProcessing) return;
-
-    if (isListening) {
-      console.log("Stopping speech recognition");
-      recognitionRef.current?.stop();
-      setIsListening(false);
-      onListeningChange?.(false);
-    } else {
-      console.log("Starting speech recognition");
-      try {
-        recognitionRef.current?.start();
-        setIsListening(true);
-        setTranscript("");
-        onListeningChange?.(true);
-      } catch (error) {
-        console.error("Failed to start speech recognition:", error);
-        alert("Failed to start voice recognition. Please try again.");
-      }
+  const startListening = async () => {
+    if (isProcessing || isListening) return;
+    console.log("Starting speech recognition");
+    try {
+      recognitionRef.current?.start();
+      setIsListening(true);
+      setTranscript("");
+      onListeningChange?.(true);
+    } catch (error) {
+      console.error("Failed to start speech recognition:", error);
+      alert("Failed to start voice recognition. Please try again.");
     }
   };
 
+  const stopListening = () => {
+    if (!isListening) return;
+    console.log("Stopping speech recognition");
+    recognitionRef.current?.stop();
+    setIsListening(false);
+    onListeningChange?.(false);
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
+  // Expose controls to parent when requested
+  useEffect(() => {
+    bindControls?.({ start: startListening, stop: stopListening, toggle: toggleListening });
+  }, [bindControls, isProcessing, isListening]);
+  if (hideUI) {
+    return null;
+  }
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Microphone Button - Small and Subtle */}

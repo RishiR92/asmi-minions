@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
@@ -143,6 +143,7 @@ const Home = () => {
   const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState("");
+  const voiceControls = useRef<{ start: () => void; stop: () => void; toggle: () => void } | null>(null);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -288,8 +289,7 @@ const Home = () => {
                 {/* Large Animated Avatar - Clickable */}
                 <motion.button
                   onClick={() => {
-                    const voiceButton = document.querySelector('[data-voice-button]') as HTMLButtonElement;
-                    if (voiceButton) voiceButton.click();
+                    voiceControls.current?.toggle?.();
                   }}
                   animate={{ 
                     scale: [1, 1.02, 1],
@@ -353,6 +353,8 @@ const Home = () => {
                     isProcessing={isProcessing}
                     onListeningChange={setIsListening}
                     onTranscriptChange={setCurrentTranscript}
+                    bindControls={(controls) => { voiceControls.current = controls; }}
+                    hideUI
                   />
                 </div>
               </motion.div>
