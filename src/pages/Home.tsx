@@ -141,6 +141,7 @@ const Home = () => {
   const [executionSteps, setExecutionSteps] = useState<ExecutionStepType[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
+  const [isListening, setIsListening] = useState(false);
 
   const handleTranscript = async (text: string) => {
     if (!text.trim()) return;
@@ -268,6 +269,7 @@ const Home = () => {
     setShowResult(false);
     setFinalResult(null);
     setIsProcessing(false);
+    setIsListening(false);
   };
 
   return (
@@ -294,7 +296,7 @@ const Home = () => {
                   className="w-24 h-24 sm:w-32 sm:h-32 cursor-pointer"
                   whileTap={{ scale: 0.95 }}
                 >
-                  <AsmiAvatar isThinking={isProcessing} />
+                  <AsmiAvatar isThinking={isProcessing} isListening={isListening} />
                 </motion.button>
 
                 {/* Warm Greeting */}
@@ -306,14 +308,45 @@ const Home = () => {
                   <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground">
                     Hey there, I'm Asmi
                   </h1>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Tell me what you'd like me to help with today
-                  </p>
+                  
+                  <AnimatePresence mode="wait">
+                    {isListening ? (
+                      <motion.p
+                        key="listening"
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        className="text-sm sm:text-base text-primary flex items-center justify-center gap-2"
+                      >
+                        <span>Listening</span>
+                        <motion.span
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          ...
+                        </motion.span>
+                      </motion.p>
+                    ) : (
+                      <motion.p
+                        key="help"
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        className="text-sm sm:text-base text-muted-foreground"
+                      >
+                        Tell me what you'd like me to help with today
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
 
                 {/* Hidden Voice Interface - Triggered by avatar click */}
                 <div className="hidden">
-                  <VoiceInterface onTranscript={handleTranscript} isProcessing={isProcessing} />
+                  <VoiceInterface 
+                    onTranscript={handleTranscript} 
+                    isProcessing={isProcessing}
+                    onListeningChange={setIsListening}
+                  />
                 </div>
               </motion.div>
             </div>

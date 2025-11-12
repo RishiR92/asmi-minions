@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 interface VoiceInterfaceProps {
   onTranscript: (text: string) => void;
   isProcessing?: boolean;
+  onListeningChange?: (isListening: boolean) => void;
 }
 
-export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInterfaceProps) => {
+export const VoiceInterface = ({ onTranscript, isProcessing = false, onListeningChange }: VoiceInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -46,6 +47,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
     recognitionRef.current.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
       setIsListening(false);
+      onListeningChange?.(false);
     };
 
     return () => {
@@ -53,7 +55,7 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
         recognitionRef.current.stop();
       }
     };
-  }, [onTranscript]);
+  }, [onTranscript, onListeningChange]);
 
   const toggleListening = () => {
     if (isProcessing) return;
@@ -61,10 +63,12 @@ export const VoiceInterface = ({ onTranscript, isProcessing = false }: VoiceInte
     if (isListening) {
       recognitionRef.current?.stop();
       setIsListening(false);
+      onListeningChange?.(false);
     } else {
       recognitionRef.current?.start();
       setIsListening(true);
       setTranscript("");
+      onListeningChange?.(true);
     }
   };
 

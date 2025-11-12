@@ -30,8 +30,12 @@ export const AsmiAvatar = ({ isThinking = false, isListening = false }: AsmiAvat
       <motion.div
         className="relative w-full h-full rounded-full overflow-hidden"
         style={{
-          background: "hsl(220, 40%, 35%)",
-          boxShadow: "0 0 40px rgba(220, 40, 35, 0.4), 0 0 80px rgba(220, 40, 35, 0.2)",
+          background: isListening 
+            ? "hsl(var(--primary))" 
+            : "hsl(220, 40%, 35%)",
+          boxShadow: isListening
+            ? "0 0 40px hsla(var(--primary), 0.6), 0 0 80px hsla(var(--primary), 0.4)"
+            : "0 0 40px rgba(220, 40, 35, 0.4), 0 0 80px rgba(220, 40, 35, 0.2)",
         }}
         animate={
           isThinking
