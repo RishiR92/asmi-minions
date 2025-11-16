@@ -473,12 +473,13 @@ const Home = () => {
                   />
                 )}
 
-                {/* Execution Steps */}
+                {/* Execution Steps - Only show current executing step */}
                 {executionSteps.map((step, index) => (
                   <ExecutionStep
                     key={index}
                     step={step.text}
                     status={step.status}
+                    isCurrentStep={step.status === "executing"}
                   />
                 ))}
 
