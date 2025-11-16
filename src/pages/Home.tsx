@@ -98,26 +98,19 @@ const getRandomResponse = (type: keyof typeof asmiResponses) => {
 const generateConfirmation = (plan: string) => {
   const lowerPlan = plan.toLowerCase();
   
-  if (lowerPlan.includes('movie') || lowerPlan.includes('ticket')) {
+  if (lowerPlan.includes('split') || lowerPlan.includes('dinner') || lowerPlan.includes('bill')) {
     return {
-      type: "movie" as const,
+      type: "billsplit" as const,
       data: {
-        title: "Dune: Part Three",
-        location: "AMC Downtown",
-        datetime: "Friday, 7:30 PM",
-        seats: "2 tickets (Row G, Seats 12-13)",
-        amount: "$28.00",
-        confirmationNumber: "BK-" + Math.random().toString(36).substr(2, 6).toUpperCase()
-      }
-    };
-  } else if (lowerPlan.includes('bill') || lowerPlan.includes('payment')) {
-    return {
-      type: "payment" as const,
-      data: {
-        amount: "$127.50",
-        method: "•••• 4242",
-        transactionId: "TXN-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-        datetime: new Date().toLocaleString()
+        title: "Dinner at Olive Garden",
+        totalAmount: "$240.00",
+        perPerson: "$30.00",
+        attendees: 8,
+        datetime: "Yesterday, 9:00 PM",
+        location: "Olive Garden - Downtown",
+        splitMethod: "Splitwise",
+        status: "All paid ✓",
+        confirmationId: "SW-" + Math.random().toString(36).substr(2, 6).toUpperCase()
       }
     };
   } else if (lowerPlan.includes('schedule') || lowerPlan.includes('calendar')) {
@@ -147,7 +140,7 @@ const Home = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStepType[]>([]);
   const [showResult, setShowResult] = useState(false);
-  const [finalResult, setFinalResult] = useState<{ type: "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
+  const [finalResult, setFinalResult] = useState<{ type: "billsplit" | "movie" | "payment" | "calendar" | "generic"; data: any } | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState("");
   const [showVoiceFallback, setShowVoiceFallback] = useState(false);
@@ -175,29 +168,14 @@ const Home = () => {
       let plan = "";
       let steps: string[] = [];
 
-      if (text.toLowerCase().includes("movie") || text.toLowerCase().includes("tickets")) {
-        plan = "I'll find the best-rated movies playing this Friday evening and book 2 tickets at your preferred theater.";
+      if (text.toLowerCase().includes("split") || text.toLowerCase().includes("dinner") || text.toLowerCase().includes("bill")) {
+        plan = "I'll check your email for the 9pm dinner details, split the $240 bill among 8 attendees ($30 each), and send payment requests via Splitwise.";
         steps = [
-          "Search for highly-rated movies (IMDB 7+)",
-          "Find showtimes for Friday 7-9PM",
-          "Check availability at AMC Downtown",
-          "Book 2 tickets and send confirmation",
-        ];
-      } else if (text.toLowerCase().includes("dinner") || text.toLowerCase().includes("restaurant")) {
-        plan = "I'll make a reservation at a top-rated Japanese restaurant for this Sunday at 7PM.";
-        steps = [
-          "Search for Japanese restaurants (4.5+ rating)",
-          "Check availability for Sunday 7PM",
-          "Make reservation for 2 people",
-          "Add to your calendar",
-        ];
-      } else if (text.toLowerCase().includes("bill") || text.toLowerCase().includes("pay")) {
-        plan = "I'll review your upcoming bills and set up automatic payments for recurring charges.";
-        steps = [
-          "Identify upcoming bill due dates",
-          "Verify account balances",
-          "Schedule automatic payments",
-          "Set up payment confirmations",
+          "Check email for dinner attendees and priorities",
+          "Retrieve dinner bill details ($240 total)",
+          "Calculate per-person split ($30 each)",
+          "Send Splitwise payment requests to 8 people",
+          "Confirm all payments received",
         ];
       } else {
         plan = "I'll help you with that. Let me create a plan to get this done.";
