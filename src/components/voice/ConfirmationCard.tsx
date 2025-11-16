@@ -1,24 +1,119 @@
 import { motion } from "framer-motion";
-import { Film, CreditCard, Calendar, CheckCircle2, Clock, MapPin, Ticket, Hash } from "lucide-react";
+import { Film, CreditCard, Calendar, CheckCircle2, Clock, MapPin, Ticket, Hash, Users, DollarSign, Receipt } from "lucide-react";
 
 interface ConfirmationCardProps {
-  confirmationType: "movie" | "payment" | "calendar" | "generic";
+  confirmationType: "billsplit" | "movie" | "payment" | "calendar" | "generic";
   data: {
     title?: string;
     subtitle?: string;
     amount?: string;
+    totalAmount?: string;
+    perPerson?: string;
+    attendees?: number;
     location?: string;
     datetime?: string;
     seats?: string;
     confirmationNumber?: string;
+    confirmationId?: string;
     method?: string;
     transactionId?: string;
     duration?: string;
     description?: string;
+    splitMethod?: string;
+    status?: string;
   };
 }
 
 export const ConfirmationCard = ({ confirmationType, data }: ConfirmationCardProps) => {
+  if (confirmationType === "billsplit") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="voice-glass rounded-3xl p-5 space-y-4"
+      >
+        {/* Header with icon */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
+              <Receipt className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg text-foreground">Bill Split Complete!</h3>
+              <p className="text-xs text-muted-foreground">Everyone has paid</p>
+            </div>
+          </div>
+          <CheckCircle2 className="w-6 h-6 text-secondary" />
+        </div>
+
+        {/* Dinner details */}
+        <div className="space-y-3 pt-2">
+          <div>
+            <p className="text-2xl font-bold text-foreground">{data.title || "Dinner"}</p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>Location</span>
+              </div>
+              <p className="text-sm font-medium text-foreground">{data.location || "Restaurant"}</p>
+            </div>
+            
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Clock className="w-3.5 h-3.5" />
+                <span>Time</span>
+              </div>
+              <p className="text-sm font-medium text-foreground">{data.datetime || "9:00 PM"}</p>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Users className="w-3.5 h-3.5" />
+              <span>Attendees</span>
+            </div>
+            <p className="text-sm font-medium text-foreground">{data.attendees || 8} people</p>
+          </div>
+        </div>
+
+        {/* Split details */}
+        <div className="pt-3 border-t border-border/50 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Total Bill</span>
+            <span className="text-lg font-semibold text-foreground">{data.totalAmount || "$240.00"}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Per Person</span>
+            <span className="text-2xl font-bold text-primary">{data.perPerson || "$30.00"}</span>
+          </div>
+        </div>
+
+        {data.splitMethod && (
+          <div className="bg-secondary/10 rounded-xl p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Payment via {data.splitMethod}</span>
+            </div>
+            <span className="text-sm font-medium text-secondary">{data.status || "Complete"}</span>
+          </div>
+        )}
+
+        {data.confirmationId && (
+          <div className="bg-muted/30 rounded-xl p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Hash className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Transaction ID</span>
+            </div>
+            <span className="text-sm font-mono font-medium text-foreground">{data.confirmationId}</span>
+          </div>
+        )}
+      </motion.div>
+    );
+  }
+
   if (confirmationType === "movie") {
     return (
       <motion.div
