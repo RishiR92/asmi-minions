@@ -14,6 +14,7 @@ import Today from "@/pages/Today";
 import Work from "@/pages/Work";
 import Family from "@/pages/Family";
 import Expenses from "@/pages/Expenses";
+import Profile from "@/pages/Profile";
 import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings, Play } from "lucide-react";
 
 type DemoPhase = 
@@ -33,7 +34,8 @@ type DemoPhase =
   | "screen-today"
   | "screen-work"
   | "screen-family"
-  | "screen-expenses";
+  | "screen-expenses"
+  | "screen-profile";
 
 const Demo = () => {
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ const Demo = () => {
   
   const familyScrollRef = useRef<HTMLDivElement>(null);
   const expensesScrollRef = useRef<HTMLDivElement>(null);
+  const profileScrollRef = useRef<HTMLDivElement>(null);
 
   const fullTranscript = "Split bill for 9pm dinner";
 
@@ -76,6 +79,7 @@ const Demo = () => {
     { phase: "screen-work", duration: 6000 },
     { phase: "screen-family", duration: 8000 },
     { phase: "screen-expenses", duration: 6000 },
+    { phase: "screen-profile", duration: 6000 },
   ];
 
   // Progress through demo phases
@@ -156,11 +160,32 @@ const Demo = () => {
     }
   }, [phase]);
 
+  // Auto-scroll for Profile page
+  useEffect(() => {
+    if (phase === "screen-profile" && profileScrollRef.current) {
+      const container = profileScrollRef.current;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight / 2, behavior: 'smooth' });
+      }, 2000);
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      }, 4000);
+    }
+  }, [phase]);
+
   const isScreenPhase = phase.startsWith("screen-");
   const isBillSplitPhase = !isScreenPhase;
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden relative">
+      {/* Ambient glow effects */}
+      <div className="absolute top-20 left-20 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full" />
+      <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/5 blur-[150px] rounded-full" />
+      
       {/* Back button */}
       <button
         onClick={() => navigate("/")}
@@ -170,24 +195,35 @@ const Demo = () => {
       </button>
 
       {/* iPhone Mockup */}
-      <div className="flex items-center justify-center min-h-screen p-8">
+      <div className="flex items-center justify-center min-h-screen p-8 relative z-10">
         <div className="relative">
-          {/* iPhone Frame - Silver/White */}
-          <div className="relative w-[375px] h-[812px] bg-gradient-to-b from-zinc-200 via-zinc-300 to-zinc-400 rounded-[60px] p-3 shadow-2xl">
+          {/* Multi-colored glow effects */}
+          <div className="absolute -inset-4 rounded-[80px] blur-2xl opacity-60">
+            <div className="absolute inset-0 bg-emerald-500/40 rounded-[80px] animate-pulse" />
+          </div>
+          <div className="absolute -inset-6 rounded-[80px] blur-3xl opacity-40" style={{ animationDelay: '1s' }}>
+            <div className="absolute inset-0 bg-blue-500/30 rounded-[80px] animate-pulse" />
+          </div>
+          <div className="absolute -inset-8 rounded-[80px] blur-[100px] opacity-30" style={{ animationDelay: '2s' }}>
+            <div className="absolute inset-0 bg-purple-500/25 rounded-[80px] animate-pulse" />
+          </div>
+          
+          {/* iPhone Frame - Space Gray */}
+          <div className="relative w-[375px] h-[812px] bg-gradient-to-b from-slate-800 via-slate-900 to-black rounded-[60px] p-3 shadow-2xl">
             {/* Side Buttons */}
-            <div className="absolute left-[-3px] top-[120px] w-[3px] h-[32px] bg-zinc-400 rounded-l-sm" />
-            <div className="absolute left-[-3px] top-[180px] w-[3px] h-[60px] bg-zinc-400 rounded-l-sm" />
-            <div className="absolute left-[-3px] top-[250px] w-[3px] h-[60px] bg-zinc-400 rounded-l-sm" />
-            <div className="absolute right-[-3px] top-[180px] w-[3px] h-[80px] bg-zinc-400 rounded-r-sm" />
+            <div className="absolute left-[-3px] top-[120px] w-[3px] h-[32px] bg-slate-700 rounded-l-sm" />
+            <div className="absolute left-[-3px] top-[180px] w-[3px] h-[60px] bg-slate-700 rounded-l-sm" />
+            <div className="absolute left-[-3px] top-[250px] w-[3px] h-[60px] bg-slate-700 rounded-l-sm" />
+            <div className="absolute right-[-3px] top-[180px] w-[3px] h-[80px] bg-slate-700 rounded-r-sm" />
             
             {/* iPhone Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-10" />
             
             {/* iPhone Glow */}
-            <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(255,255,255,0.3)]" />
+            <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(16,185,129,0.2)]" />
 
             {/* Screen Content */}
-            <div className="relative w-full h-full bg-black rounded-[48px] overflow-hidden">
+            <div className="relative w-full h-full bg-slate-900 rounded-[48px] overflow-hidden">
               <AnimatePresence mode="wait">
                 {isBillSplitPhase && (
                   <motion.div
@@ -213,7 +249,7 @@ const Demo = () => {
                     exit={{ opacity: 0 }}
                     className="w-full h-full"
                   >
-                    <div className="w-full h-full overflow-hidden pointer-events-none">
+                    <div className="w-full h-full overflow-hidden pointer-events-none bg-slate-900 dark">
                       {phase === "screen-automations" && (
                         <div className="h-full overflow-y-auto scrollbar-hide">
                           <Automations />
@@ -237,6 +273,11 @@ const Demo = () => {
                       {phase === "screen-expenses" && (
                         <div ref={expensesScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
                           <Expenses />
+                        </div>
+                      )}
+                      {phase === "screen-profile" && (
+                        <div ref={profileScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
+                          <Profile />
                         </div>
                       )}
                     </div>
@@ -264,44 +305,62 @@ const BillSplitDemo = ({
   // Home Welcome Screen
   if (phase === "home-welcome") {
     return (
-      <div className="relative min-h-full flex flex-col items-center justify-center p-6">
+      <div className="relative min-h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col p-6 pt-16">
         <BackgroundAmbient />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center gap-6 z-10"
-        >
-          <AsmiAvatar />
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-lg text-center text-foreground/80 max-w-xs"
-          >
-            Hey there! What can I do for you today?
-          </motion.p>
-          
-          {/* Quick Actions */}
+        
+        {/* Large AsmiAvatar - centered */}
+        <div className="flex-1 flex items-center justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-wrap gap-4 justify-center mt-4 max-w-sm"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative"
           >
-            {quickActions.map((action, idx) => (
-              <motion.div
-                key={action.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 + idx * 0.05 }}
-              >
-                <QuickActionChip
-                  icon={action.icon}
-                  label={action.label}
-                />
-              </motion.div>
-            ))}
+            <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+            <AsmiAvatar />
           </motion.div>
+        </div>
+        
+        {/* Greeting text */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-center space-y-2 mb-8 z-10"
+        >
+          <h1 className="text-2xl font-bold text-slate-100">
+            Hey there, I'm Asmi
+          </h1>
+          <p className="text-slate-400">
+            Tell me what you'd like me to help with today
+          </p>
+        </motion.div>
+        
+        {/* Quick action chips - bottom bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex gap-2 overflow-x-auto pb-safe scrollbar-hide z-10"
+        >
+          {quickActions.map((action, idx) => (
+            <motion.div
+              key={action.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 + idx * 0.05 }}
+              className="flex-shrink-0"
+            >
+              <div className={`${action.label === 'Voice' ? 'relative' : ''}`}>
+                {action.label === 'Voice' && (
+                  <div className="absolute inset-0 bg-emerald-500/30 blur-xl rounded-xl" />
+                )}
+                <div className={`relative ${action.label === 'Voice' ? 'bg-slate-700' : 'bg-slate-800'} hover:bg-slate-700 rounded-xl px-4 py-3 flex items-center gap-2`}>
+                  <action.icon className={`w-5 h-5 ${action.label === 'Voice' ? 'text-emerald-400' : 'text-slate-300'}`} />
+                  <span className={`text-sm ${action.label === 'Voice' ? 'text-slate-100' : 'text-slate-200'}`}>{action.label}</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     );
@@ -310,7 +369,7 @@ const BillSplitDemo = ({
   // Voice Listening Screen
   if (phase === "voice-listening" || phase === "voice-transcribing") {
     return (
-      <div className="relative min-h-full flex flex-col items-center justify-center p-6">
+      <div className="relative min-h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-6">
         <BackgroundAmbient />
         <motion.div
           initial={{ opacity: 0 }}
@@ -319,52 +378,38 @@ const BillSplitDemo = ({
         >
           <AsmiAvatar isListening={true} />
           
-          {/* Microphone Button */}
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="relative"
-          >
-            <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-primary/30 flex items-center justify-center">
-                <Mic className="w-8 h-8 text-primary" />
-              </div>
-            </div>
-          </motion.div>
-
           {/* Sound Wave Animation */}
           <div className="flex gap-1 items-center justify-center h-12">
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-1 bg-primary rounded-full"
+                className="w-1 bg-emerald-500 rounded-full"
                 animate={{
-                  height: ["8px", "32px", "8px"],
+                  height: [20, 40, 20],
+                  opacity: [0.5, 1, 0.5],
                 }}
                 transition={{
-                  duration: 0.8,
+                  duration: 1,
                   repeat: Infinity,
                   delay: i * 0.1,
-                  ease: "easeInOut"
                 }}
               />
             ))}
           </div>
+
+          {/* Status text */}
+          <p className="text-center text-emerald-400 text-sm">
+            {phase === "voice-listening" ? "Listening..." : "Processing..."}
+          </p>
 
           {/* Transcribed Text */}
           {phase === "voice-transcribing" && displayedTranscript && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-4 rounded-2xl bg-background/40 backdrop-blur-sm"
+              className="mt-4"
             >
-              <p className="text-foreground text-center">
+              <p className="text-lg text-slate-100 font-medium text-center">
                 "{displayedTranscript}"
               </p>
             </motion.div>
@@ -377,7 +422,7 @@ const BillSplitDemo = ({
   // Chat Interface
   if (phase === "transition-to-chat" || phase === "chat-user" || phase === "chat-asmi") {
     return (
-      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
         <AnimatePresence>
           {(phase === "chat-user" || phase === "chat-asmi") && (
             <ConversationMessage
@@ -399,7 +444,7 @@ const BillSplitDemo = ({
   // Action Plan
   if (phase === "action-plan") {
     return (
-      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -434,7 +479,7 @@ const BillSplitDemo = ({
     ];
 
     return (
-      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -464,7 +509,7 @@ const BillSplitDemo = ({
   // Confirmation
   if (phase === "confirmation") {
     return (
-      <div className="min-h-full bg-black p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
+      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
         <ConversationMessage
           role="assistant"
           content="All done! Your bill has been split successfully."

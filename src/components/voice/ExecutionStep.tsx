@@ -63,44 +63,39 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
         className="relative w-full"
       >
         {/* Glowing background effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 rounded-2xl blur-xl animate-pulse" />
+        <div className="absolute inset-0 bg-emerald-500/10 rounded-2xl blur-xl" />
         
         {/* Main card */}
         <motion.div 
-          className="relative voice-glass rounded-2xl p-5 sm:p-6 border-2 border-primary/30"
+          className="relative bg-slate-800/80 backdrop-blur border border-emerald-500/30 rounded-2xl p-5 shadow-xl shadow-emerald-500/10"
           animate={{ 
             boxShadow: [
-              "0 0 20px hsl(var(--primary) / 0.3)",
-              "0 0 40px hsl(var(--primary) / 0.5)",
-              "0 0 20px hsl(var(--primary) / 0.3)",
+              "0 0 20px rgba(16, 185, 129, 0.1)",
+              "0 0 40px rgba(16, 185, 129, 0.2)",
+              "0 0 20px rgba(16, 185, 129, 0.1)",
             ]
           }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="flex items-start gap-3 sm:gap-4">
-            {/* Animated icon */}
-            <motion.div 
-              className="relative flex-shrink-0"
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
-              </div>
+            {/* Animated spinner */}
+            <motion.div className="relative w-10 h-10 flex-shrink-0">
+              <div className="absolute inset-0 border-2 border-emerald-500/30 rounded-full" />
               <motion.div
-                className="absolute -top-1 -right-1"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-secondary" />
-              </motion.div>
+                className="absolute inset-0 border-2 border-emerald-500 border-t-transparent rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-emerald-400" />
+              </div>
             </motion.div>
 
             <div className="flex-1 space-y-3 min-w-0">
               <div className="space-y-2">
                 <motion.p 
-                  className="text-sm sm:text-base font-semibold text-foreground leading-relaxed"
-                  animate={{ opacity: [0.8, 1, 0.8] }}
+                  className="text-sm font-medium text-slate-100"
+                  animate={{ opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   {step}
@@ -108,7 +103,7 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                 
                 {/* Subtext showing what's happening */}
                 <motion.p
-                  className="text-xs text-muted-foreground"
+                  className="text-xs text-slate-400"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
@@ -117,9 +112,9 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                 </motion.p>
                 
                 {/* Animated progress bar */}
-                <div className="h-1.5 bg-muted/30 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-slate-900/50 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full"
+                    className="h-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-500 rounded-full"
                     initial={{ x: "-100%" }}
                     animate={{ x: "100%" }}
                     transition={{ 
@@ -140,10 +135,10 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.3 }}
-                      className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/20 rounded-lg px-3 py-1.5"
+                      className="flex items-center gap-2 text-xs text-slate-300 bg-slate-900/50 rounded-lg px-3 py-1.5"
                     >
                       <motion.div
-                        className="w-1.5 h-1.5 rounded-full bg-primary"
+                        className="w-1.5 h-1.5 rounded-full bg-emerald-400"
                         animate={{ scale: [1, 1.3, 1] }}
                         transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                       />
@@ -158,7 +153,7 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                 {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary/40"
+                    className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400/40"
                     animate={{ 
                       scale: [1, 1.5, 1],
                       opacity: [0.4, 1, 0.4]
