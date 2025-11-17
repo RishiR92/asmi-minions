@@ -256,39 +256,6 @@ const Automations = () => {
             lastRun={automation.lastRun}
             nextRun={automation.nextRun}
             onToggle={() => {
-
-          {/* Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 sm:px-4 sm:py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all min-h-[44px] sm:min-h-0 ${
-                  activeTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-soft"
-                    : "glass text-muted-foreground hover:text-foreground"
-                }`}
-                whileTap={{ scale: 0.96 }}
-              >
-                {tab.label}
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Automations List */}
-      <div className="max-w-full sm:max-w-lg mx-auto px-6 py-5 sm:py-6 space-y-3">
-        {filteredAutomations.map((automation) => (
-          <AutomationCard
-            key={automation.id}
-            icon={automation.icon}
-            title={automation.title}
-            description={automation.description}
-            enabled={automationStates[automation.id]}
-            lastRun={automation.lastRun}
-            nextRun={automation.nextRun}
-            onToggle={() => {
               setAutomationStates(prev => ({
                 ...prev,
                 [automation.id]: !prev[automation.id]
