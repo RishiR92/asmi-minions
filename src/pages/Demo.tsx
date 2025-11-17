@@ -181,7 +181,7 @@ const Demo = () => {
   const isBillSplitPhase = !isScreenPhase;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black overflow-hidden relative">
       {/* Ambient glow effects */}
       <div className="absolute top-20 left-20 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full" />
@@ -253,32 +253,44 @@ const Demo = () => {
                     <div className="w-full h-full overflow-hidden pointer-events-none">
                       {phase === "screen-automations" && (
                         <div className="h-full overflow-y-auto scrollbar-hide">
-                          <Automations />
+                          <div className="max-w-[375px] mx-auto">
+                            <Automations />
+                          </div>
                         </div>
                       )}
                       {phase === "screen-today" && (
                         <div className="h-full overflow-y-auto scrollbar-hide">
-                          <Today />
+                          <div className="max-w-[375px] mx-auto">
+                            <Today />
+                          </div>
                         </div>
                       )}
                       {phase === "screen-work" && (
                         <div className="h-full overflow-y-auto scrollbar-hide">
-                          <Work />
+                          <div className="max-w-[375px] mx-auto">
+                            <Work />
+                          </div>
                         </div>
                       )}
                       {phase === "screen-family" && (
                         <div ref={familyScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
-                          <Family />
+                          <div className="max-w-[375px] mx-auto">
+                            <Family />
+                          </div>
                         </div>
                       )}
                       {phase === "screen-expenses" && (
                         <div ref={expensesScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
-                          <Expenses />
+                          <div className="max-w-[375px] mx-auto">
+                            <Expenses />
+                          </div>
                         </div>
                       )}
                       {phase === "screen-profile" && (
                         <div ref={profileScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
-                          <Profile />
+                          <div className="max-w-[375px] mx-auto">
+                            <Profile />
+                          </div>
                         </div>
                       )}
                     </div>
@@ -313,7 +325,7 @@ const BillSplitDemo = ({
         className="h-full w-full pointer-events-none overflow-hidden"
       >
         <div className="max-w-[375px] mx-auto h-full">
-          <Home />
+          <Home embed />
         </div>
       </motion.div>
     );
@@ -375,7 +387,7 @@ const BillSplitDemo = ({
   // Chat Interface
   if (phase === "transition-to-chat" || phase === "chat-user" || phase === "chat-asmi") {
     return (
-      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-[#ECE5DD] p-4 pt-8 space-y-4">
         <AnimatePresence>
           {(phase === "chat-user" || phase === "chat-asmi") && (
             <ConversationMessage
@@ -397,7 +409,7 @@ const BillSplitDemo = ({
   // Action Plan
   if (phase === "action-plan") {
     return (
-      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-[#ECE5DD] p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -432,7 +444,7 @@ const BillSplitDemo = ({
     ];
 
     return (
-      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-[#ECE5DD] p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -462,7 +474,7 @@ const BillSplitDemo = ({
   // Confirmation
   if (phase === "confirmation") {
     return (
-      <div className="min-h-full bg-background p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
+      <div className="min-h-full bg-[#ECE5DD] p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
         <ConversationMessage
           role="assistant"
           content="All done! Your bill has been split successfully."
