@@ -125,6 +125,32 @@ const Demo = () => {
     }
   }, [phase]);
 
+  // Auto-scroll for Automations page
+  useEffect(() => {
+    if (phase === "screen-automations") {
+      const timer = setTimeout(() => {
+        const container = document.querySelector('.scrollbar-hide');
+        if (container) {
+          const scrollHeight = container.scrollHeight - container.clientHeight;
+          
+          setTimeout(() => {
+            container.scrollTo({ top: scrollHeight / 3, behavior: 'smooth' });
+          }, 2000);
+          
+          setTimeout(() => {
+            container.scrollTo({ top: (scrollHeight / 3) * 2, behavior: 'smooth' });
+          }, 4000);
+          
+          setTimeout(() => {
+            container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+          }, 6000);
+        }
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [phase]);
+
   // Auto-scroll for Family page
   useEffect(() => {
     if (phase === "screen-family" && familyScrollRef.current) {
@@ -374,7 +400,7 @@ const BillSplitDemo = ({
               animate={{ opacity: 1, y: 0 }}
               className="mt-4"
             >
-              <p className="text-lg text-slate-100 font-medium text-center">
+              <p className="text-lg text-slate-900 font-medium text-center">
                 "{displayedTranscript}"
               </p>
             </motion.div>
