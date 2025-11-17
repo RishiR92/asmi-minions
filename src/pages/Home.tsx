@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings, Mic } from "lucide-react";
+import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings, Mic, Play } from "lucide-react";
 import { VoiceInterface } from "@/components/voice/VoiceInterface";
 import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
@@ -30,6 +30,11 @@ interface ExecutionStepType {
 }
 
 const quickActions = [
+  {
+    icon: Play,
+    label: "Demo",
+    href: "/demo",
+  },
   {
     icon: Bot,
     label: "AI Mins",

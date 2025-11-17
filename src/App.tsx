@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Demo from "./pages/Demo";
 import Automations from "./pages/Automations";
 import AutomationDetail from "./pages/AutomationDetail";
 import MailHub from "./pages/MailHub";
@@ -30,6 +31,7 @@ const App = () => (
         <div className="min-h-screen">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/demo" element={<Demo />} />
             <Route path="/automations" element={<Automations />} />
             <Route path="/automation-detail" element={<AutomationDetail />} />
             <Route path="/today" element={<Today />} />
