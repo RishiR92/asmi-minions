@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { AsmiAvatar } from "@/components/voice/AsmiAvatar";
+import { BackgroundAmbient } from "@/components/voice/BackgroundAmbient";
+import { QuickActionChip } from "@/components/voice/QuickActionChip";
 import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ExecutionStep } from "@/components/voice/ExecutionStep";
@@ -11,62 +14,150 @@ import Today from "@/pages/Today";
 import Work from "@/pages/Work";
 import Family from "@/pages/Family";
 import Expenses from "@/pages/Expenses";
+import { Bot, Calendar as CalendarIcon, Briefcase, Users, DollarSign, Settings, Play } from "lucide-react";
+
+type DemoPhase = 
+  | "home-welcome"
+  | "voice-listening" 
+  | "voice-transcribing"
+  | "transition-to-chat"
+  | "chat-user"
+  | "chat-asmi"
+  | "action-plan"
+  | "execution-1"
+  | "execution-2"
+  | "execution-3"
+  | "execution-4"
+  | "confirmation"
+  | "screen-automations"
+  | "screen-today"
+  | "screen-work"
+  | "screen-family"
+  | "screen-expenses";
 
 const Demo = () => {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState<"billsplit" | "screens">("billsplit");
-  const [billSplitStep, setBillSplitStep] = useState(0);
-  const [screenIndex, setScreenIndex] = useState(0);
+  const [phase, setPhase] = useState<DemoPhase>("home-welcome");
+  const [displayedTranscript, setDisplayedTranscript] = useState("");
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  
+  const familyScrollRef = useRef<HTMLDivElement>(null);
+  const expensesScrollRef = useRef<HTMLDivElement>(null);
 
-  // Bill split workflow states
-  const billSplitStates = [
-    { type: "voice", duration: 2500 },
-    { type: "chat", duration: 3500 },
-    { type: "plan", duration: 4500 },
-    { type: "execution-1", duration: 4000 },
-    { type: "execution-2", duration: 4000 },
-    { type: "execution-3", duration: 4000 },
-    { type: "execution-4", duration: 4000 },
-    { type: "confirmation", duration: 6000 },
+  const fullTranscript = "Split bill for 9pm dinner";
+
+  const quickActions = [
+    { icon: Play, label: "Demo", href: "/demo" },
+    { icon: Bot, label: "AI Mins", href: "/automations" },
+    { icon: CalendarIcon, label: "Today", href: "/today" },
+    { icon: Briefcase, label: "Work", href: "/work" },
+    { icon: Users, label: "Family", href: "/family" },
+    { icon: DollarSign, label: "Expenses", href: "/expenses" },
+    { icon: Settings, label: "Admin", href: "/profile" },
+    { icon: Mic, label: "Voice", href: "#voice" },
   ];
 
-  // App screens to showcase
-  const appScreens = [
-    { name: "Automations", component: <Automations /> },
-    { name: "Today", component: <Today /> },
-    { name: "Work", component: <Work /> },
-    { name: "Family", component: <Family /> },
-    { name: "Expenses", component: <Expenses /> },
+  // Demo flow with durations
+  const demoFlow: { phase: DemoPhase; duration: number }[] = [
+    { phase: "home-welcome", duration: 3000 },
+    { phase: "voice-listening", duration: 2000 },
+    { phase: "voice-transcribing", duration: 2500 },
+    { phase: "transition-to-chat", duration: 500 },
+    { phase: "chat-user", duration: 1500 },
+    { phase: "chat-asmi", duration: 1500 },
+    { phase: "action-plan", duration: 4000 },
+    { phase: "execution-1", duration: 4000 },
+    { phase: "execution-2", duration: 4000 },
+    { phase: "execution-3", duration: 4000 },
+    { phase: "execution-4", duration: 4000 },
+    { phase: "confirmation", duration: 6000 },
+    { phase: "screen-automations", duration: 8000 },
+    { phase: "screen-today", duration: 6000 },
+    { phase: "screen-work", duration: 6000 },
+    { phase: "screen-family", duration: 8000 },
+    { phase: "screen-expenses", duration: 6000 },
   ];
 
-  // Progress through bill split workflow
+  // Progress through demo phases
   useEffect(() => {
-    if (phase === "billsplit") {
-      if (billSplitStep < billSplitStates.length - 1) {
-        const timer = setTimeout(() => {
-          setBillSplitStep(billSplitStep + 1);
-        }, billSplitStates[billSplitStep].duration);
-        return () => clearTimeout(timer);
-      } else {
-        const timer = setTimeout(() => {
-          setPhase("screens");
-        }, billSplitStates[billSplitStep].duration);
-        return () => clearTimeout(timer);
-      }
+    const currentIndex = demoFlow.findIndex(item => item.phase === phase);
+    if (currentIndex === -1 || currentIndex >= demoFlow.length - 1) return;
+
+    const timer = setTimeout(() => {
+      setPhase(demoFlow[currentIndex + 1].phase);
+    }, demoFlow[currentIndex].duration);
+
+    return () => clearTimeout(timer);
+  }, [phase]);
+
+  // Typing effect for transcription
+  useEffect(() => {
+    if (phase === "voice-transcribing") {
+      setDisplayedTranscript("");
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index <= fullTranscript.length) {
+          setDisplayedTranscript(fullTranscript.slice(0, index));
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 80);
+      return () => clearInterval(interval);
     }
-  }, [billSplitStep, phase]);
+  }, [phase]);
 
-  // Cycle through app screens
+  // Auto-open AI Mins BottomSheet during Automations screen
   useEffect(() => {
-    if (phase === "screens") {
-      const timer = setInterval(() => {
-        setScreenIndex((prev) => (prev + 1) % appScreens.length);
+    if (phase === "screen-automations") {
+      setShowBottomSheet(false);
+      const timer = setTimeout(() => {
+        setShowBottomSheet(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowBottomSheet(false);
+    }
+  }, [phase]);
+
+  // Auto-scroll for Family page
+  useEffect(() => {
+    if (phase === "screen-family" && familyScrollRef.current) {
+      const container = familyScrollRef.current;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight / 3, behavior: 'smooth' });
+      }, 2000);
+      
+      setTimeout(() => {
+        container.scrollTo({ top: (scrollHeight / 3) * 2, behavior: 'smooth' });
       }, 4000);
-      return () => clearInterval(timer);
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      }, 6000);
     }
-  }, [phase, appScreens.length]);
+  }, [phase]);
 
-  const currentState = billSplitStates[billSplitStep]?.type;
+  // Auto-scroll for Expenses page
+  useEffect(() => {
+    if (phase === "screen-expenses" && expensesScrollRef.current) {
+      const container = expensesScrollRef.current;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight / 2, behavior: 'smooth' });
+      }, 2000);
+      
+      setTimeout(() => {
+        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      }, 4000);
+    }
+  }, [phase]);
+
+  const isScreenPhase = phase.startsWith("screen-");
+  const isBillSplitPhase = !isScreenPhase;
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -81,40 +172,73 @@ const Demo = () => {
       {/* iPhone Mockup */}
       <div className="flex items-center justify-center min-h-screen p-8">
         <div className="relative">
-          {/* iPhone Frame */}
-          <div className="relative w-[375px] h-[812px] bg-gray-900 rounded-[60px] p-3 shadow-2xl">
+          {/* iPhone Frame - Silver/White */}
+          <div className="relative w-[375px] h-[812px] bg-gradient-to-b from-zinc-200 via-zinc-300 to-zinc-400 rounded-[60px] p-3 shadow-2xl">
+            {/* Side Buttons */}
+            <div className="absolute left-[-3px] top-[120px] w-[3px] h-[32px] bg-zinc-400 rounded-l-sm" />
+            <div className="absolute left-[-3px] top-[180px] w-[3px] h-[60px] bg-zinc-400 rounded-l-sm" />
+            <div className="absolute left-[-3px] top-[250px] w-[3px] h-[60px] bg-zinc-400 rounded-l-sm" />
+            <div className="absolute right-[-3px] top-[180px] w-[3px] h-[80px] bg-zinc-400 rounded-r-sm" />
+            
             {/* iPhone Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-10" />
             
             {/* iPhone Glow */}
-            <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(255,255,255,0.1)]" />
+            <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(255,255,255,0.3)]" />
 
             {/* Screen Content */}
-            <div className="relative w-full h-full bg-black rounded-[48px] overflow-hidden pt-4">
+            <div className="relative w-full h-full bg-black rounded-[48px] overflow-hidden">
               <AnimatePresence mode="wait">
-                {phase === "billsplit" && (
+                {isBillSplitPhase && (
                   <motion.div
                     key="billsplit"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="w-full h-full overflow-y-auto"
+                    className="w-full h-full overflow-y-auto scrollbar-hide"
                   >
-                    <BillSplitDemo currentState={currentState} />
+                    <BillSplitDemo 
+                      phase={phase as any} 
+                      displayedTranscript={displayedTranscript}
+                      quickActions={quickActions}
+                    />
                   </motion.div>
                 )}
 
-                {phase === "screens" && (
+                {isScreenPhase && (
                   <motion.div
-                    key={appScreens[screenIndex].name}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full h-full overflow-y-auto"
+                    key="screens"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="w-full h-full"
                   >
-                    <div className="pointer-events-none">
-                      {appScreens[screenIndex].component}
+                    <div className="w-full h-full overflow-hidden pointer-events-none">
+                      {phase === "screen-automations" && (
+                        <div className="h-full overflow-y-auto scrollbar-hide">
+                          <Automations />
+                        </div>
+                      )}
+                      {phase === "screen-today" && (
+                        <div className="h-full overflow-y-auto scrollbar-hide">
+                          <Today />
+                        </div>
+                      )}
+                      {phase === "screen-work" && (
+                        <div className="h-full overflow-y-auto scrollbar-hide">
+                          <Work />
+                        </div>
+                      )}
+                      {phase === "screen-family" && (
+                        <div ref={familyScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
+                          <Family />
+                        </div>
+                      )}
+                      {phase === "screen-expenses" && (
+                        <div ref={expensesScrollRef} className="h-full overflow-y-auto scrollbar-hide scroll-smooth">
+                          <Expenses />
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -128,222 +252,252 @@ const Demo = () => {
 };
 
 // Bill Split Demo Component
-const BillSplitDemo = ({ currentState }: { currentState: string }) => {
-  return (
-    <div className="p-6 space-y-4 min-h-full bg-black">
-      {/* Voice Input State */}
-      {currentState === "voice" && (
+const BillSplitDemo = ({ 
+  phase, 
+  displayedTranscript,
+  quickActions 
+}: { 
+  phase: DemoPhase;
+  displayedTranscript: string;
+  quickActions: any[];
+}) => {
+  // Home Welcome Screen
+  if (phase === "home-welcome") {
+    return (
+      <div className="relative min-h-full flex flex-col items-center justify-center p-6">
+        <BackgroundAmbient />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center justify-center min-h-[400px] space-y-4"
+          className="flex flex-col items-center gap-6 z-10"
         >
+          <AsmiAvatar />
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-lg text-center text-foreground/80 max-w-xs"
+          >
+            Hey there! What can I do for you today?
+          </motion.p>
+          
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-wrap gap-4 justify-center mt-4 max-w-sm"
+          >
+            {quickActions.map((action, idx) => (
+              <motion.div
+                key={action.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 + idx * 0.05 }}
+              >
+                <QuickActionChip
+                  icon={action.icon}
+                  label={action.label}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Voice Listening Screen
+  if (phase === "voice-listening" || phase === "voice-transcribing") {
+    return (
+      <div className="relative min-h-full flex flex-col items-center justify-center p-6">
+        <BackgroundAmbient />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6 z-10"
+        >
+          <AsmiAvatar isListening={true} />
+          
+          {/* Microphone Button */}
           <motion.div
             animate={{
-              scale: [1, 1.2, 1],
+              scale: [1, 1.1, 1],
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: "easeInOut"
             }}
-            className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center"
+            className="relative"
           >
-            <div className="w-16 h-16 rounded-full bg-primary" />
+            <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-primary/30 flex items-center justify-center">
+                <Mic className="w-8 h-8 text-primary" />
+              </div>
+            </div>
           </motion.div>
-          <p className="text-foreground/60 text-sm">Listening...</p>
-          <p className="text-lg text-center">"Split my 9pm dinner bill"</p>
+
+          {/* Sound Wave Animation */}
+          <div className="flex gap-1 items-center justify-center h-12">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-1 bg-primary rounded-full"
+                animate={{
+                  height: ["8px", "32px", "8px"],
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Transcribed Text */}
+          {phase === "voice-transcribing" && displayedTranscript && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 p-4 rounded-2xl bg-background/40 backdrop-blur-sm"
+            >
+              <p className="text-foreground text-center">
+                "{displayedTranscript}"
+              </p>
+            </motion.div>
+          )}
         </motion.div>
-      )}
+      </div>
+    );
+  }
 
-      {/* Chat State */}
-      {currentState === "chat" && (
-        <div className="space-y-4">
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-        </div>
-      )}
+  // Chat Interface
+  if (phase === "transition-to-chat" || phase === "chat-user" || phase === "chat-asmi") {
+    return (
+      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+        <AnimatePresence>
+          {(phase === "chat-user" || phase === "chat-asmi") && (
+            <ConversationMessage
+              role="user"
+              content="Split bill for 9pm dinner"
+            />
+          )}
+          {phase === "chat-asmi" && (
+            <ConversationMessage
+              role="assistant"
+              content="Got it! Let me work on that for you..."
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
-      {/* Plan State */}
-      {currentState === "plan" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-          <ActionPlanCard
-            plan="I'll handle the bill split for your dinner. Here's what I'll do:"
-            steps={[
-              "Scan your inbox for 9pm restaurant receipts",
-              "Calculate the split: $584 ÷ 8 people = $73 each",
-              "Send Splitwise requests to all attendees",
-              "Verify payment confirmations",
-              "Send you a summary of who's paid",
-            ]}
-            status="pending"
-          />
-        </>
-      )}
+  // Action Plan
+  if (phase === "action-plan") {
+    return (
+      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+        <ConversationMessage
+          role="user"
+          content="Split bill for 9pm dinner"
+        />
+        <ConversationMessage
+          role="assistant"
+          content="Got it! Let me work on that for you..."
+        />
+        <ActionPlanCard
+          plan="I'll split your dinner bill from yesterday evening"
+          steps={[
+            "Scan your inbox for dinner receipts",
+            "Compute equal split among attendees",
+            "Send Splitwise payment requests",
+            "Verify payment statuses",
+            "Send confirmation to all attendees"
+          ]}
+          status="pending"
+        />
+      </div>
+    );
+  }
 
-      {/* Execution States */}
-      {currentState === "execution-1" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-          <ActionPlanCard
-            plan="I'll handle the bill split for your dinner. Here's what I'll do:"
-            steps={[
-              "Scan your inbox for 9pm restaurant receipts",
-              "Calculate the split: $584 ÷ 8 people = $73 each",
-              "Send Splitwise requests to all attendees",
-              "Verify payment confirmations",
-              "Send you a summary of who's paid",
-            ]}
-            status="executing"
-          />
+  // Execution Steps
+  if (phase.startsWith("execution-")) {
+    const stepNumber = parseInt(phase.split("-")[1]);
+    const steps = [
+      { text: "Scanning your inbox for dinner receipts...", status: "executing" as const },
+      { text: "Computing equal split among attendees...", status: "executing" as const },
+      { text: "Sending Splitwise payment requests...", status: "executing" as const },
+      { text: "Verifying payment statuses...", status: "executing" as const },
+    ];
+
+    return (
+      <div className="min-h-full bg-black p-4 pt-8 space-y-4">
+        <ConversationMessage
+          role="user"
+          content="Split bill for 9pm dinner"
+        />
+        <ActionPlanCard
+          plan="I'll split your dinner bill from yesterday evening"
+          steps={[
+            "Scan your inbox for dinner receipts",
+            "Compute equal split among attendees",
+            "Send Splitwise payment requests",
+            "Verify payment statuses",
+            "Send confirmation to all attendees"
+          ]}
+          status="executing"
+        />
+        {steps[stepNumber - 1] && (
           <ExecutionStep
-            step="Scanning inbox for 9pm restaurant receipts"
-            status="executing"
+            step={steps[stepNumber - 1].text}
+            status={steps[stepNumber - 1].status}
             isCurrentStep={true}
           />
-        </>
-      )}
+        )}
+      </div>
+    );
+  }
 
-      {currentState === "execution-2" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-          <ActionPlanCard
-            plan="I'll handle the bill split for your dinner. Here's what I'll do:"
-            steps={[
-              "Scan your inbox for 9pm restaurant receipts",
-              "Calculate the split: $584 ÷ 8 people = $73 each",
-              "Send Splitwise requests to all attendees",
-              "Verify payment confirmations",
-              "Send you a summary of who's paid",
-            ]}
-            status="executing"
-          />
-          <ExecutionStep
-            step="Computing split: $584 ÷ 8 people"
-            status="executing"
-            isCurrentStep={true}
-          />
-        </>
-      )}
+  // Confirmation
+  if (phase === "confirmation") {
+    return (
+      <div className="min-h-full bg-black p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
+        <ConversationMessage
+          role="assistant"
+          content="All done! Your bill has been split successfully."
+        />
+        <ConfirmationCard
+          confirmationType="billsplit"
+          data={{
+            title: "Dinner at Olive Garden",
+            totalAmount: "$240.00",
+            perPerson: "$30.00",
+            attendees: 8,
+            datetime: "Yesterday, 9:00 PM",
+            location: "Olive Garden - Downtown",
+            splitMethod: "Splitwise",
+            status: "All paid ✓",
+            confirmationId: "SW-ABC123",
+            attendeeList: [
+              { name: "John Smith", amount: "$30.00", status: "paid" },
+              { name: "Sarah Johnson", amount: "$30.00", status: "paid" },
+              { name: "Mike Chen", amount: "$30.00", status: "paid" },
+              { name: "Emily Davis", amount: "$30.00", status: "paid" },
+              { name: "Alex Rodriguez", amount: "$30.00", status: "paid" },
+              { name: "Lisa Anderson", amount: "$30.00", status: "paid" },
+              { name: "David Kim", amount: "$30.00", status: "paid" },
+              { name: "Jessica Brown", amount: "$30.00", status: "paid" },
+            ],
+          }}
+        />
+      </div>
+    );
+  }
 
-      {currentState === "execution-3" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-          <ActionPlanCard
-            plan="I'll handle the bill split for your dinner. Here's what I'll do:"
-            steps={[
-              "Scan your inbox for 9pm restaurant receipts",
-              "Calculate the split: $584 ÷ 8 people = $73 each",
-              "Send Splitwise requests to all attendees",
-              "Verify payment confirmations",
-              "Send you a summary of who's paid",
-            ]}
-            status="executing"
-          />
-          <ExecutionStep
-            step="Sending Splitwise requests to attendees"
-            status="executing"
-            isCurrentStep={true}
-          />
-        </>
-      )}
-
-      {currentState === "execution-4" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="I found your dinner receipt for $584. I'll split it equally among 8 people and send Splitwise requests."
-          />
-          <ActionPlanCard
-            plan="I'll handle the bill split for your dinner. Here's what I'll do:"
-            steps={[
-              "Scan your inbox for 9pm restaurant receipts",
-              "Calculate the split: $584 ÷ 8 people = $73 each",
-              "Send Splitwise requests to all attendees",
-              "Verify payment confirmations",
-              "Send you a summary of who's paid",
-            ]}
-            status="executing"
-          />
-          <ExecutionStep
-            step="Verifying payment confirmations"
-            status="executing"
-            isCurrentStep={true}
-          />
-        </>
-      )}
-
-      {/* Confirmation State */}
-      {currentState === "confirmation" && (
-        <>
-          <ConversationMessage
-            role="user"
-            content="Split my 9pm dinner bill"
-          />
-          <ConversationMessage
-            role="assistant"
-            content="Done! I've split your $584 dinner bill among 8 people. Here's the breakdown:"
-          />
-          <ConfirmationCard
-            confirmationType="billsplit"
-            data={{
-              totalAmount: "$584",
-              perPerson: "$73",
-              attendeeList: [
-                { name: "Sarah Chen", amount: "$73", status: "paid" },
-                { name: "Mike Torres", amount: "$73", status: "paid" },
-                { name: "Emily Watson", amount: "$73", status: "pending" },
-                { name: "David Kim", amount: "$73", status: "paid" },
-                { name: "Lisa Anderson", amount: "$73", status: "paid" },
-                { name: "James Wilson", amount: "$73", status: "pending" },
-                { name: "Maria Garcia", amount: "$73", status: "paid" },
-                { name: "You", amount: "$73", status: "paid" },
-              ],
-            }}
-          />
-        </>
-      )}
-    </div>
-  );
+  return null;
 };
 
 export default Demo;
