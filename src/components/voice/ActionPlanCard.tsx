@@ -21,43 +21,47 @@ export const ActionPlanCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="voice-glass rounded-3xl p-6 space-y-4"
+      className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl p-5 shadow-xl"
     >
-      {/* Status indicator */}
-      <div className="flex items-center gap-2">
-        {status === "executing" ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          >
-            <Clock className="w-5 h-5 text-voice-primary" />
-          </motion.div>
-        ) : status === "completed" ? (
-          <CheckCircle2 className="w-5 h-5 text-primary" />
-        ) : (
-          <div className="w-5 h-5 rounded-full bg-voice-primary/20" />
-        )}
-        <span className="text-xs font-medium text-muted-foreground">
-          {status === "executing" ? "Working on it..." : status === "completed" ? "Done!" : "Action Plan"}
-        </span>
-      </div>
-
-      {/* Plan description */}
-      <div className="asmi-message text-foreground leading-relaxed">{plan}</div>
-
-      {/* Steps if provided */}
-      {steps.length > 0 && (
-        <div className="space-y-2 pl-4 border-l-2 border-voice-primary/30">
-          {steps.map((step, index) => (
+      {/* Header */}
+      <div className="flex items-start gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+          {status === "executing" ? (
             <motion.div
-              key={index}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Clock className="w-5 h-5 text-emerald-400" />
+            </motion.div>
+          ) : status === "completed" ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          ) : (
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          )}
+        </div>
+        <div className="flex-1">
+          <h3 className="text-slate-100 font-semibold mb-1">
+            {status === "executing" ? "Working on it..." : status === "completed" ? "Done!" : "Action Plan"}
+          </h3>
+          <p className="text-slate-300 text-sm">{plan}</p>
+        </div>
+      </div>
+      
+      {/* Steps */}
+      {steps.length > 0 && (
+        <div className="space-y-2">
+          {steps.map((step, i) => (
+            <motion.div
+              key={i}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="text-xs text-muted-foreground flex items-start gap-2"
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-3 text-sm"
             >
-              <span className="text-voice-primary font-semibold">{index + 1}.</span>
-              <span>{step}</span>
+              <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 flex-shrink-0">
+                {i + 1}
+              </div>
+              <span className="text-slate-300">{step}</span>
             </motion.div>
           ))}
         </div>
@@ -65,17 +69,17 @@ export const ActionPlanCard = ({
 
       {/* Action buttons */}
       {status === "pending" && (onConfirm || onModify) && (
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-4 mt-4 border-t border-slate-700">
           {onConfirm && (
             <Button
               onClick={onConfirm}
-              className="flex-1 bg-primary text-white hover:bg-primary/90"
+              className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700"
             >
               Confirm
             </Button>
           )}
           {onModify && (
-            <Button onClick={onModify} variant="outline" className="flex-1">
+            <Button onClick={onModify} variant="outline" className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700">
               Modify
             </Button>
           )}
