@@ -1,392 +1,504 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Zap, Calendar, Users, Wallet, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ConversationMessage } from "@/components/voice/ConversationMessage";
+import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
+import { ExecutionStep } from "@/components/voice/ExecutionStep";
+import { ConfirmationCard } from "@/components/voice/ConfirmationCard";
+import { Switch } from "@/components/ui/switch";
 
-const billSplitSequence = [
-  {
-    type: "voice",
-    content: "Split my 9pm dinner bill"
-  },
-  {
-    type: "chat",
-    messages: [
-      { role: "user", text: "Split my 9pm dinner bill" },
-      { role: "assistant", text: "Got it! Let me work on that for you..." }
-    ]
-  },
-  {
-    type: "plan",
-    title: "Bill Split Plan",
-    steps: [
-      "Scan inbox for dinner receipt",
-      "Identify attendees from emails",
-      "Calculate per-person amount",
-      "Send Splitwise payment requests",
-      "Verify payment confirmations"
-    ]
-  },
-  {
-    type: "execution",
-    step: "Scanning inbox for receipt...",
-    details: ["Found: Dinner receipt from Olive Garden", "Date: Today 9:00 PM", "Total: $240.00"]
-  },
-  {
-    type: "execution",
-    step: "Calculating split for 8 people...",
-    details: ["Per person: $30.00", "Tax & tip included", "Splitwise ready"]
-  },
-  {
-    type: "execution",
-    step: "Sending payment requests...",
-    details: ["Sarah - $30.00 ✓", "Mike - $30.00 ✓", "John - $30.00 ✓", "Emma - $30.00 ✓"]
-  },
-  {
-    type: "confirmation",
-    attendees: [
-      { name: "Sarah M.", amount: "$30.00", status: "paid" },
-      { name: "Mike R.", amount: "$30.00", status: "paid" },
-      { name: "John D.", amount: "$30.00", status: "paid" },
-      { name: "Emma S.", amount: "$30.00", status: "paid" },
-      { name: "Alex K.", amount: "$30.00", status: "paid" },
-      { name: "Lisa T.", amount: "$30.00", status: "paid" },
-      { name: "Tom W.", amount: "$30.00", status: "paid" },
-      { name: "Kate P.", amount: "$30.00", status: "paid" }
-    ]
-  }
-];
-
-const appScreens = [
-  {
-    name: "AI Automations",
-    content: (
-      <div className="p-4 space-y-3">
-        <div className="text-xs font-semibold text-white/60 mb-3">Active Automations</div>
-        {["Bill Reminders", "Expense Tracking", "Smart Email Sort", "Calendar Sync"].map((item, i) => (
-          <div key={i} className="bg-white/5 rounded-lg p-3 border border-white/10">
-            <div className="text-xs text-white font-medium">{item}</div>
-            <div className="text-[10px] text-white/40 mt-1">Running automatically</div>
-          </div>
-        ))}
-      </div>
-    )
-  },
-  {
-    name: "Today",
-    content: (
-      <div className="p-4 space-y-3">
-        <div className="text-xs font-semibold text-white/60 mb-3">Today's Schedule</div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Team Standup</div>
-          <div className="text-[10px] text-white/40 mt-1">10:00 AM • 30 min</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Client Call</div>
-          <div className="text-[10px] text-white/40 mt-1">2:00 PM • 1 hour</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Q4 Report Due</div>
-          <div className="text-[10px] text-red-400 mt-1">5:00 PM deadline</div>
-        </div>
-      </div>
-    )
-  },
-  {
-    name: "Work",
-    content: (
-      <div className="p-4 space-y-3">
-        <div className="text-xs font-semibold text-white/60 mb-3">This Week</div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Board Review</div>
-          <div className="text-[10px] text-white/40 mt-1">Tomorrow • 9:00 AM</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Product Launch</div>
-          <div className="text-[10px] text-white/40 mt-1">Friday • 2:00 PM</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Budget Approval</div>
-          <div className="text-[10px] text-white/40 mt-1">Due Tomorrow</div>
-        </div>
-      </div>
-    )
-  },
-  {
-    name: "Family",
-    content: (
-      <div className="p-4 space-y-3">
-        <div className="text-xs font-semibold text-white/60 mb-3">Family Events</div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Soccer Practice</div>
-          <div className="text-[10px] text-white/40 mt-1">Wed & Fri • 4:00 PM</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Movie Night</div>
-          <div className="text-[10px] text-white/40 mt-1">Saturday • 7:00 PM</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="text-xs text-white font-medium">Parent-Teacher Meet</div>
-          <div className="text-[10px] text-white/40 mt-1">Next Tuesday</div>
-        </div>
-      </div>
-    )
-  },
-  {
-    name: "Expenses",
-    content: (
-      <div className="p-4 space-y-3">
-        <div className="text-xs font-semibold text-white/60 mb-3">Recent Expenses</div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="text-xs text-white font-medium">Groceries</div>
-              <div className="text-[10px] text-white/40 mt-1">Whole Foods</div>
-            </div>
-            <div className="text-xs text-white">$124.50</div>
-          </div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="text-xs text-white font-medium">Dinner</div>
-              <div className="text-[10px] text-white/40 mt-1">Olive Garden</div>
-            </div>
-            <div className="text-xs text-white">$240.00</div>
-          </div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="text-xs text-white font-medium">Gas</div>
-              <div className="text-[10px] text-white/40 mt-1">Shell Station</div>
-            </div>
-            <div className="text-xs text-white">$65.20</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-];
-
-export default function Demo() {
+const Demo = () => {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState<"billsplit" | "screens">("billsplit");
   const [billSplitStep, setBillSplitStep] = useState(0);
   const [screenIndex, setScreenIndex] = useState(0);
 
+  // Bill split workflow states
+  const billSplitStates = [
+    { type: "voice", duration: 2000 },
+    { type: "chat", duration: 3000 },
+    { type: "plan", duration: 4000 },
+    { type: "execution-1", duration: 2500 },
+    { type: "execution-2", duration: 2500 },
+    { type: "execution-3", duration: 2500 },
+    { type: "execution-4", duration: 2500 },
+    { type: "confirmation", duration: 5000 },
+  ];
+
+  // App screens to showcase
+  const appScreens = [
+    { name: "Automations", component: <AutomationsScreen /> },
+    { name: "Today", component: <TodayScreen /> },
+    { name: "Work", component: <WorkScreen /> },
+    { name: "Family", component: <FamilyScreen /> },
+    { name: "Expenses", component: <ExpensesScreen /> },
+  ];
+
+  // Progress through bill split workflow
   useEffect(() => {
     if (phase === "billsplit") {
-      if (billSplitStep < billSplitSequence.length - 1) {
+      if (billSplitStep < billSplitStates.length - 1) {
         const timer = setTimeout(() => {
-          setBillSplitStep(prev => prev + 1);
-        }, 3000);
+          setBillSplitStep(billSplitStep + 1);
+        }, billSplitStates[billSplitStep].duration);
         return () => clearTimeout(timer);
       } else {
         const timer = setTimeout(() => {
           setPhase("screens");
-          setScreenIndex(0);
-        }, 4000);
+        }, billSplitStates[billSplitStep].duration);
         return () => clearTimeout(timer);
       }
-    } else {
+    }
+  }, [billSplitStep, phase]);
+
+  // Cycle through app screens
+  useEffect(() => {
+    if (phase === "screens") {
       const timer = setInterval(() => {
-        setScreenIndex(prev => (prev + 1) % appScreens.length);
-      }, 3000);
+        setScreenIndex((prev) => (prev + 1) % appScreens.length);
+      }, 4000);
       return () => clearInterval(timer);
     }
-  }, [phase, billSplitStep]);
+  }, [phase, appScreens.length]);
 
-  const currentSequence = billSplitSequence[billSplitStep];
+  const currentState = billSplitStates[billSplitStep]?.type;
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden flex items-center justify-center p-4">
-      {/* Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Back button */}
+      <button
+        onClick={() => navigate("/")}
+        className="fixed top-6 left-6 z-50 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
 
       {/* iPhone Mockup */}
-      <div className="relative">
-        {/* Subtle glow */}
-        <div className="absolute inset-0 bg-white/10 blur-3xl scale-75" />
-        
-        {/* iPhone Frame */}
-        <div className="relative bg-gray-900 rounded-[3rem] p-3 shadow-2xl border-4 border-gray-800 w-[340px] h-[680px]">
-          {/* Notch */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-3xl z-10" />
-          
-          {/* Screen */}
-          <div className="relative w-full h-full bg-black rounded-[2.5rem] overflow-hidden">
-            <AnimatePresence mode="wait">
-              {phase === "billsplit" ? (
-                <motion.div
-                  key={billSplitStep}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="absolute inset-0 p-4 overflow-y-auto"
-                >
-                  {currentSequence.type === "voice" && (
-                    <div className="h-full flex flex-col items-center justify-center">
-                      <motion.div
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-6"
-                      >
-                        <div className="text-4xl">🎤</div>
-                      </motion.div>
-                      <div className="text-white/60 text-sm text-center px-8">
-                        "{currentSequence.content}"
-                      </div>
-                    </div>
-                  )}
+      <div className="flex items-center justify-center min-h-screen p-8">
+        <div className="relative">
+          {/* iPhone Frame */}
+          <div className="relative w-[375px] h-[812px] bg-gray-900 rounded-[60px] p-3 shadow-2xl">
+            {/* iPhone Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-10" />
+            
+            {/* iPhone Glow */}
+            <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(255,255,255,0.1)]" />
 
-                  {currentSequence.type === "chat" && (
-                    <div className="h-full flex flex-col justify-end space-y-3">
-                      {currentSequence.messages.map((msg, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.5 }}
-                          className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                        >
-                          <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-xs ${
-                            msg.role === "user" 
-                              ? "bg-white/10 text-white" 
-                              : "bg-white/5 text-white/80"
-                          }`}>
-                            {msg.text}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
+            {/* Screen Content */}
+            <div className="relative w-full h-full bg-black rounded-[48px] overflow-hidden">
+              <AnimatePresence mode="wait">
+                {phase === "billsplit" && (
+                  <motion.div
+                    key="billsplit"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="w-full h-full overflow-y-auto"
+                  >
+                    <BillSplitDemo currentState={currentState} />
+                  </motion.div>
+                )}
 
-                  {currentSequence.type === "plan" && (
-                    <div className="space-y-4">
-                      <div className="text-sm font-semibold text-white mb-4">{currentSequence.title}</div>
-                      <div className="space-y-2">
-                        {currentSequence.steps.map((step, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.2 }}
-                            className="flex items-start gap-3 bg-white/5 rounded-lg p-3"
-                          >
-                            <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/60 flex-shrink-0">
-                              {i + 1}
-                            </div>
-                            <div className="text-xs text-white/80">{step}</div>
-                          </motion.div>
-                        ))}
-                      </div>
-                      <div className="mt-6 text-center">
-                        <Button className="bg-white text-black hover:bg-white/90 text-xs px-6">
-                          Confirm Plan
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentSequence.type === "execution" && (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="w-full space-y-4">
-                        <div className="text-center">
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                            className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center"
-                          >
-                            <div className="text-xl">⚡</div>
-                          </motion.div>
-                          <div className="text-sm text-white font-medium mb-2">{currentSequence.step}</div>
-                        </div>
-                        <div className="space-y-2 bg-white/5 rounded-xl p-4">
-                          {currentSequence.details.map((detail, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: i * 0.3 }}
-                              className="text-xs text-white/60"
-                            >
-                              {detail}
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentSequence.type === "confirmation" && (
-                    <div className="space-y-4">
-                      <div className="text-center mb-6">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="text-5xl mb-2"
-                        >
-                          ✅
-                        </motion.div>
-                        <div className="text-sm font-semibold text-white">All Payments Confirmed</div>
-                        <div className="text-xs text-white/40 mt-1">Sent via Splitwise</div>
-                      </div>
-                      <div className="space-y-2 max-h-96 overflow-y-auto">
-                        {currentSequence.attendees.map((person, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="flex items-center justify-between bg-white/5 rounded-lg p-3"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white font-medium">
-                                {person.name.split(' ').map(n => n[0]).join('')}
-                              </div>
-                              <div className="text-xs text-white">{person.name}</div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-xs text-white/80">{person.amount}</div>
-                              <div className="text-green-400 text-xs">✓</div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={screenIndex}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="absolute inset-0"
-                >
-                  <div className="h-full flex flex-col">
-                    <div className="p-4 border-b border-white/10">
-                      <div className="text-lg font-semibold text-white">{appScreens[screenIndex].name}</div>
-                    </div>
-                    <div className="flex-1 overflow-y-auto">
-                      {appScreens[screenIndex].content}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                {phase === "screens" && (
+                  <motion.div
+                    key={`screen-${screenIndex}`}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    className="w-full h-full overflow-y-auto"
+                  >
+                    {appScreens[screenIndex].component}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+// Bill Split Demo Component
+const BillSplitDemo = ({ currentState }: { currentState: string }) => {
+  return (
+    <div className="p-6 space-y-4 min-h-full bg-gradient-to-b from-purple-950/20 to-black">
+      {/* Header */}
+      <div className="text-center py-4">
+        <h2 className="text-xl font-semibold">Asmi</h2>
+      </div>
+
+      {/* Voice Input State */}
+      {currentState === "voice" && (
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="flex flex-col items-center justify-center h-[600px] space-y-6"
+        >
+          {/* Microphone Animation */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              boxShadow: [
+                "0 0 0 0 rgba(168, 85, 247, 0.4)",
+                "0 0 0 20px rgba(168, 85, 247, 0)",
+              ],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+            }}
+            className="w-24 h-24 rounded-full bg-primary flex items-center justify-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-white" />
+          </motion.div>
+          <p className="text-foreground/60 text-sm">Listening...</p>
+        </motion.div>
+      )}
+
+      {/* Chat State */}
+      {(currentState === "chat" || currentState?.startsWith("plan") || currentState?.startsWith("execution") || currentState === "confirmation") && (
+        <div className="space-y-4">
+          <ConversationMessage role="user" content="Split my 9pm dinner bill" />
+          
+          {currentState !== "chat" && (
+            <ConversationMessage
+              role="assistant"
+              content="I'll help you split the dinner bill. Let me check your calendar and emails to find the details."
+            />
+          )}
+        </div>
+      )}
+
+      {/* Plan State */}
+      {(currentState === "plan" || currentState?.startsWith("execution") || currentState === "confirmation") && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <ActionPlanCard
+            plan="Split dinner bill from Osteria Mozza among attendees"
+            steps={[
+              "Scan inbox for dinner reservation confirmation",
+              "Extract attendee list and total amount",
+              "Calculate equal split for 8 people",
+              "Send Splitwise requests to all attendees",
+              "Verify payment confirmations"
+            ]}
+            status={currentState === "plan" ? "pending" : "executing"}
+          />
+        </motion.div>
+      )}
+
+      {/* Execution Steps */}
+      {currentState === "execution-1" && (
+        <ExecutionStep
+          step="Scanning inbox for dinner reservation"
+          status="executing"
+          isCurrentStep={true}
+        />
+      )}
+      {currentState === "execution-2" && (
+        <ExecutionStep
+          step="Computing split for 8 people"
+          status="executing"
+          isCurrentStep={true}
+        />
+      )}
+      {currentState === "execution-3" && (
+        <ExecutionStep
+          step="Sending Splitwise requests"
+          status="executing"
+          isCurrentStep={true}
+        />
+      )}
+      {currentState === "execution-4" && (
+        <ExecutionStep
+          step="Verifying payments"
+          status="executing"
+          isCurrentStep={true}
+        />
+      )}
+
+      {/* Confirmation State */}
+      {currentState === "confirmation" && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <ConfirmationCard
+            confirmationType="billsplit"
+            data={{
+              title: "Dinner at Osteria Mozza",
+              location: "Osteria Mozza",
+              datetime: "Tonight, 9:00 PM",
+              totalAmount: "$487.50",
+              perPerson: "$60.94",
+              attendees: 8,
+              attendeeList: [
+                { name: "John Doe", amount: "$60.94", status: "paid" },
+                { name: "Sarah Chen", amount: "$60.94", status: "paid" },
+                { name: "Mike Johnson", amount: "$60.94", status: "pending" },
+                { name: "Emily Davis", amount: "$60.94", status: "paid" },
+                { name: "Alex Kumar", amount: "$60.94", status: "pending" },
+                { name: "Lisa Wang", amount: "$60.94", status: "paid" },
+                { name: "David Park", amount: "$60.94", status: "paid" },
+                { name: "Maria Garcia", amount: "$60.94", status: "pending" },
+              ],
+            }}
+          />
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+// Automations Screen
+const AutomationsScreen = () => {
+  return (
+    <div className="p-6 space-y-6 bg-black min-h-full">
+      <div className="flex items-center gap-3">
+        <Zap className="w-6 h-6 text-primary" />
+        <h1 className="text-2xl font-bold">AI Automations</h1>
+      </div>
+
+      <div className="space-y-3">
+        {[
+          { title: "Smart Bill Splitting", desc: "Auto-split bills from emails", enabled: true },
+          { title: "Meeting Summaries", desc: "AI notes from all meetings", enabled: true },
+          { title: "Expense Tracking", desc: "Auto-categorize transactions", enabled: false },
+          { title: "Email Priority", desc: "Filter urgent messages", enabled: true },
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold">{item.title}</h3>
+                <p className="text-sm text-foreground/60">{item.desc}</p>
+              </div>
+              <Switch checked={item.enabled} />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Today Screen
+const TodayScreen = () => {
+  return (
+    <div className="p-6 space-y-6 bg-black min-h-full">
+      <div className="flex items-center gap-3">
+        <Clock className="w-6 h-6 text-primary" />
+        <h1 className="text-2xl font-bold">Today</h1>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">URGENT DEADLINES</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20"
+          >
+            <p className="font-semibold">Q4 Budget Review</p>
+            <p className="text-sm text-foreground/60">Due in 3 hours</p>
+          </motion.div>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">MEETINGS</h3>
+          <div className="space-y-2">
+            {[
+              { title: "Team Standup", time: "10:00 AM" },
+              { title: "Client Review", time: "2:00 PM" },
+            ].map((meeting, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/10"
+              >
+                <p className="font-semibold">{meeting.title}</p>
+                <p className="text-sm text-foreground/60">{meeting.time}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Work Screen
+const WorkScreen = () => {
+  return (
+    <div className="p-6 space-y-6 bg-black min-h-full">
+      <div className="flex items-center gap-3">
+        <Calendar className="w-6 h-6 text-primary" />
+        <h1 className="text-2xl font-bold">Work</h1>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">KEY MEETINGS</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-2xl bg-white/5 border border-white/10"
+          >
+            <p className="font-semibold">Product Strategy Review</p>
+            <p className="text-sm text-foreground/60">Tomorrow, 3:00 PM</p>
+            <p className="text-xs text-foreground/40 mt-1">With: Sarah, Mike, Emily</p>
+          </motion.div>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">PRIORITY TASKS</h3>
+          <div className="space-y-2">
+            {[
+              { task: "Review Q4 proposals", due: "Today" },
+              { task: "Update project timeline", due: "Tomorrow" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/10"
+              >
+                <p className="font-semibold">{item.task}</p>
+                <p className="text-sm text-foreground/60">{item.due}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Family Screen
+const FamilyScreen = () => {
+  return (
+    <div className="p-6 space-y-6 bg-black min-h-full">
+      <div className="flex items-center gap-3">
+        <Users className="w-6 h-6 text-primary" />
+        <h1 className="text-2xl font-bold">Family</h1>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">KIDS' SCHEDULE</h3>
+          <div className="space-y-2">
+            {[
+              { kid: "Emma", activity: "Soccer Practice", time: "4:00 PM" },
+              { kid: "Noah", activity: "Piano Lesson", time: "5:30 PM" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/10"
+              >
+                <p className="font-semibold">{item.kid} - {item.activity}</p>
+                <p className="text-sm text-foreground/60">{item.time}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">SCHOOL EVENTS</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-2xl bg-white/5 border border-white/10"
+          >
+            <p className="font-semibold">Parent-Teacher Conference</p>
+            <p className="text-sm text-foreground/60">Friday, 6:00 PM</p>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Expenses Screen
+const ExpensesScreen = () => {
+  return (
+    <div className="p-6 space-y-6 bg-black min-h-full">
+      <div className="flex items-center gap-3">
+        <Wallet className="w-6 h-6 text-primary" />
+        <h1 className="text-2xl font-bold">Expenses</h1>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="p-6 rounded-2xl bg-primary/20 border border-primary/20"
+      >
+        <p className="text-sm text-foreground/60">Monthly Total</p>
+        <p className="text-4xl font-bold mt-2">$4,287</p>
+      </motion.div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">UPCOMING BILLS</h3>
+          <div className="space-y-2">
+            {[
+              { name: "Internet", amount: "$89", due: "Jan 15" },
+              { name: "Electricity", amount: "$156", due: "Jan 18" },
+            ].map((bill, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center"
+              >
+                <div>
+                  <p className="font-semibold">{bill.name}</p>
+                  <p className="text-sm text-foreground/60">Due {bill.due}</p>
+                </div>
+                <p className="text-lg font-bold">{bill.amount}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-foreground/60 mb-2">SUBSCRIPTIONS</h3>
+          <div className="space-y-2">
+            {[
+              { name: "Netflix", amount: "$15.99" },
+              { name: "Spotify", amount: "$10.99" },
+            ].map((sub, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center"
+              >
+                <p className="font-semibold">{sub.name}</p>
+                <p className="text-foreground/60">{sub.amount}/mo</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Demo;
