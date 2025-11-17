@@ -89,30 +89,6 @@ export const ConfirmationCard = ({ confirmationType, data }: ConfirmationCardPro
           </div>
         </div>
 
-        {/* Attendee List */}
-        {data.attendeeList && (
-          <div className="space-y-2">
-            <p className="text-slate-400 text-sm font-medium mb-2">Attendees ({data.attendees || 8})</p>
-            <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-hide">
-              {data.attendeeList.map((attendee, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center justify-between py-2 border-b border-slate-700 last:border-0"
-                >
-                  <span className="text-slate-200 text-sm">{attendee.name}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-300 text-sm">{attendee.amount}</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {data.splitMethod && (
           <div className="bg-slate-900/50 rounded-xl p-3 flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">

@@ -9,6 +9,7 @@ import { ConversationMessage } from "@/components/voice/ConversationMessage";
 import { ActionPlanCard } from "@/components/voice/ActionPlanCard";
 import { ExecutionStep } from "@/components/voice/ExecutionStep";
 import { ConfirmationCard } from "@/components/voice/ConfirmationCard";
+import Home from "./Home";
 import Automations from "@/pages/Automations";
 import Today from "@/pages/Today";
 import Work from "@/pages/Work";
@@ -223,7 +224,7 @@ const Demo = () => {
             <div className="absolute inset-0 rounded-[60px] shadow-[0_0_60px_rgba(16,185,129,0.2)]" />
 
             {/* Screen Content */}
-            <div className="relative w-full h-full bg-slate-900 rounded-[48px] overflow-hidden">
+            <div className="relative w-full h-full bg-background rounded-[48px] overflow-hidden">
               <AnimatePresence mode="wait">
                 {isBillSplitPhase && (
                   <motion.div
@@ -249,7 +250,7 @@ const Demo = () => {
                     exit={{ opacity: 0 }}
                     className="w-full h-full"
                   >
-                    <div className="w-full h-full overflow-hidden pointer-events-none bg-slate-900 dark">
+                    <div className="w-full h-full overflow-hidden pointer-events-none">
                       {phase === "screen-automations" && (
                         <div className="h-full overflow-y-auto scrollbar-hide">
                           <Automations />
@@ -305,64 +306,14 @@ const BillSplitDemo = ({
   // Home Welcome Screen
   if (phase === "home-welcome") {
     return (
-      <div className="relative min-h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col p-6 pt-16">
-        <BackgroundAmbient />
-        
-        {/* Large AsmiAvatar - centered */}
-        <div className="flex-1 flex items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-            <AsmiAvatar />
-          </motion.div>
-        </div>
-        
-        {/* Greeting text */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-center space-y-2 mb-8 z-10"
-        >
-          <h1 className="text-2xl font-bold text-slate-100">
-            Hey there, I'm Asmi
-          </h1>
-          <p className="text-slate-400">
-            Tell me what you'd like me to help with today
-          </p>
-        </motion.div>
-        
-        {/* Quick action chips - bottom bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex gap-2 overflow-x-auto pb-safe scrollbar-hide z-10"
-        >
-          {quickActions.map((action, idx) => (
-            <motion.div
-              key={action.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + idx * 0.05 }}
-              className="flex-shrink-0"
-            >
-              <div className={`${action.label === 'Voice' ? 'relative' : ''}`}>
-                {action.label === 'Voice' && (
-                  <div className="absolute inset-0 bg-emerald-500/30 blur-xl rounded-xl" />
-                )}
-                <div className={`relative ${action.label === 'Voice' ? 'bg-slate-700' : 'bg-slate-800'} hover:bg-slate-700 rounded-xl px-4 py-3 flex items-center gap-2`}>
-                  <action.icon className={`w-5 h-5 ${action.label === 'Voice' ? 'text-emerald-400' : 'text-slate-300'}`} />
-                  <span className={`text-sm ${action.label === 'Voice' ? 'text-slate-100' : 'text-slate-200'}`}>{action.label}</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="h-full w-full pointer-events-none"
+      >
+        <Home />
+      </motion.div>
     );
   }
 
@@ -422,7 +373,7 @@ const BillSplitDemo = ({
   // Chat Interface
   if (phase === "transition-to-chat" || phase === "chat-user" || phase === "chat-asmi") {
     return (
-      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
         <AnimatePresence>
           {(phase === "chat-user" || phase === "chat-asmi") && (
             <ConversationMessage
@@ -444,7 +395,7 @@ const BillSplitDemo = ({
   // Action Plan
   if (phase === "action-plan") {
     return (
-      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -479,7 +430,7 @@ const BillSplitDemo = ({
     ];
 
     return (
-      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4">
+      <div className="min-h-full bg-background p-4 pt-8 space-y-4">
         <ConversationMessage
           role="user"
           content="Split bill for 9pm dinner"
@@ -509,7 +460,7 @@ const BillSplitDemo = ({
   // Confirmation
   if (phase === "confirmation") {
     return (
-      <div className="min-h-full bg-slate-900 p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
+      <div className="min-h-full bg-background p-4 pt-8 space-y-4 overflow-y-auto scrollbar-hide">
         <ConversationMessage
           role="assistant"
           content="All done! Your bill has been split successfully."
@@ -526,16 +477,6 @@ const BillSplitDemo = ({
             splitMethod: "Splitwise",
             status: "All paid ✓",
             confirmationId: "SW-ABC123",
-            attendeeList: [
-              { name: "John Smith", amount: "$30.00", status: "paid" },
-              { name: "Sarah Johnson", amount: "$30.00", status: "paid" },
-              { name: "Mike Chen", amount: "$30.00", status: "paid" },
-              { name: "Emily Davis", amount: "$30.00", status: "paid" },
-              { name: "Alex Rodriguez", amount: "$30.00", status: "paid" },
-              { name: "Lisa Anderson", amount: "$30.00", status: "paid" },
-              { name: "David Kim", amount: "$30.00", status: "paid" },
-              { name: "Jessica Brown", amount: "$30.00", status: "paid" },
-            ],
           }}
         />
       </div>
