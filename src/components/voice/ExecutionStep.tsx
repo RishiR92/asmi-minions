@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Zap } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface ExecutionStepProps {
   step: string;

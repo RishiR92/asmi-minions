@@ -200,29 +200,62 @@ const Automations = () => {
   };
 
   return (
-    <div className="min-h-screen pt-safe pb-safe pb-20">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className="glass-sheet border-b border-border/30 sticky top-0 pt-safe z-40">
-        <div className="max-w-full sm:max-w-lg mx-auto px-6 py-5 sm:py-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between mb-4"
-          >
+      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
+        <div className="p-3 sm:p-4 flex items-center justify-between max-w-md mx-auto">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => navigate("/")}
+              className="p-1.5 sm:p-2 hover:bg-muted rounded-full transition-colors"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180" />
+            </button>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground">AI Mins</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <h1 className="text-lg sm:text-xl font-bold text-foreground">AI Mins</h1>
+              <p className="text-xs text-muted-foreground">
                 {automations.filter(a => automationStates[a.id]).length} active
               </p>
             </div>
-            <Button
-              onClick={() => setIsGalleryOpen(true)}
-              size="icon"
-              className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft min-h-[44px] min-w-[44px]"
-            >
-              <Plus className="w-5 h-5" />
-            </Button>
-          </motion.div>
+          </div>
+          <button
+            onClick={() => setIsGalleryOpen(true)}
+            className="p-1.5 sm:p-2 hover:bg-muted rounded-full transition-colors"
+          >
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="px-3 sm:px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide max-w-md mx-auto">
+        {["all", "web", "email", "calendar"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === tab
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Automations List */}
+      <div className="p-3 sm:p-4 space-y-3 max-w-md mx-auto">
+        {filteredAutomations.map((automation) => (
+          <AutomationCard
+            key={automation.id}
+            icon={automation.icon}
+            title={automation.title}
+            description={automation.description}
+            enabled={automationStates[automation.id]}
+            lastRun={automation.lastRun}
+            nextRun={automation.nextRun}
+            onToggle={() => {
 
           {/* Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
