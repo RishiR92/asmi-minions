@@ -310,9 +310,11 @@ const BillSplitDemo = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="h-full w-full pointer-events-none"
+        className="h-full w-full pointer-events-none overflow-hidden"
       >
-        <Home />
+        <div className="max-w-[375px] mx-auto h-full">
+          <Home />
+        </div>
       </motion.div>
     );
   }
@@ -469,9 +471,9 @@ const BillSplitDemo = ({
           confirmationType="billsplit"
           data={{
             title: "Dinner at Olive Garden",
-            totalAmount: "$240.00",
+            totalAmount: "$150.00",
             perPerson: "$30.00",
-            attendees: 8,
+            attendees: 5,
             datetime: "Yesterday, 9:00 PM",
             location: "Olive Garden - Downtown",
             splitMethod: "Splitwise",

@@ -41,10 +41,10 @@ export const ConversationMessage = ({
         }`}
       >
         <div
-          className={`inline-block px-4 py-2.5 rounded-2xl shadow-lg ${
+          className={`inline-block px-4 py-2.5 rounded-2xl ${
             isUser
-              ? "bg-emerald-600 text-white rounded-tr-sm shadow-emerald-600/20"
-              : "bg-slate-800 text-slate-100 rounded-tl-sm shadow-slate-900/50"
+              ? "bg-emerald-500/90 text-white rounded-tr-sm shadow-md shadow-emerald-500/10 border border-emerald-500/20"
+              : "bg-slate-100 text-slate-900 rounded-tl-sm shadow-md shadow-slate-200/50 border border-slate-200"
           }`}
         >
           {isThinking ? (

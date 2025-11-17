@@ -73,7 +73,7 @@ export const ConfirmationCard = ({ confirmationType, data }: ConfirmationCardPro
               <Users className="w-3.5 h-3.5" />
               <span>Attendees</span>
             </div>
-            <p className="text-sm font-medium text-slate-100">{data.attendees || 8} people</p>
+            <p className="text-sm font-medium text-slate-100">{data.attendees || 5} people</p>
           </div>
         </div>
 
