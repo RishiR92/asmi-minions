@@ -110,7 +110,17 @@ const generateConfirmation = (plan: string) => {
         location: "Olive Garden - Downtown",
         splitMethod: "Splitwise",
         status: "All paid ✓",
-        confirmationId: "SW-" + Math.random().toString(36).substr(2, 6).toUpperCase()
+        confirmationId: "SW-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
+        attendeeList: [
+          { name: "John Smith", amount: "$30.00", status: "paid" },
+          { name: "Sarah Johnson", amount: "$30.00", status: "paid" },
+          { name: "Mike Chen", amount: "$30.00", status: "paid" },
+          { name: "Emily Davis", amount: "$30.00", status: "paid" },
+          { name: "Alex Rodriguez", amount: "$30.00", status: "paid" },
+          { name: "Lisa Anderson", amount: "$30.00", status: "paid" },
+          { name: "David Kim", amount: "$30.00", status: "paid" },
+          { name: "Maria Garcia", amount: "$30.00", status: "paid" },
+        ]
       }
     };
   } else if (lowerPlan.includes('schedule') || lowerPlan.includes('calendar')) {
@@ -209,7 +219,7 @@ const Home = () => {
     }));
     setExecutionSteps(steps);
 
-    // Execute steps sequentially
+    // Execute steps sequentially with slower timing
     steps.forEach((_, index) => {
       setTimeout(() => {
         // Mark current step as executing, then completed
@@ -239,10 +249,10 @@ const Home = () => {
               // Generate detailed confirmation based on the request
               const confirmationDetails = generateConfirmation(actionPlan.plan);
               setFinalResult(confirmationDetails);
-            }, 500);
+            }, 800);
           }
-        }, 800);
-      }, index * 2000);
+        }, 3500); // Increased from 800ms to 3500ms for longer execution time
+      }, index * 4200); // Increased from 2000ms to 4200ms for slower transitions
     });
   };
 
@@ -452,7 +462,8 @@ const Home = () => {
             </motion.div>
 
             {/* Scrollable Chat Messages */}
-            <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-hide">
+            {/* Scrollable Messages Area */}
+            <div className="flex-1 overflow-y-auto py-4 sm:py-6 space-y-4 scrollbar-hide">
               <AnimatePresence mode="popLayout">
                 {messages.map((message, index) => (
                   <ConversationMessage

@@ -13,6 +13,45 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
     return null;
   }
 
+  // Determine what to show based on the step text
+  const getStepDetails = () => {
+    const lowerStep = step.toLowerCase();
+    
+    if (lowerStep.includes('email') || lowerStep.includes('attendees')) {
+      return {
+        subtext: "Scanning inbox for dinner thread...",
+        details: ["Found: 8 attendees", "Priorities: Sarah (vegetarian), Mike (no shellfish)"]
+      };
+    } else if (lowerStep.includes('retrieve') || lowerStep.includes('bill')) {
+      return {
+        subtext: "Accessing receipt from Olive Garden...",
+        details: ["Total: $240.00", "Items: Pasta, Salads, Drinks", "Tax: $18.50, Tip: $36.00"]
+      };
+    } else if (lowerStep.includes('calculate') || lowerStep.includes('split')) {
+      return {
+        subtext: "Computing fair split...",
+        details: ["$240.00 ÷ 8 people", "Each person: $30.00", "Splitwise fee: $0.00"]
+      };
+    } else if (lowerStep.includes('splitwise') || lowerStep.includes('payment')) {
+      return {
+        subtext: "Sending payment requests...",
+        details: ["John ✓", "Sarah ✓", "Mike ✓", "Emily ✓", "Alex ✓", "Lisa ✓", "David ✓", "Maria ✓"]
+      };
+    } else if (lowerStep.includes('confirm') || lowerStep.includes('paid')) {
+      return {
+        subtext: "Verifying payments...",
+        details: ["8/8 payments received", "All transactions cleared", "Confirmation emails sent"]
+      };
+    }
+    
+    return {
+      subtext: "Processing...",
+      details: []
+    };
+  };
+
+  const stepDetails = getStepDetails();
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -67,6 +106,16 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                   {step}
                 </motion.p>
                 
+                {/* Subtext showing what's happening */}
+                <motion.p
+                  className="text-xs text-muted-foreground"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  {stepDetails.subtext}
+                </motion.p>
+                
                 {/* Animated progress bar */}
                 <div className="h-1.5 bg-muted/30 rounded-full overflow-hidden">
                   <motion.div
@@ -74,7 +123,7 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                     initial={{ x: "-100%" }}
                     animate={{ x: "100%" }}
                     transition={{ 
-                      duration: 1.5, 
+                      duration: 2, 
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
@@ -82,8 +131,30 @@ export const ExecutionStep = ({ step, status, isCurrentStep = false }: Execution
                 </div>
               </div>
 
+              {/* Details that appear */}
+              {stepDetails.details.length > 0 && (
+                <div className="space-y-1.5">
+                  {stepDetails.details.map((detail, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.3 }}
+                      className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/20 rounded-lg px-3 py-1.5"
+                    >
+                      <motion.div
+                        className="w-1.5 h-1.5 rounded-full bg-primary"
+                        animate={{ scale: [1, 1.3, 1] }}
+                        transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                      />
+                      <span>{detail}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+
               {/* Data particles effect */}
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap pt-1">
                 {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}

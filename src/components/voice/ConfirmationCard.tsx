@@ -10,6 +10,7 @@ interface ConfirmationCardProps {
     totalAmount?: string;
     perPerson?: string;
     attendees?: number;
+    attendeeList?: Array<{ name: string; amount: string; status: string }>;
     location?: string;
     datetime?: string;
     seats?: string;
@@ -90,6 +91,40 @@ export const ConfirmationCard = ({ confirmationType, data }: ConfirmationCardPro
             <span className="text-2xl font-bold text-primary">{data.perPerson || "$30.00"}</span>
           </div>
         </div>
+
+        {/* Attendee List */}
+        {data.attendeeList && (
+          <div className="pt-3 border-t border-border/50 space-y-2">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">Payment Status</span>
+            </div>
+            <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-hide">
+              {data.attendeeList.map((attendee, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-muted/20 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-xs font-semibold text-primary">
+                        {attendee.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{attendee.name}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-foreground">{attendee.amount}</span>
+                    <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {data.splitMethod && (
           <div className="bg-secondary/10 rounded-xl p-3 flex items-center justify-between">
