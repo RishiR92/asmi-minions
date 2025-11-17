@@ -118,23 +118,27 @@ const Expenses = () => {
             {activeSubscriptions.map((sub) => {
               const Icon = sub.icon;
               return (
-                <div key={sub.id} className="flex items-center justify-between p-2 sm:p-3 rounded-xl bg-background/40 gap-2">
-                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                <motion.div
+                  key={sub.id}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-3 rounded-xl bg-background/40 space-y-2 transition-all hover:bg-background/60"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-5 h-5 text-primary" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm font-medium text-foreground break-words">{sub.name}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">{sub.renewDate}</p>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-foreground">{sub.name}</p>
+                      <p className="text-xs text-muted-foreground">{sub.renewDate}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <p className="text-xs sm:text-sm font-semibold text-foreground whitespace-nowrap">${sub.amount}/mo</p>
-                    <Button size="sm" variant="outline" className="rounded-full h-7 sm:h-8 px-2 sm:px-4 text-[10px] sm:text-xs">
+                  <div className="flex items-center justify-between pl-[52px]">
+                    <p className="text-sm font-semibold text-foreground">${sub.amount}/mo</p>
+                    <Button size="sm" variant="outline" className="rounded-full h-8 px-4 text-xs">
                       Manage
                     </Button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
