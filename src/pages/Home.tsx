@@ -108,9 +108,9 @@ const generateConfirmation = (plan: string) => {
       type: "billsplit" as const,
       data: {
         title: "Dinner at Olive Garden",
-        totalAmount: "$240.00",
+        totalAmount: "$150.00",
         perPerson: "$30.00",
-        attendees: 8,
+        attendees: 5,
         datetime: "Yesterday, 9:00 PM",
         location: "Olive Garden - Downtown",
         splitMethod: "Splitwise",
@@ -122,33 +122,13 @@ const generateConfirmation = (plan: string) => {
           { name: "Mike Chen", amount: "$30.00", status: "paid" },
           { name: "Emily Davis", amount: "$30.00", status: "paid" },
           { name: "Alex Rodriguez", amount: "$30.00", status: "paid" },
-          { name: "Lisa Anderson", amount: "$30.00", status: "paid" },
-          { name: "David Kim", amount: "$30.00", status: "paid" },
-          { name: "Maria Garcia", amount: "$30.00", status: "paid" },
         ]
-      }
-    };
-  } else if (lowerPlan.includes('schedule') || lowerPlan.includes('calendar')) {
-    return {
-      type: "calendar" as const,
-      data: {
-        title: "Team Meeting",
-        datetime: "Tomorrow, 2:00 PM",
-        duration: "1 hour",
-        location: "Conference Room B"
-      }
-    };
-  } else {
-    return {
-      type: "generic" as const,
-      data: {
-        description: `All set! ${getRandomResponse('success')}\n\nYour request has been completed successfully.`
       }
     };
   }
 };
 
-const Home = () => {
+const Home = ({ embed = false }: { embed?: boolean }) => {
   const [conversationMode, setConversationMode] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
@@ -286,8 +266,10 @@ const Home = () => {
   };
 
   return (
-    <div className="h-screen fixed inset-0 overflow-hidden w-full">
-      <BackgroundAmbient />
+    <div className={embed ? "relative h-full w-full overflow-hidden" : "h-screen fixed inset-0 overflow-hidden w-full"}>
+      <div className={embed ? "absolute inset-0" : ""}>
+        <BackgroundAmbient />
+      </div>
 
       {/* Voice Fallback Dialog */}
       <Dialog open={showVoiceFallback} onOpenChange={setShowVoiceFallback}>
@@ -407,7 +389,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10"
+              className={embed ? "absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10" : "fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/40 pb-safe z-10"}
             >
               <div className="flex justify-start items-center gap-3 px-4 py-3 overflow-x-auto scrollbar-hide"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
